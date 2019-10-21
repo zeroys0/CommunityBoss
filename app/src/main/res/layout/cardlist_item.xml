@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/x1014"
+    android:layout_height="@dimen/y279"
+    android:background="@mipmap/card_bg"
+    android:layout_marginLeft="@dimen/x33"
+    android:layout_marginTop="@dimen/y29"
+    android:orientation="vertical">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="@color/white"
+    android:textSize="@dimen/x39"
+    android:text="农业银行"
+    android:layout_marginLeft="@dimen/x173"
+    android:layout_marginTop="@dimen/y42"
+    android:includeFontPadding="false"
+    />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x36"
+        android:text="储蓄卡"
+        android:layout_marginLeft="@dimen/x173"
+        android:layout_marginTop="@dimen/y15"
+        android:includeFontPadding="false"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x60"
+        android:text="**** **** **** 8854"
+        android:layout_marginLeft="@dimen/x173"
+        android:layout_marginTop="@dimen/y24"
+        android:includeFontPadding="false"
+        />
+</LinearLayout>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.leelink.communityboss">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".activity.OrderDetailActivity" />
+        <activity android:name=".activity.CommentListActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.ManageGoodsActivity" />
+        <activity android:name=".activity.RefundListActivity" />
+        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".activity.IncomeActivity" />
+        <activity android:name=".activity.ManageListActivity" />
+        <activity android:name=".activity.ApplyActivity" />
+        <activity android:name=".activity.ChangePasswordActivity" />
+        <activity android:name=".activity.ChangePhoneActivity" />
+        <activity android:name=".activity.InformationActivity" />
+        <activity android:name=".activity.BindCardActivity" />
+        <activity android:name=".activity.WithdrawActivity" />
+        <activity android:name=".activity.ConfirmWithdrawActivity" />
+        <activity android:name=".activity.ExamineActivity"/>
+        <activity android:name=".activity.MyServiceActivity"/>
+    </application>
+
+</manifest>
