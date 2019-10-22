@@ -5,19 +5,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.bean.GoodListBean;
 
 import java.util.List;
 
 public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHolder> {
-    private List<String> list ;
+    private List<GoodListBean> list ;
     private Context context;
     private OnCollectListener onCollectListener;
     private int type = 0;
 
-    public GoodListAdapter(List<String> list,Context context,OnCollectListener onCollectListener,int type){
+    public GoodListAdapter(List<GoodListBean> list,Context context,OnCollectListener onCollectListener,int type){
         this.list = list;
         this.context = context;
         this.onCollectListener = onCollectListener;
@@ -47,9 +50,13 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout rl_check;
+        ImageView img_head;
+        TextView tv_name;
         public ViewHolder(View itemView) {
             super(itemView);
             rl_check = itemView.findViewById(R.id.rl_check);
+            img_head = itemView.findViewById(R.id.img_head);
+            tv_name = itemView.findViewById(R.id.tv_name);
         }
     }
 }

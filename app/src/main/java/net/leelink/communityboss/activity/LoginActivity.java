@@ -177,6 +177,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("用户名密码登录",json.toString());
                             if (json.getInt("ResultCode") == 200) {
+                                CommunityBossApplication.token = json.getString("AppToken");
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();

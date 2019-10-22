@@ -45,7 +45,7 @@ import java.io.File;
 
 public class ManageGoodsActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout rl_back;
-    private ImageView img_head;
+    private ImageView img_head,img_del;
     private File file;
     private View popview;
     private PopupWindow popupWindow;
@@ -68,6 +68,10 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
         ed_name = findViewById(R.id.ed_name);
         ed_price = findViewById(R.id.ed_price);
         ed_detail = findViewById(R.id.ed_detail);
+        btn_upload = findViewById(R.id.btn_upload);
+        btn_upload.setOnClickListener(this);
+        img_del = findViewById(R.id.img_del);
+        img_del.setOnClickListener(this);
     }
 
     @Override
@@ -117,7 +121,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void commit(){
-        OkGo.<String>put(Urls.STOREINFO+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>put(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
                 .tag(this)
                 .params("details", ed_detail.getText().toString().trim())
                 .params("name",ed_name.getText().toString().trim())

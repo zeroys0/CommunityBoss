@@ -49,10 +49,11 @@
             />
     </RelativeLayout>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/x186"
+        android:layout_height="@dimen/y186"
         android:src="@mipmap/img_camera_b"
         android:layout_centerHorizontal="true"
+        android:scaleType="fitXY"
         android:layout_marginTop="@dimen/y53"
         android:layout_below="@id/rl_top"
         android:id="@+id/img_head"/>
@@ -95,6 +96,7 @@
             android:background="@null"
             android:layout_marginLeft="@dimen/x38"
             android:id="@+id/ed_name"
+            android:textColor="@color/text_black"
             android:maxLength="15"/>
     </LinearLayout>
     <LinearLayout
@@ -152,6 +154,7 @@
             android:background="@null"
             android:id="@+id/ed_price"
             android:layout_marginLeft="@dimen/x38"
+            android:textColor="@color/text_black"
             android:inputType="number"/>
     </LinearLayout>
     <LinearLayout
@@ -183,6 +186,7 @@
             android:background="@null"
             android:layout_marginLeft="@dimen/x38"
             android:id="@+id/ed_detail"
+            android:textColor="@color/text_black"
             android:maxLength="50"/>
     </LinearLayout>
     <Button
