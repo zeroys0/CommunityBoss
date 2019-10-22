@@ -179,6 +179,7 @@
             android:layout_height="@dimen/y140"
             android:layout_marginLeft="@dimen/x30"
             android:layout_marginRight="@dimen/x30"
+            android:id="@+id/rl_open_time"
             android:background="@color/white">
             <ImageView
                 android:layout_width="wrap_content"
@@ -197,11 +198,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/x335"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/x42"
                 android:textColor="@color/text_grey"
                 android:id="@+id/tv_open_time"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/x100"
                 />
             <ImageView
                 android:layout_width="wrap_content"
@@ -223,6 +225,7 @@
             android:layout_height="@dimen/y140"
             android:layout_marginLeft="@dimen/x30"
             android:layout_marginRight="@dimen/x30"
+            android:id="@+id/rl_close_time"
             android:background="@color/white">
             <ImageView
                 android:layout_width="wrap_content"
@@ -241,11 +244,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/x335"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/x42"
                 android:textColor="@color/text_grey"
                 android:id="@+id/tv_close_time"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/x100"
                 />
             <ImageView
                 android:layout_width="wrap_content"
@@ -292,11 +296,13 @@
                 android:layout_centerVertical="true"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x180"
+                android:layout_height="@dimen/y180"
                 android:src="@mipmap/img_camera"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:id="@+id/img_store_head"
+                android:scaleType="fitXY"
                 android:layout_marginRight="@dimen/x30"/>
         </RelativeLayout>
         <View
@@ -328,11 +334,13 @@
                 android:layout_centerVertical="true"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x180"
+                android:layout_height="@dimen/y180"
                 android:src="@mipmap/img_camera"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:id="@+id/img_publicity"
+                android:scaleType="fitXY"
                 android:layout_marginRight="@dimen/x30"/>
         </RelativeLayout>
         <View
@@ -364,11 +372,13 @@
                 android:layout_centerVertical="true"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x180"
+                android:layout_height="@dimen/y180"
                 android:src="@mipmap/img_camera"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:id="@+id/img_license"
                 android:layout_marginRight="@dimen/x30"/>
         </RelativeLayout>
         <View
@@ -400,11 +410,13 @@
                 android:layout_centerVertical="true"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x180"
+                android:layout_height="@dimen/y180"
                 android:src="@mipmap/img_camera"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:id="@+id/img_permit"
+                android:scaleType="fitXY"
                 android:layout_marginRight="@dimen/x30"/>
         </RelativeLayout>
         <View
@@ -418,7 +430,7 @@
             android:layout_width="@dimen/x1014"
             android:layout_height="@dimen/y129"
             android:background="@drawable/cancel"
-            android:text="注册"
+            android:text="完成"
             android:layout_marginTop="@dimen/y100"
             android:layout_marginBottom="@dimen/y57"
             android:layout_gravity="center_horizontal"

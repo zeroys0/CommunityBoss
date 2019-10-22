@@ -16,4 +16,5 @@
     <color name="red">#e60012</color>
     <color name="grey">#dfdfdf</color>
     <color name="background">#f3f3f3</color>
+    <color name="tab_color_off">#5B5B5B</color>
 </resources>

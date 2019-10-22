@@ -8,4 +8,5 @@ public class Urls {
     public static final String LOGIN = WEBSITE+"Login";     //用户名密码登录
     public static final String LOGINBYCODE = WEBSITE +"LoginByCode";   //短信验证码登录
     public static final String STOREINFO = WEBSITE+"StoreInfo";     //修改商户信息
+    public static final String UPLOADIMAGE = WEBSITE +"UploadImage";    //上传商家图片(商户头像,营业执照等)
 }

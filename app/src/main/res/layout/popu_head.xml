@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/x1022"
+        android:layout_height="@dimen/y725"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/dialog_login"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/y72"
+            android:text="设置头像"
+            android:textColor="#5B5B5B"
+            android:textSize="@dimen/x44" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y1"
+            android:layout_marginTop="@dimen/y72"
+            android:background="#EDEDED" />
+
+        <Button
+            android:id="@+id/btn_album"
+            android:layout_width="@dimen/x879"
+            android:layout_height="@dimen/y134"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/y72"
+            android:background="@drawable/btn_dialog"
+            android:text="从相册选一张" />
+
+        <Button
+            android:id="@+id/btn_photograph"
+            android:layout_width="@dimen/x879"
+            android:layout_height="@dimen/y134"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/y72"
+            android:layout_marginTop="@dimen/y72"
+            android:background="@drawable/btn_dialog"
+            android:text="拍一张照片" />
+    </LinearLayout>
+</LinearLayout>
