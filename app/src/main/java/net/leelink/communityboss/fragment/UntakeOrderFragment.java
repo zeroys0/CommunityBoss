@@ -9,14 +9,26 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.ChangePasswordActivity;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
+import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.utils.Urls;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +54,38 @@ private List<String> list = new ArrayList<>();
 
     public void init(View view){
         list_order = view.findViewById(R.id.list_order);
-        orderListAdapter = new OrderListAdapter(list,getContext(),this);
-        list.add("新的订单");
-        list.add("新的订单");
-        list.add("新的订单");
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-        list_order.setLayoutManager(layoutManager);
-        list_order.setAdapter(orderListAdapter);
+
+
+            OkGo.<String>post(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token)
+                    .tag(this)
+                    .params("type",2)
+                    .params("order",1)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            try {
+                                String body = response.body();
+                                body = body.substring(1,body.length()-1);
+                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                                Log.d("未接订单",json.toString());
+                                if (json.getInt("ResultCode") == 200) {
+                                    orderListAdapter = new OrderListAdapter(list,getContext(),UntakeOrderFragment.this);
+                                    list.add("新的订单");
+                                    list.add("新的订单");
+                                    list.add("新的订单");
+                                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+                                    list_order.setLayoutManager(layoutManager);
+                                    list_order.setAdapter(orderListAdapter);
+                                } else {
+
+                                }
+                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
     }
 
     @Override

@@ -1,16 +1,28 @@
 package net.leelink.communityboss.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.utils.Urls;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener {
 private EditText ed_phone,ed_code,ed_password,ed_confirm_password;
@@ -45,10 +57,43 @@ private Button btn_confirm;
                 }
                 break;
             case R.id.btn_confirm:      //确认修改密码
+                if(ed_password.getText().toString().trim().equals(ed_confirm_password.getText().toString().trim())){
+                    resetPassword();
+                }else {
+                    Toast.makeText(this, "两次密码输入的不一致", Toast.LENGTH_SHORT).show();
+                }
                 break;
                 default:
                     break;
         }
+    }
+
+    //修改密码(忘记密码)
+    public void resetPassword(){
+        OkGo.<String>post(Urls.RESETPASSWORD)
+                .tag(this)
+                .params("username", ed_phone.getText().toString().trim())
+                .params("smscode",ed_code.getText().toString().trim())
+                .params("password",ed_password.getText().toString().trim())
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            body = body.substring(1,body.length()-1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            Log.d("忘记密码",json.toString());
+                            if (json.getInt("ResultCode") == 200) {
+                                finish();
+                            } else {
+
+                            }
+                            Toast.makeText(ChangePasswordActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     private class TimeRun implements Runnable {

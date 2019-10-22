@@ -83,7 +83,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                     tv_forgot.setVisibility(View.VISIBLE);
                     ed_phone.setHint("请输入账号");
                     ed_password.setHint("请输入密码");
-                    ed_password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    ed_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     TYPE = 1;
                 }
             }
