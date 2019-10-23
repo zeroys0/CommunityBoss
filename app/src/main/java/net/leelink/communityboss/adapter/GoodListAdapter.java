@@ -1,10 +1,12 @@
 package net.leelink.communityboss.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,8 +39,12 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
         return viewHolder;
     }
 
+    public void setType(int type){
+        this.type = type;
+    }
+
     @Override
-    public void onBindViewHolder(GoodListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final GoodListAdapter.ViewHolder holder, final int position) {
         if(type == 1) {
             holder.rl_check.setVisibility(View.VISIBLE);
         } else {
@@ -48,6 +54,16 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
         holder.tv_price.setText("￥"+list.get(position).getPrice());
         holder.tv_detail.setText(list.get(position).getDetails());
         Glide.with(context).load(Urls.IMAGEURL+"Store/"+ CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+list.get(position).getHeadImage()).into(holder.img_head);
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.checkBox.isChecked()) {
+                    onCollectListener.onCancelChecked(v, position,true);
+                }else {
+                    onCollectListener.onCancelChecked(v, position,false);
+                }
+            }
+        });
     }
 
     @Override
@@ -57,6 +73,7 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout rl_check;
+        CheckBox checkBox;
         ImageView img_head;
         TextView tv_name,tv_price,tv_detail;
         public ViewHolder(View itemView) {
@@ -66,6 +83,7 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_price = itemView.findViewById(R.id.tv_price);
             tv_detail = itemView.findViewById(R.id.tv_detail);
+            checkBox = itemView.findViewById(R.id.checkbox);
 
         }
     }

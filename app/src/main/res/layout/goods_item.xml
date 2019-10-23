@@ -8,10 +8,12 @@
         android:layout_height="match_parent"
         android:id="@+id/rl_check"
         >
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/collect_tick"
+    <android.support.v7.widget.AppCompatCheckBox
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:background="@drawable/check_box"
+        android:id="@+id/checkbox"
+        android:button="@null"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/x30"
         android:layout_alignParentRight="true"/>

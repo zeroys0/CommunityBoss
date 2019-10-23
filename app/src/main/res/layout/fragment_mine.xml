@@ -35,8 +35,8 @@
         android:layout_height="@dimen/y342"
         android:background="@color/blue">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/x195"
+            android:layout_height="@dimen/y195"
             android:src="@mipmap/head_default"
             android:layout_marginTop="@dimen/y65"
             android:id="@+id/img_head"

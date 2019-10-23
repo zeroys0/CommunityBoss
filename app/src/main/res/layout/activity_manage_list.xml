@@ -78,6 +78,7 @@
         android:layout_height="@dimen/y129"
         android:background="@drawable/cancel"
         android:text="上传"
+        android:id="@+id/btn_del"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/y57"
         android:layout_centerHorizontal="true"

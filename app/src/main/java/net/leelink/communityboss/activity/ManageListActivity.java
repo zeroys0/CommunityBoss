@@ -7,7 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -36,6 +38,10 @@ private RelativeLayout rl_back,rl_add;
 private RecyclerView list_goods;
 private GoodListAdapter goodListAdapter;
 private List<GoodListBean> list = new ArrayList<>();
+private TextView tv_done;
+private Button btn_del;
+private int type = 0;
+List<Integer> idList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,10 @@ private List<GoodListBean> list = new ArrayList<>();
         rl_add = findViewById(R.id.rl_add);
         rl_add.setOnClickListener(this);
         list_goods = findViewById(R.id.list_goods);
+        tv_done = findViewById(R.id.tv_done);
+        tv_done.setOnClickListener(this);
+        btn_del = findViewById(R.id.btn_del);
+        btn_del.setOnClickListener(this);
     }
 
     public void initlist(){
@@ -90,10 +100,24 @@ private List<GoodListBean> list = new ArrayList<>();
                 Intent intent =  new Intent(this,ManageGoodsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.tv_done:  //编辑
+                if(type == 0) {
+                    type = 1;
+                    goodListAdapter.setType(type);
+                }else {
+                    type = 0;
+                    goodListAdapter.setType(type);
+                }
+                goodListAdapter.notifyDataSetChanged();
+                break;
+            case R.id.btn_del:  //完成删除
+                delete();
+                break;
                 default:
                     break;
         }
     }
+
 
     @Override
     public void onItemClick(View view) {
@@ -101,7 +125,19 @@ private List<GoodListBean> list = new ArrayList<>();
     }
 
     @Override
-    public void onCancelChecked(View view) {
+    public void onCancelChecked(View view,int position,boolean state) {
+        if(state==true){
+           idList.add(list.get(position).getCommodityId());
+        } else {
+            for(int i=0;i<idList.size();i++){
+                if(idList.get(i)==list.get(position).getCommodityId()) {
+                    idList.remove(i);
+                }
+            }
+        }
+    }
 
+    public void delete(){
+        Log.d( "delete: ",idList.toString());
     }
 }

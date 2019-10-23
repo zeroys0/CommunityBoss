@@ -77,7 +77,7 @@
                 android:layout_marginLeft="@dimen/x45"
                 android:textSize="@dimen/x42"
                 android:layout_centerVertical="true"/>
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
