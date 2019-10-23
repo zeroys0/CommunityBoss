@@ -38,6 +38,7 @@
         android:layout_marginTop="@dimen/y60"/>
     <TextView
         android:layout_width="wrap_content"
+        android:id="@+id/tv_price"
         android:layout_height="wrap_content"
         android:textColor="@color/red"
         android:textSize="@dimen/x48"
@@ -55,5 +56,6 @@
         android:layout_toRightOf="@id/img_head"
         android:layout_marginLeft="@dimen/x45"
         android:includeFontPadding="false"
+        android:id="@+id/tv_detail"
         android:layout_marginTop="@dimen/y207"/>
 </RelativeLayout>

@@ -3,23 +3,47 @@ package net.leelink.communityboss.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.ChangePhoneActivity;
 import net.leelink.communityboss.activity.CommentListActivity;
 import net.leelink.communityboss.activity.IncomeActivity;
 import net.leelink.communityboss.activity.InformationActivity;
 import net.leelink.communityboss.activity.ManageListActivity;
 import net.leelink.communityboss.activity.MyServiceActivity;
 import net.leelink.communityboss.activity.RefundListActivity;
+import net.leelink.communityboss.adapter.GoodListAdapter;
+import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.GoodListBean;
+import net.leelink.communityboss.utils.Urls;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service;
-    private ImageView img_head;
+    private ImageView img_head,img_change;
+    private TextView tv_income,tv_order_number,tv_phone;
     @Override
     public void handleCallBack(Message msg) {
 
@@ -30,6 +54,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine,container,false);
         init(view);
+        initdata();
         return view;
     }
 
@@ -48,6 +73,38 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         rl_refund.setOnClickListener(this);
         rl_service = view.findViewById(R.id.rl_service);
         rl_service.setOnClickListener(this);
+        tv_income = view.findViewById(R.id.tv_income);
+        tv_order_number = view.findViewById(R.id.tv_order_number);
+        tv_phone = view.findViewById(R.id.tv_phone);
+        img_change = view.findViewById(R.id.img_change);
+        img_change.setOnClickListener(this);
+    }
+
+    public void initdata(){
+        Glide.with(getContext()).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/Image/"+CommunityBossApplication.storeInfo.getHeadImage()).into(img_head);
+        tv_phone.setText(CommunityBossApplication.storeInfo.getPhoneNumber());
+
+        OkGo.<String>get(Urls.STOREHOME+"?appToken="+ CommunityBossApplication.token)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            body = body.substring(1,body.length()-1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            Log.d("用户信息",json.toString());
+                            if (json.getInt("ResultCode") == 200) {
+                                tv_income.setText("今日收入: ￥"+json.getJSONObject("ObjectData").getString("Income"));
+                                tv_order_number.setText("今日订单: "+json.getJSONObject("ObjectData").getString("OrderNumber")+"单");
+                            } else {
+                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -76,6 +133,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.rl_service:   //我的客服
                 Intent intent5 = new Intent(getContext(), MyServiceActivity.class);
                 startActivity(intent5);
+                break;
+            case R.id.img_change:   //修改电话
+                Intent intent6 = new Intent(getContext(), ChangePhoneActivity.class);
+                startActivity(intent6);
                 break;
                 default:
                     break;

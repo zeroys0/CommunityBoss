@@ -14,6 +14,8 @@ import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 
+import net.leelink.communityboss.bean.StoreInfo;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,18 +28,21 @@ public class CommunityBossApplication extends Application {
     private List<Activity> activityList = new LinkedList<Activity>();
     public static SharedPreferences preferences;
     public static String token;
+    public static StoreInfo storeInfo;
 
     @Override
     public void onCreate() {
         super.onCreate();
         token = "";
         instance = this;
+        storeInfo = new StoreInfo();
         initokGO();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
     }
+
     public void initokGO() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("commonHeaderKey1", "commonHeaderValue1");    //header不支持中文，不允许有特殊字符

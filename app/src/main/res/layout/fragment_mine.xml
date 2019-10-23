@@ -59,6 +59,7 @@
             android:text="135xxxx3724"
             android:layout_marginLeft="@dimen/x284"
             android:layout_marginTop="@dimen/y198"
+            android:id="@+id/tv_phone"
             android:includeFontPadding="false"/>
         <ImageView
             android:layout_width="wrap_content"
@@ -66,6 +67,7 @@
             android:src="@mipmap/change_phone"
             android:layout_marginLeft="@dimen/x604"
             android:layout_marginTop="@dimen/y198"
+            android:id="@+id/img_change"
             />
     </RelativeLayout>
     <LinearLayout
@@ -80,6 +82,7 @@
             android:textSize="@dimen/x45"
             android:textColor="#333333"
             android:layout_gravity="center"
+            android:id="@+id/tv_income"
             android:gravity="center"/>
         <View
             android:layout_width="@dimen/x2"
@@ -94,6 +97,7 @@
             android:text="今日订单: 57单"
             android:textSize="@dimen/x45"
             android:textColor="#333333"
+            android:id="@+id/tv_order_number"
             android:layout_gravity="center"
             android:gravity="center"/>
     </LinearLayout>

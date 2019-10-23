@@ -9,8 +9,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.GoodListBean;
+import net.leelink.communityboss.utils.Urls;
 
 import java.util.List;
 
@@ -30,7 +34,6 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
     public GoodListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.goods_item, parent, false); // 实例化viewholder
         GoodListAdapter.ViewHolder viewHolder = new GoodListAdapter.ViewHolder(v);
-
         return viewHolder;
     }
 
@@ -41,6 +44,10 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
         } else {
             holder.rl_check.setVisibility(View.GONE);
         }
+        holder.tv_name.setText(list.get(position).getName());
+        holder.tv_price.setText("￥"+list.get(position).getPrice());
+        holder.tv_detail.setText(list.get(position).getDetails());
+        Glide.with(context).load(Urls.IMAGEURL+"Store/"+ CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+list.get(position).getHeadImage()).into(holder.img_head);
     }
 
     @Override
@@ -51,12 +58,15 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout rl_check;
         ImageView img_head;
-        TextView tv_name;
+        TextView tv_name,tv_price,tv_detail;
         public ViewHolder(View itemView) {
             super(itemView);
             rl_check = itemView.findViewById(R.id.rl_check);
             img_head = itemView.findViewById(R.id.img_head);
             tv_name = itemView.findViewById(R.id.tv_name);
+            tv_price = itemView.findViewById(R.id.tv_price);
+            tv_detail = itemView.findViewById(R.id.tv_detail);
+
         }
     }
 }

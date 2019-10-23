@@ -3,6 +3,7 @@ package net.leelink.communityboss.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -64,8 +65,11 @@ private List<GoodListBean> list = new ArrayList<>();
                             if (json.getInt("ResultCode") == 200) {
                                 JSONArray jsonArray = json.getJSONArray("ObjectData");
                                 Gson gson = new Gson();
-                                list = gson.fromJson(jsonArray.toString(), TypeToken.get(GoodListBean.class).getType());
-                                goodListAdapter = new GoodListAdapter(list,ManageListActivity.this,ManageListActivity.this);
+                                list = gson.fromJson(jsonArray.toString(), new TypeToken<List<GoodListBean>>(){}.getType());
+                                goodListAdapter = new GoodListAdapter(list,ManageListActivity.this,ManageListActivity.this,0);
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ManageListActivity.this,LinearLayoutManager.VERTICAL,false);
+                                list_goods.setLayoutManager(layoutManager);
+                                list_goods.setAdapter(goodListAdapter);
                             } else {
                                 Toast.makeText(ManageListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }

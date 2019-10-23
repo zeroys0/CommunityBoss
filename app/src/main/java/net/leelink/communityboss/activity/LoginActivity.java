@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -24,6 +26,7 @@ import com.lzy.okgo.model.Response;
 import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.utils.Urls;
 
 
@@ -148,6 +151,10 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             Log.d("验证码登录",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 CommunityBossApplication.token = json.getString("AppToken");
+                                Gson gson = new Gson();
+                                JSONObject jsonObject = json.getJSONObject("storeInfo");
+                                StoreInfo storeInfo = gson.fromJson(jsonObject.toString(),StoreInfo.class);
+                                CommunityBossApplication.storeInfo = storeInfo;
                                 Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -178,6 +185,10 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             Log.d("用户名密码登录",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 CommunityBossApplication.token = json.getString("AppToken");
+                                Gson gson = new Gson();
+                                JSONObject jsonObject = json.getJSONObject("StoreInfo");
+                                StoreInfo storeInfo = gson.fromJson(jsonObject.toString(),StoreInfo.class);
+                                CommunityBossApplication.storeInfo = storeInfo;
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();

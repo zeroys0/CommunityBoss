@@ -36,6 +36,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.0.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'jp.wasabeef:glide-transformations:2.0.1'
 
     implementation 'com.lzy.net:okgo:+'
     implementation 'com.lzy.net:okrx2:+'
