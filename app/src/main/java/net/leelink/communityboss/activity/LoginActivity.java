@@ -104,7 +104,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     }
 
     // 获取短信验证码的页面显示
-    private int time = 120;
+    private int time = 60;
 
 
     @Override
@@ -217,7 +217,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                 JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                 Log.d("获取验证码",json.toString());
                                 if (json.getInt("ResultCode") == 200) {
-                                    if(time == 120) {
+                                    if(time == 60) {
                                         new Thread(new LoginActivity.TimeRun()).start();
                                     }else {
                                         getmsmpass_TX.setEnabled(false);
@@ -257,7 +257,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
             public void handleMessage(Message msg) {
                 if (time == 0) {
                     getmsmpass_TX.setText("获取验证码");
-                    time = 120;
+                    time = 60;
                 } else {
                     getmsmpass_TX.setText((--time) + "秒");
                 }

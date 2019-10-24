@@ -28,7 +28,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 private TextView getmsmpass_TX;
 private EditText ed_phone,ed_code,ed_password,ed_confirm_password;
 private Button btn_register;
-private int time = 120;
+private int time = 60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ private int time = 120;
                                 JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                 Log.d("获取验证码",json.toString());
                                 if (json.getInt("ResultCode") == 200) {
-                                    if(time == 120) {
+                                    if(time == 60) {
                                         new Thread(new RegisterActivity.TimeRun()).start();
                                     }else {
                                         getmsmpass_TX.setEnabled(false);
@@ -158,7 +158,7 @@ private int time = 120;
             public void handleMessage(Message msg) {
                 if (time == 0) {
                     getmsmpass_TX.setText("获取验证码");
-                    time = 120;
+                    time = 60;
                 } else {
                     getmsmpass_TX.setText((--time) + "秒");
                 }
