@@ -72,6 +72,7 @@
             android:text="655.35"
             android:textColor="@color/white"
             android:textSize="@dimen/x123"
+            android:id="@+id/tv_income"
             android:includeFontPadding="false"
             />
     </LinearLayout>
@@ -99,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/y120"
         android:background="@color/white"
-        android:id="@+id/rl_start_time"
+        android:id="@+id/rl_open_time"
         android:layout_marginLeft="@dimen/x30"
         android:layout_marginRight="@dimen/x30"
         android:layout_marginTop="@dimen/y39"
@@ -112,6 +113,16 @@
             android:text="开始时间"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/x30"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x39"
+            android:text="12-22"
+            android:id="@+id/tv_open_time"
+            android:layout_centerVertical="true"
+            android:textColor="@color/text_black"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x80"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -131,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/y120"
         android:background="@color/white"
-        android:id="@+id/rl_end_time"
+        android:id="@+id/rl_close_time"
         android:layout_marginLeft="@dimen/x30"
         android:layout_marginRight="@dimen/x30"
         >
@@ -143,6 +154,16 @@
             android:text="结束时间"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/x30"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x39"
+            android:text="12-22"
+            android:layout_centerVertical="true"
+            android:id="@+id/tv_close_time"
+            android:textColor="@color/text_black"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x80"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -173,6 +194,7 @@
             android:layout_height="wrap_content"
             android:text="10单"
             android:textColor="#878787"
+            android:id="@+id/tv_order_number"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/x33"/>
@@ -204,6 +226,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="￥6887.44"
+            android:id="@+id/tv_total_income"
             android:textColor="#878787"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -233,6 +256,7 @@
             android:textColor="#ed6c00"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:id="@+id/tv_royalty"
             android:layout_marginRight="@dimen/x33"/>
         <View
             android:layout_width="match_parent"

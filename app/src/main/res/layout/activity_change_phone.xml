@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLength="16"
-            android:id="@+id/ed_password"
+            android:id="@+id/ed_phone"
             android:background="@null"
             android:layout_centerVertical="true"
             android:textSize="@dimen/x45"
@@ -123,5 +123,6 @@
         android:text="完成"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/y50"
+        android:id="@+id/btn_complete"
         />
 </LinearLayout>
