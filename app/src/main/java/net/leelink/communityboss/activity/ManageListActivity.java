@@ -121,6 +121,15 @@ List<Integer> idList = new ArrayList<>();
 
     @Override
     public void onItemClick(View view) {
+        int position = list_goods.getChildLayoutPosition(view);
+        Intent intent = new Intent(this,ChangeGoodsActivity.class);
+        intent.putExtra("commodityId",list.get(position).getCommodityId());
+        intent.putExtra("name",list.get(position).getName());
+        intent.putExtra("price",list.get(position).getPrice());
+        intent.putExtra("details",list.get(position).getDetails());
+        intent.putExtra("image",list.get(position).getHeadImage());
+        startActivity(intent);
+
 
     }
 
@@ -138,6 +147,34 @@ List<Integer> idList = new ArrayList<>();
     }
 
     public void delete(){
-        Log.d( "delete: ",idList.toString());
+
+        String s  = "";
+        for(int i=0;i<idList.size();i++) {
+            s += idList.get(i).toString()+",";
+        }
+        s = s.substring(0,s.length()-1);
+        Log.d( "delete: ",s);
+        OkGo.<String>delete(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token+"&commodityIds="+s)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            body = body.substring(1,body.length()-1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            Log.d("用户信息",json.toString());
+                            if (json.getInt("ResultCode") == 200) {
+                                initlist();
+                            } else {
+
+                            }
+                            Toast.makeText(ManageListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
     }
 }

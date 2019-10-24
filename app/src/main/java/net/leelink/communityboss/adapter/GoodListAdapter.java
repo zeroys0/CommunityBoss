@@ -36,6 +36,12 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
     public GoodListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.goods_item, parent, false); // 实例化viewholder
         GoodListAdapter.ViewHolder viewHolder = new GoodListAdapter.ViewHolder(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCollectListener.onItemClick(v);
+            }
+        });
         return viewHolder;
     }
 

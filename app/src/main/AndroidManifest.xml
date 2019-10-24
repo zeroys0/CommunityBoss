@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.leelink.communityboss">
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- protection level is dangerous, need request runtime permission   RxPermissions -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- protection level is dangerous, need request runtime permission   RxPermissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -16,10 +16,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 允许程序访问WiFi网络信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
@@ -29,6 +27,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".activity.ChangeGoodsActivity"></activity>
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +43,7 @@
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.ManageGoodsActivity" />
         <activity android:name=".activity.RefundListActivity" />
-        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.IncomeActivity" />
         <activity android:name=".activity.ManageListActivity" />
         <activity android:name=".activity.ApplyActivity" />
@@ -54,8 +53,8 @@
         <activity android:name=".activity.BindCardActivity" />
         <activity android:name=".activity.WithdrawActivity" />
         <activity android:name=".activity.ConfirmWithdrawActivity" />
-        <activity android:name=".activity.ExamineActivity"/>
-        <activity android:name=".activity.MyServiceActivity"/>
+        <activity android:name=".activity.ExamineActivity" />
+        <activity android:name=".activity.MyServiceActivity" />
     </application>
 
 </manifest>

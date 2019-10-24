@@ -13,8 +13,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,12 +26,13 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
-import net.leelink.communityboss.adapter.CommentListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.Urls;
@@ -42,8 +41,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
-public class ManageGoodsActivity extends BaseActivity implements View.OnClickListener {
+public class ChangeGoodsActivity extends BaseActivity implements View.OnClickListener {
+
     private RelativeLayout rl_back;
     private ImageView img_head,img_del;
     private File file;
@@ -52,6 +53,8 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
     private Button btn_album,btn_photograph,btn_upload;
     private EditText ed_name,ed_price,ed_detail;
     private Bitmap bitmap;
+    private int commodityId;
+    private String url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +75,29 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
         btn_upload.setOnClickListener(this);
         img_del = findViewById(R.id.img_del);
         img_del.setOnClickListener(this);
+
+        commodityId = getIntent().getIntExtra("commodityId",0);
+        ed_name.setText(getIntent().getStringExtra("name"));
+        float price = getIntent().getFloatExtra("price",0);
+        ed_price.setText(Float.toString(price));
+        ed_detail.setText(getIntent().getStringExtra("details"));
+        url = getIntent().getStringExtra("image");
+        Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+url).into(img_head);
+
+        //将网络地址转化为file
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap bitmap =Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                    file =  BitmapCompress.compressImage(bitmap);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -121,8 +147,9 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void commit(){
-        OkGo.<String>put(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>post(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
                 .tag(this)
+                .params("commodityId",commodityId)
                 .params("details", ed_detail.getText().toString().trim())
                 .params("name",ed_name.getText().toString().trim())
                 .params("price",ed_price.getText().toString().trim())
@@ -134,13 +161,13 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
                             String body = response.body();
                             body = body.substring(1,body.length()-1);
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("添加商品",json.toString());
+                            Log.d("编辑商品",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 finish();
                             } else {
 
                             }
-                            Toast.makeText(ManageGoodsActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ChangeGoodsActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -155,7 +182,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
             switch (requestCode) {
                 case 1:
                     Uri uri = data.getData();
-                    bitmap = BitmapCompress.decodeUriBitmap(ManageGoodsActivity.this, uri);
+                    bitmap = BitmapCompress.decodeUriBitmap(ChangeGoodsActivity.this, uri);
                     img_head.setImageBitmap(bitmap);
                     file =  BitmapCompress.compressImage(bitmap);
                     break;
@@ -178,7 +205,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
     @SuppressLint("WrongConstant")
     private void popu_head() {
         // TODO Auto-generated method stub
-        popview = LayoutInflater.from(ManageGoodsActivity.this).inflate(R.layout.popu_head, null);
+        popview = LayoutInflater.from(ChangeGoodsActivity.this).inflate(R.layout.popu_head, null);
         btn_album = (Button) popview.findViewById(R.id.btn_album);
         btn_photograph = (Button) popview.findViewById(R.id.btn_photograph);
         btn_album.setOnClickListener(this);
@@ -191,7 +218,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
         popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.setOnDismissListener(new ManageGoodsActivity.poponDismissListener());
+        popupWindow.setOnDismissListener(new ChangeGoodsActivity.poponDismissListener());
     }
 
     /**
@@ -224,5 +251,4 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
             backgroundAlpha(1f);
         }
     }
-
 }
