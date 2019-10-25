@@ -29,7 +29,7 @@ private EditText ed_phone,ed_code,ed_password,ed_confirm_password;
 private TextView getmsmpass_TX;
 private Button btn_confirm;
     // 获取短信验证码的页面显示
-    private int time = 120;
+    private int time = 60;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +52,7 @@ private Button btn_confirm;
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.getmsmpass_TX:    //获取验证码
-                if(time ==120) {
-                    new Thread(new ChangePasswordActivity.TimeRun()).start();
-                }
+                sendSmsCode();
                 break;
             case R.id.btn_confirm:      //确认修改密码
                 if(ed_password.getText().toString().trim().equals(ed_confirm_password.getText().toString().trim())){
@@ -96,6 +94,40 @@ private Button btn_confirm;
                 });
     }
 
+    //发送短信验证码
+    public void sendSmsCode(){
+        if(!ed_phone.getText().toString().trim().equals("")){
+            OkGo.<String>get(Urls.SENDSMSCODE)
+                    .tag(this)
+                    .params("phone", ed_phone.getText().toString().trim())
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            try {
+                                String body = response.body();
+                                body = body.substring(1,body.length()-1);
+                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                                Log.d("获取验证码",json.toString());
+                                if (json.getInt("ResultCode") == 200) {
+                                    if(time == 60) {
+                                        new Thread(new ChangePasswordActivity.TimeRun()).start();
+                                    }else {
+                                        getmsmpass_TX.setEnabled(false);
+                                    }
+                                } else {
+                                    Toast.makeText(ChangePasswordActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+        } else {
+            Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private class TimeRun implements Runnable {
         @Override
         public void run() {
@@ -117,7 +149,7 @@ private Button btn_confirm;
             public void handleMessage(Message msg) {
                 if (time == 0) {
                     getmsmpass_TX.setText("获取验证码");
-                    time = 120;
+                    time = 60;
                 } else {
                     getmsmpass_TX.setText((--time) + "秒");
                 }
