@@ -26,6 +26,7 @@ import net.leelink.communityboss.activity.ChangePasswordActivity;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.adapter.OnItemClickListener;
+import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.OrderBean;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class UntakeOrderFragment extends BaseFragment implements OnItemClickListener {
+public class UntakeOrderFragment extends BaseFragment implements OnOrderListener {
 private RecyclerView list_order;
 private OrderListAdapter orderListAdapter;
 private List<OrderBean> list = new ArrayList<>();
@@ -93,5 +94,33 @@ private List<OrderBean> list = new ArrayList<>();
     public void onItemClick(View view) {
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onButtonClick(View view, final int position) {
+        OkGo.<String>post(Urls.ORDEROPERATION+"?appToken="+ CommunityBossApplication.token)
+                .params("storeId",list.get(position).getStore().getStoreId())
+                .params("operation",1)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            body = body.substring(1,body.length()-1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            Log.d("确认订单",json.toString());
+                            if (json.getInt("ResultCode") == 200) {
+                                list.remove(position);
+                                orderListAdapter.notifyDataSetChanged();
+                            } else {
+
+                            }
+                            Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 }

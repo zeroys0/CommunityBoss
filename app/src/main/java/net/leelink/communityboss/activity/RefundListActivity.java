@@ -9,13 +9,14 @@ import android.widget.RelativeLayout;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.OnItemClickListener;
+import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.bean.OrderBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefundListActivity extends BaseActivity implements OnItemClickListener {
+public class RefundListActivity extends BaseActivity implements OnOrderListener {
 private RecyclerView refund_list;
     private OrderListAdapter orderListAdapter;
     private List<OrderBean> list = new ArrayList<>();
@@ -44,6 +45,11 @@ private RecyclerView refund_list;
 
     @Override
     public void onItemClick(View view) {
+
+    }
+
+    @Override
+    public void onButtonClick(View view, int position) {
 
     }
 }

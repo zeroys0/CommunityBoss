@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.OnItemClickListener;
+import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.bean.OrderBean;
 
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static net.leelink.communityboss.activity.LoginActivity.setIndicator;
 
-public class TakeOrderFragment extends  BaseFragment implements OnItemClickListener {
+public class TakeOrderFragment extends  BaseFragment implements OnOrderListener {
     private RecyclerView list_order;
     private OrderListAdapter orderListAdapter;
     private List<OrderBean> list = new ArrayList<>();
@@ -60,5 +61,10 @@ public class TakeOrderFragment extends  BaseFragment implements OnItemClickListe
     public void onItemClick(View view) {
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onButtonClick(View view, int position) {
+
     }
 }

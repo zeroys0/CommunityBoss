@@ -17,4 +17,5 @@ public class Urls {
     public static final String PHONENUMBER = WEBSITE +"PhoneNumber";    //修改绑定电话
     public static final String BANKCARD = WEBSITE +"BankCard";  //获取银行卡列表
     public static final String STOREINCOME = WEBSITE +"StoreIncome";    //商户收入查询
+    public static final String ORDEROPERATION = WEBSITE +"OrderOperation";  //修改订单状态
 }
