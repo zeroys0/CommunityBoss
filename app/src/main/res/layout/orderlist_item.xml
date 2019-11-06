@@ -34,6 +34,7 @@
         android:textColor="@color/text_grey"
         android:text="退款申请中"
         android:layout_marginTop="@dimen/y45"
+        android:id="@+id/tv_state"
         />
     <View
         android:layout_width="match_parent"
@@ -51,6 +52,7 @@
         android:layout_marginLeft="@dimen/x23"
         android:layout_marginTop="@dimen/y161"
         android:includeFontPadding="false"
+        android:id="@+id/tv_time"
         android:textSize="@dimen/x36"/>
     <TextView
         android:layout_width="wrap_content"
@@ -60,6 +62,7 @@
         android:layout_marginLeft="@dimen/x23"
         android:layout_marginTop="@dimen/y233"
         android:includeFontPadding="false"
+        android:id="@+id/tv_total_price"
         android:textSize="@dimen/x36"/>
     <Button
         android:id="@+id/btn_confirm"

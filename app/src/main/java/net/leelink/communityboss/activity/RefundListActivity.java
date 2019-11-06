@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
+import net.leelink.communityboss.bean.OrderBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class RefundListActivity extends BaseActivity implements OnItemClickListener {
 private RecyclerView refund_list;
     private OrderListAdapter orderListAdapter;
-    private List<String> list = new ArrayList<>();
+    private List<OrderBean> list = new ArrayList<>();
     private RelativeLayout rl_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +30,6 @@ private RecyclerView refund_list;
     public void init(){
         refund_list = findViewById(R.id.refund_list);
         orderListAdapter = new OrderListAdapter(list,this,this);
-        list.add("难吃卷饼");
-        list.add("辣鸡炒面");
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         refund_list.setLayoutManager(layoutManager);
         refund_list.setAdapter(orderListAdapter);

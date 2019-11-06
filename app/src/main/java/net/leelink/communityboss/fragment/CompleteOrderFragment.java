@@ -14,6 +14,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
+import net.leelink.communityboss.bean.OrderBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 public class CompleteOrderFragment extends BaseFragment implements OnItemClickListener {
     private RecyclerView list_order;
     private OrderListAdapter orderListAdapter;
-    private List<String> list = new ArrayList<>();
+    private List<OrderBean> list = new ArrayList<>();
     @Override
     public void handleCallBack(Message msg) {
 
@@ -38,9 +39,6 @@ public class CompleteOrderFragment extends BaseFragment implements OnItemClickLi
     public void init(View view){
         list_order = view.findViewById(R.id.list_order);
         orderListAdapter = new OrderListAdapter(list,getContext(),this);
-        list.add("已完成单");
-        list.add("吼山路订单");
-        list.add("完成单2");
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         list_order.setLayoutManager(layoutManager);
         list_order.setAdapter(orderListAdapter);

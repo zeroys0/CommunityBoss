@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -22,11 +24,14 @@ import com.lzy.okgo.model.Response;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.ChangePasswordActivity;
 import net.leelink.communityboss.activity.OrderDetailActivity;
+import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.OrderBean;
 import net.leelink.communityboss.utils.Urls;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +42,7 @@ import java.util.PriorityQueue;
 public class UntakeOrderFragment extends BaseFragment implements OnItemClickListener {
 private RecyclerView list_order;
 private OrderListAdapter orderListAdapter;
-private List<String> list = new ArrayList<>();
+private List<OrderBean> list = new ArrayList<>();
 
     @Override
     public void handleCallBack(Message msg) {
@@ -54,12 +59,8 @@ private List<String> list = new ArrayList<>();
 
     public void init(View view){
         list_order = view.findViewById(R.id.list_order);
-
-
-            OkGo.<String>post(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token)
+            OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+2+"&orderId="+0)
                     .tag(this)
-                    .params("type",2)
-                    .params("order",1)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
@@ -69,15 +70,15 @@ private List<String> list = new ArrayList<>();
                                 JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                 Log.d("未接订单",json.toString());
                                 if (json.getInt("ResultCode") == 200) {
+                                    Gson gson = new Gson();
+                                    JSONArray jsonArray = json.getJSONArray("ObjectData");
+                                    list = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
                                     orderListAdapter = new OrderListAdapter(list,getContext(),UntakeOrderFragment.this);
-                                    list.add("新的订单");
-                                    list.add("新的订单");
-                                    list.add("新的订单");
                                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
                                     list_order.setLayoutManager(layoutManager);
                                     list_order.setAdapter(orderListAdapter);
                                 } else {
-
+                                    
                                 }
                                 Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             } catch (JSONException e) {
