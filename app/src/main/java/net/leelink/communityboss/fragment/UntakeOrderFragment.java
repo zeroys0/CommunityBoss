@@ -59,6 +59,8 @@ private List<OrderBean> list = new ArrayList<>();
     }
 
     public void init(View view){
+
+        //获取订单列表
         list_order = view.findViewById(R.id.list_order);
             OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+2+"&orderId="+0)
                     .tag(this)
@@ -96,10 +98,11 @@ private List<OrderBean> list = new ArrayList<>();
         startActivity(intent);
     }
 
+    //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
         OkGo.<String>post(Urls.ORDEROPERATION+"?appToken="+ CommunityBossApplication.token)
-                .params("storeId",list.get(position).getStore().getStoreId())
+                .params("orderId",list.get(position).getOrderId())
                 .params("operation",1)
                 .tag(this)
                 .execute(new StringCallback() {

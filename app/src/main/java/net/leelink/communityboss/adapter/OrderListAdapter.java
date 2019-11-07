@@ -43,7 +43,20 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
             case 2:
                 holder.tv_state.setText("未接订单");
                 break;
-                default:
+            case 3:
+                holder.tv_state.setText("未派送");
+                holder.btn_confirm.setText("订单送出");
+                break;
+            case 4:
+                holder.tv_state.setText("已送出");
+                holder.btn_confirm.setText("确认送达");
+                break;
+            case 5:
+            case 6:
+                holder.tv_state.setText("已完成");
+                holder.btn_confirm.setVisibility(View.INVISIBLE);
+                break;
+            default:
                     break;
         }
         holder.tv_time.setText("预约时间:"+list.get(position).getDeliveryTime());
