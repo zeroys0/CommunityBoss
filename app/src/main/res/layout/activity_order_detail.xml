@@ -52,6 +52,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/x54"
                 android:text="订单已配送"
+                android:id="@+id/tv_state"
                 android:includeFontPadding="false"
                 android:layout_marginLeft="@dimen/x32"
                 android:layout_marginTop="@dimen/y32"/>

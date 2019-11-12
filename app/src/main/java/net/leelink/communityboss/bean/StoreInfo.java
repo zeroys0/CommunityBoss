@@ -15,7 +15,7 @@ public class StoreInfo {
     private String PropagandaImage;
     private String BusinessLicense;
     private String FoodLicence;
-    private int Score;
+    private String Score;
     private int SalesVolume;
     private String DeviceToken;
     private int StoreState;
@@ -100,11 +100,11 @@ public class StoreInfo {
         this.FoodLicence = FoodLicence;
     }
 
-    public int getScore() {
+    public String getScore() {
         return Score;
     }
 
-    public void setScore(int Score) {
+    public void setScore(String Score) {
         this.Score = Score;
     }
 
