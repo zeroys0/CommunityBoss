@@ -12,6 +12,7 @@
     android:textColor="@color/white"
     android:textSize="@dimen/x39"
     android:text="农业银行"
+    android:id="@+id/tv_bank"
     android:layout_marginLeft="@dimen/x173"
     android:layout_marginTop="@dimen/y42"
     android:includeFontPadding="false"
@@ -35,5 +36,6 @@
         android:layout_marginLeft="@dimen/x173"
         android:layout_marginTop="@dimen/y24"
         android:includeFontPadding="false"
+        android:id="@+id/tv_card_number"
         />
 </LinearLayout>

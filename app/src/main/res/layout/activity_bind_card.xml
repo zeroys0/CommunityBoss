@@ -50,12 +50,14 @@
             android:layout_centerVertical="true"
             />
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
+            android:id="@+id/ed_name"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
             android:text=""
+            android:background="@null"
             android:layout_marginLeft="@dimen/x300"/>
     </RelativeLayout>
     <View
@@ -77,11 +79,13 @@
             android:layout_centerVertical="true"
             />
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
+            android:id="@+id/ed_ID"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
+            android:background="@null"
             android:text=""
             android:layout_marginLeft="@dimen/x300"/>
     </RelativeLayout>
@@ -104,10 +108,12 @@
             android:layout_centerVertical="true"
             />
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/ed_bank"
             android:maxLines="1"
             android:textSize="@dimen/x45"
+            android:background="@null"
             android:textColor="@color/text_black"
             android:text=""
             android:layout_marginLeft="@dimen/x300"/>
@@ -131,11 +137,14 @@
             android:layout_centerVertical="true"
             />
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="number"
             android:maxLines="1"
+            android:id="@+id/ed_card_number"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
+            android:background="@null"
             android:text=""
             android:layout_marginLeft="@dimen/x300"/>
     </RelativeLayout>
@@ -158,9 +167,12 @@
             android:layout_centerVertical="true"
             />
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
+            android:inputType="number"
+            android:id="@+id/ed_phone"
+            android:background="@null"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
             android:text=""
@@ -179,5 +191,6 @@
         android:text="确认"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/y50"
+        android:id="@+id/btn_submit"
         />
 </LinearLayout>

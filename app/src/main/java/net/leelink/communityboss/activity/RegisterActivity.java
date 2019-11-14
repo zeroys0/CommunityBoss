@@ -109,6 +109,7 @@ private int time = 60;
             OkGo.<String>get(Urls.SENDSMSCODE)
                     .tag(this)
                     .params("phone", ed_phone.getText().toString().trim())
+                    .params("used",0)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
