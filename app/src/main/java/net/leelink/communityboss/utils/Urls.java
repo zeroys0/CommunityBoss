@@ -20,4 +20,5 @@ public class Urls {
     public static final String ORDEROPERATION = WEBSITE +"OrderOperation";  //修改订单状态
     public static final String ORDERDETAILS = WEBSITE +"OrderDetails";    //获取订单详情
     public static final String CASHOUT = WEBSITE +"CashOut";    //申请提现
+    public static final String LOGOUT =WEBSITE+"Logout";    //退出登录
 }

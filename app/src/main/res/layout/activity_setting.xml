@@ -112,7 +112,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/y132"
-        android:id="@+id/rl_balance"
+        android:id="@+id/rl_logout"
         >
         <ImageView
             android:layout_width="wrap_content"

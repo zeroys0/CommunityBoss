@@ -152,11 +152,16 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             if (json.getInt("ResultCode") == 200) {
                                 CommunityBossApplication.token = json.getString("AppToken");
                                 Gson gson = new Gson();
-                                JSONObject jsonObject = json.getJSONObject("storeInfo");
-                                StoreInfo storeInfo = gson.fromJson(jsonObject.toString(),StoreInfo.class);
-                                CommunityBossApplication.storeInfo = storeInfo;
-                                Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
-                                startActivity(intent);
+                                JSONObject jsonObject = json.getJSONObject("StoreInfo");
+                                if(jsonObject.getInt("StoreState")==0) {
+                                    Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                    CommunityBossApplication.storeInfo = storeInfo;
+                                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                    startActivity(intent);
+                                }
                                 finish();
                             } else {
                                 Toast.makeText(LoginActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
@@ -208,6 +213,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
             OkGo.<String>get(Urls.SENDSMSCODE)
                     .tag(this)
                     .params("phone", ed_phone.getText().toString().trim())
+                    .params("used",1)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {

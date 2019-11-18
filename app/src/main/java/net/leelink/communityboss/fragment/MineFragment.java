@@ -29,6 +29,7 @@ import net.leelink.communityboss.activity.InformationActivity;
 import net.leelink.communityboss.activity.ManageListActivity;
 import net.leelink.communityboss.activity.MyServiceActivity;
 import net.leelink.communityboss.activity.RefundListActivity;
+import net.leelink.communityboss.activity.SettingActivity;
 import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.GoodListBean;
@@ -42,7 +43,7 @@ import java.util.List;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service;
-    private ImageView img_head,img_change;
+    private ImageView img_head,img_change,img_setting;
     private TextView tv_income,tv_order_number,tv_phone;
     @Override
     public void handleCallBack(Message msg) {
@@ -78,6 +79,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         tv_phone = view.findViewById(R.id.tv_phone);
         img_change = view.findViewById(R.id.img_change);
         img_change.setOnClickListener(this);
+        img_setting = view.findViewById(R.id.img_setting);
+        img_setting.setOnClickListener(this);
     }
 
     public void initdata(){
@@ -137,6 +140,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.img_change:   //修改电话
                 Intent intent6 = new Intent(getContext(), ChangePhoneActivity.class);
                 startActivity(intent6);
+                break;
+            case R.id.img_setting:
+                Intent intent7 = new Intent(getContext(), SettingActivity.class);
+                startActivity(intent7);
                 break;
                 default:
                     break;
