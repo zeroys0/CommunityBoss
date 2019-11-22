@@ -39,8 +39,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_top"
-        android:layout_above="@+id/cancel">
+        android:layout_below="@+id/rl_top">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -217,7 +216,7 @@
                     android:textColor="@color/text_grey"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/x30"
-                    android:id="@+id/tv_adress"/>
+                    android:id="@+id/tv_address"/>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -301,14 +300,25 @@
                     android:text="￥25"
                     android:textColor="@color/black"
                     android:textSize="@dimen/x54"
+                    android:id="@+id/tv_total_price"
                     />
             </LinearLayout>
+            <Button
+                android:layout_width="@dimen/x1014"
+                android:layout_height="@dimen/y129"
+                android:background="@drawable/cancel"
+                android:text="null"
+                android:id="@+id/btn_confirm"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/y57"
+                android:layout_marginTop="@dimen/y40"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y1028"
                 android:layout_marginLeft="@dimen/x30"
                 android:layout_marginRight="@dimen/x30"
-                android:id="@+id/rl_comment"
+                android:id="@+id/ll_comment"
                 android:background="@color/white"
                 android:layout_marginBottom="@dimen/y75"
                 android:orientation="vertical"
@@ -519,16 +529,6 @@
         </LinearLayout>
 
     </ScrollView>
-    <Button
-        android:layout_width="@dimen/x1014"
-        android:layout_height="@dimen/y129"
-        android:background="@drawable/cancel"
-        android:text="取消订单"
-        android:id="@+id/cancel"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/y57"
-        android:visibility="gone"
-        />
+
 
 </RelativeLayout>

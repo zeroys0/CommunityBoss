@@ -94,7 +94,10 @@ private List<OrderBean> list = new ArrayList<>();
 
     @Override
     public void onItemClick(View view) {
+        int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
+        intent.putExtra("orderId",list.get(position).getOrderId());
+        intent.putExtra("type",0);
         startActivity(intent);
     }
 

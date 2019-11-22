@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.OkHttpClient;
 
 public class CommunityBossApplication extends Application {
@@ -33,6 +34,7 @@ public class CommunityBossApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initJPush();
         token = "";
         instance = this;
         storeInfo = new StoreInfo();
@@ -41,6 +43,7 @@ public class CommunityBossApplication extends Application {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
+
     }
 
     public void initokGO() {
@@ -71,5 +74,10 @@ public class CommunityBossApplication extends Application {
                 .setRetryCount(3)                               //全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
                 .addCommonHeaders(headers)                      //全局公共头
                 .addCommonParams(params);                       //全局公共参数
+    }
+
+    public void initJPush(){
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 }

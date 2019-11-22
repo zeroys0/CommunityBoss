@@ -125,7 +125,14 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
 
     @Override
     public void onItemClick(View view) {
+        int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
+        intent.putExtra("orderId",list.get(position).getOrderId());
+        if(type==3) {
+            intent.putExtra("type",1);
+        } else {
+            intent.putExtra("type",2);
+        }
         startActivity(intent);
     }
 

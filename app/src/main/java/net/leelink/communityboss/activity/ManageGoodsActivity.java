@@ -35,9 +35,11 @@ import com.lzy.okgo.model.Response;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.CommentListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.Urls;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -137,6 +139,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
                             Log.d("添加商品",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 finish();
+                                EventBus.getDefault().post(new Event());
                             } else {
 
                             }

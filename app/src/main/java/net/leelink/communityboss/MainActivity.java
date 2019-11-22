@@ -79,7 +79,6 @@ FragmentManager fm;
                 Utils.setStatusTextColor(true, MainActivity.this);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
-                Toast.makeText(this, "click 0", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 if(takeOrderFragment ==null) {

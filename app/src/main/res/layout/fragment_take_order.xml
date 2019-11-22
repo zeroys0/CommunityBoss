@@ -21,19 +21,6 @@
             android:text="已接订单"
             android:textColor="#ffffff"
             android:textSize="@dimen/x58" />
-        <RelativeLayout
-            android:id="@+id/rl_back"
-            android:layout_width="@dimen/x200"
-            android:layout_height="@dimen/y185">
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x45"
-                android:layout_marginTop="@dimen/y95"
-                android:src="@mipmap/back" />
-        </RelativeLayout>
     </RelativeLayout>
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"

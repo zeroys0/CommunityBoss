@@ -36,6 +36,8 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 private TabLayout tablayout;
@@ -140,7 +142,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                 .tag(this)
                 .params("username", ed_phone.getText().toString().trim())
                 .params("smscode",ed_password.getText().toString().trim())
-                .params("deviceToken","aabbc")
+                .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -179,7 +181,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                 .tag(this)
                 .params("username", ed_phone.getText().toString().trim())
                 .params("password",ed_password.getText().toString().trim())
-                .params("deviceToken","aabbc")
+                .params("deviceToken",JPushInterface.getRegistrationID(LoginActivity.this))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {

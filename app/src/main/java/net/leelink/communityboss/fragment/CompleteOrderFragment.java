@@ -94,7 +94,9 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
 
     @Override
     public void onItemClick(View view) {
+        int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
+        intent.putExtra("orderId",list.get(position).getOrderId());
         startActivity(intent);
     }
 

@@ -23,9 +23,13 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.adapter.OnCollectListener;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.bean.GoodListBean;
 import net.leelink.communityboss.utils.Urls;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,8 +63,16 @@ List<Integer> idList = new ArrayList<>();
         tv_done.setOnClickListener(this);
         btn_del = findViewById(R.id.btn_del);
         btn_del.setOnClickListener(this);
+        EventBus.getDefault().register(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Event event) {
+        initlist();
+    }
+
+
+    //获取商品列表
     public void initlist(){
         OkGo.<String>get(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
                 .tag(this)
@@ -176,5 +188,11 @@ List<Integer> idList = new ArrayList<>();
                     }
                 });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
