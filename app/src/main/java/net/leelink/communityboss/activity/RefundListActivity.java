@@ -97,11 +97,37 @@ private RecyclerView refund_list;
 
     @Override
     public void onButtonClick(View view, int position) {
-        Toast.makeText(this, "那我挺牛逼的了", Toast.LENGTH_SHORT).show();
+        operation(position,4);
     }
 
     @Override
     public void onCancel(View view, int position) {
-        Toast.makeText(this, "那我挺牛逼的了", Toast.LENGTH_SHORT).show();
+        operation(position,5);
+    }
+
+    public void operation(final int position , int operation){
+        OkGo.<String>post(Urls.ORDEROPERATION+"?appToken="+ CommunityBossApplication.token)
+                .params("orderId",list.get(position).getOrderId())
+                .params("operation",operation)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            body = body.substring(1,body.length()-1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            Log.d("确认订单",json.toString());
+                            if (json.getInt("ResultCode") == 200) {
+                                initData();
+                            } else {
+
+                            }
+                            Toast.makeText(RefundListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 }

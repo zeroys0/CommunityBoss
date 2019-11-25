@@ -13,12 +13,14 @@ import net.leelink.communityboss.bean.OrderBean;
 
 import java.util.List;
 
-public class RefundAdapter extends OrderListAdapter {
+public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.ViewHolder> {
     private Context context;
     private List<OrderBean> list;
     private OnCancelListener onCancelListener;
     public RefundAdapter(List<OrderBean> list, Context context, OnCancelListener onCancelListener) {
-        super(list, context, onCancelListener);
+        this.context = context;
+        this.list = list;
+        this.onCancelListener = onCancelListener;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class RefundAdapter extends OrderListAdapter {
         return viewHolder;
     }
 
-
+    @Override
     public void onBindViewHolder(RefundAdapter.ViewHolder holder, final int position) {
         holder.tv_orderid.setText(list.get(position).getOrderId());
         holder.tv_time.setText("预约时间:"+list.get(position).getDeliveryTime());
@@ -51,14 +53,38 @@ public class RefundAdapter extends OrderListAdapter {
                 onCancelListener.onCancel(v,position);
             }
         });
+        if(list.get(position).getState()==7) {
+            holder.tv_state.setText("退款申请中");
+            holder.btn_confirm.setVisibility(View.VISIBLE);
+            holder.btn_cancel.setVisibility(View.VISIBLE);
+        } else if(list.get(position).getState()==8){
+            holder.tv_state.setText("退款中");
+            holder.btn_confirm.setVisibility(View.GONE);
+            holder.btn_cancel.setVisibility(View.GONE);
+        } else if(list.get(position).getState()==9){
+            holder.tv_state.setText("退款完成");
+            holder.btn_confirm.setVisibility(View.GONE);
+            holder.btn_cancel.setVisibility(View.GONE);
+        }
     }
 
-    public class ViewHolder extends OrderListAdapter.ViewHolder {
+    @Override
+    public int getItemCount() {
+        return list==null?0:list.size();
+    }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tv_orderid,tv_time,tv_total_price,tv_state;
+        Button btn_confirm;
         Button btn_cancel;
         public ViewHolder(View itemView) {
             super(itemView);
             btn_cancel = itemView.findViewById(R.id.btn_refuse);
+            tv_orderid = itemView.findViewById(R.id.tv_orderid);
+            tv_time = itemView.findViewById(R.id.tv_time);
+            tv_total_price = itemView.findViewById(R.id.tv_total_price);
+            btn_confirm = itemView.findViewById(R.id.btn_confirm);
+            tv_state  = itemView.findViewById(R.id.tv_state);
         }
     }
 }
