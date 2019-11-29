@@ -89,9 +89,9 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                                 list_order.setLayoutManager(layoutManager);
                                 list_order.setAdapter(orderListAdapter);
                             } else {
-
+                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -104,6 +104,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         intent.putExtra("orderId",list.get(position).getOrderId());
+        intent.putExtra("type",3);
         startActivity(intent);
     }
 
@@ -126,6 +127,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
+                        initData();
                     }
                 }, 1000);
             }

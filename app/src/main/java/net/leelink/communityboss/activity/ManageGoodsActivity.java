@@ -15,9 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -38,6 +41,7 @@ import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -69,6 +73,46 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
         img_head.setOnClickListener(this);
         ed_name = findViewById(R.id.ed_name);
         ed_price = findViewById(R.id.ed_price);
+        ed_price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //删除“.”后面超过2位后的数据
+                if (s.toString().contains(".")) {
+                    if (s.length() - 1 - s.toString().indexOf(".") > 2) {
+                        s = s.toString().subSequence(0,
+                                s.toString().indexOf(".") + 3);
+                        ed_price.setText(s);
+                        ed_price.setSelection(s.length()); //光标移到最后
+                    }
+                }
+                //如果"."在起始位置,则起始位置自动补0
+                if (s.toString().trim().substring(0).equals(".")) {
+                    s = "0" + s;
+                    ed_price.setText(s);
+                    ed_price.setSelection(2);
+                }
+
+                //如果起始位置为0,且第二位跟的不是".",则无法后续输入
+                if (s.toString().startsWith("0")
+                        && s.toString().trim().length() > 1) {
+                    if (!s.toString().substring(1, 2).equals(".")) {
+                        ed_price.setText(s.subSequence(0, 1));
+                        ed_price.setSelection(1);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         ed_detail = findViewById(R.id.ed_detail);
         btn_upload = findViewById(R.id.btn_upload);
         btn_upload.setOnClickListener(this);
@@ -87,7 +131,12 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
                 backgroundAlpha(0.5f);
                 break;
             case R.id.btn_upload:   //提交
-                commit();
+                if(file!=null) {
+                    commit();
+                }  else {
+                    Toast.makeText(this, "请上传商品图片", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.btn_photograph://拍照
                 popupWindow.dismiss();
@@ -226,6 +275,20 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
             // Log.v("List_noteTypeActivity:", "我是关闭事件");
             backgroundAlpha(1f);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                View view =getCurrentFocus();
+                Utils.hideKeyboard(ev, view, this);
+                break;
+            default:
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+
     }
 
 }

@@ -191,6 +191,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
+                        initData();
                     }
                 }, 1000);
             }

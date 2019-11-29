@@ -41,6 +41,8 @@ public class RatingBar extends View {
         FULL, HALF
     }
 
+    private boolean touchable = true;
+
 
 
     public RatingBar(Context context, @Nullable AttributeSet attrs) {
@@ -170,55 +172,63 @@ public class RatingBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            //减少绘制
-            case MotionEvent.ACTION_MOVE:
-                // 获取用户触摸的x位置
-                float x = event.getX();
-                // 一个星星占的宽度
-                int startWidth = getWidth() / mStartTotalNumber;
-                // 计算用户触摸星星的位置
-                int position = (int) (x / startWidth + 1);
-                if (position < 0) {
-                    position = 0;
-                }
-                if (position > mStartTotalNumber) {
-                    position = mStartTotalNumber;
-                }
-                // 计算绘制的星星是不是满的
-                float result = x - startWidth * (position - 1);
-                Status status;
-                // 结果大于一半就是满的
-                if (result > startWidth * 0.5f) {
-                    // 满的
-                    status = Status.FULL;
-                } else {
-                    // 一半的
-                    status = Status.HALF;
-                }
-                if (isFull) {
-                    status = Status.FULL;
-                }
+        if(touchable) {
+            switch (event.getAction()) {
                 //减少绘制
-                if (mSelectedNumber != position || status != mStatus) {
-                    mSelectedNumber = position;
-                    mStatus = status;
-                    invalidate();
-                    if (mOnStarChangeListener != null) {
-                        position = (int) (mSelectedNumber - 1);
-                        // 选中的数量：满的就回调（1.0这种），一半就（0.5这种）
-                        float selectedNumber = status == Status.FULL ? mSelectedNumber
-                                : (mSelectedNumber - 0.5f);
-                        mOnStarChangeListener.OnStarChanged(selectedNumber,
-                                position < 0 ? 0 : position);
+                case MotionEvent.ACTION_MOVE:
+                    // 获取用户触摸的x位置
+                    float x = event.getX();
+                    // 一个星星占的宽度
+                    int startWidth = getWidth() / mStartTotalNumber;
+                    // 计算用户触摸星星的位置
+                    int position = (int) (x / startWidth + 1);
+                    if (position < 0) {
+                        position = 0;
                     }
-                }
-                break;
+                    if (position > mStartTotalNumber) {
+                        position = mStartTotalNumber;
+                    }
+                    // 计算绘制的星星是不是满的
+                    float result = x - startWidth * (position - 1);
+                    Status status;
+                    // 结果大于一半就是满的
+                    if (result > startWidth * 0.5f) {
+                        // 满的
+                        status = Status.FULL;
+                    } else {
+                        // 一半的
+                        status = Status.HALF;
+                    }
+                    if (isFull) {
+                        status = Status.FULL;
+                    }
+                    //减少绘制
+                    if (mSelectedNumber != position || status != mStatus) {
+                        mSelectedNumber = position;
+                        mStatus = status;
+                        invalidate();
+                        if (mOnStarChangeListener != null) {
+                            position = (int) (mSelectedNumber - 1);
+                            // 选中的数量：满的就回调（1.0这种），一半就（0.5这种）
+                            float selectedNumber = status == Status.FULL ? mSelectedNumber
+                                    : (mSelectedNumber - 0.5f);
+                            mOnStarChangeListener.OnStarChanged(selectedNumber,
+                                    position < 0 ? 0 : position);
+                        }
+                    }
+                    break;
+            }
+        } else {
+
         }
         return true;
     }
 
     public interface OnStarChangeListener {
         void OnStarChanged(float selectedNumber, int position);
+    }
+
+    public void setUntouchable(){
+        touchable = false;
     }
 }

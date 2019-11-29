@@ -177,11 +177,10 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/y35"
             android:textSize="@dimen/x36"
             android:hint="商品详情介绍"
             android:textColorHint="#cacaca"
-            android:gravity="top"
+            android:gravity="center|left"
             android:layout_gravity="center_vertical"
             android:background="@null"
             android:layout_marginLeft="@dimen/x38"

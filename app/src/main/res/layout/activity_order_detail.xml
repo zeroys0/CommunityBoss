@@ -271,6 +271,7 @@
                 android:layout_marginLeft="@dimen/x30"
                 android:text="吉野家(鼓楼店)"
                 android:textColor="@color/black"
+                android:id="@+id/tv_store_name"
                 android:textSize="@dimen/x48"
                 />
             <android.support.v7.widget.RecyclerView
@@ -303,6 +304,40 @@
                     android:id="@+id/tv_total_price"
                     />
             </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:textSize="@dimen/x34"
+                android:layout_marginLeft="@dimen/x20"
+                android:id="@+id/tv_refundRecord"
+                android:visibility="gone"
+                android:text="退款原因:"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ll_button"
+                android:orientation="horizontal"
+                android:visibility="gone">
+                <Button
+                    android:layout_width="@dimen/x480"
+                    android:layout_height="@dimen/y129"
+                    android:background="@drawable/btn_cancel"
+                    android:text="拒绝退款"
+                    android:layout_marginLeft="@dimen/x30"
+                    android:textColor="#2194fe"
+                    android:id="@+id/order_cancel"
+                    />
+                <Button
+                    android:layout_width="@dimen/x480"
+                    android:layout_height="@dimen/y129"
+                    android:background="@drawable/btn_confirm"
+                    android:text="确认退款"
+                    android:id="@+id/order_confirm"
+                    android:layout_marginLeft="@dimen/x30"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
             <Button
                 android:layout_width="@dimen/x1014"
                 android:layout_height="@dimen/y129"
@@ -312,6 +347,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/y57"
                 android:layout_marginTop="@dimen/y40"
+
                 />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -350,6 +386,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:starEmptyRes="@mipmap/star"
+                        android:id="@+id/rt_attitude"
                         app:starSelectedRes="@mipmap/star_full"
                         app:starDistance="@dimen/x50"
                         app:selectedNumber="5"
@@ -376,6 +413,7 @@
                         android:layout_height="wrap_content"
                         app:starEmptyRes="@mipmap/star"
                         app:starSelectedRes="@mipmap/star_full"
+                        android:id="@+id/rt_taste"
                         app:starDistance="@dimen/x50"
                         app:selectedNumber="5"
                         android:layout_centerVertical="true"
@@ -400,6 +438,7 @@
                         android:layout_height="wrap_content"
                         app:starEmptyRes="@mipmap/star"
                         app:starSelectedRes="@mipmap/star_full"
+                        android:id="@+id/rt_hygiene"
                         app:starDistance="@dimen/x50"
                         app:selectedNumber="5"
                         android:layout_centerVertical="true"
@@ -424,6 +463,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:starEmptyRes="@mipmap/star"
+                        android:id="@+id/rt_speed"
                         app:starSelectedRes="@mipmap/star_full"
                         app:starDistance="@dimen/x50"
                         app:selectedNumber="5"
@@ -448,6 +488,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:starEmptyRes="@mipmap/star"
+                        android:id="@+id/rt_quality"
                         app:starSelectedRes="@mipmap/star_full"
                         app:starDistance="@dimen/x50"
                         app:selectedNumber="5"
@@ -469,6 +510,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/x36"
+                        android:id="@+id/tv_userphone"
                         android:textColor="@color/black"
                         android:includeFontPadding="false"
                         android:text="155xxxx3787"
@@ -511,6 +553,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/x35"
                         android:textColor="#333333"
+                        android:id="@+id/tv_comment"
                         android:text="非常好吃,好吃到爆,包装很好,配送十分快,下次也会关顾的"
                         android:layout_marginLeft="@dimen/x147"
                         android:layout_marginTop="@dimen/x96"/>
@@ -524,6 +567,7 @@
                     android:hint="回复"
                     android:textColorHint="#8e8e8e"
                     android:textSize="@dimen/x39"
+                    android:visibility="invisible"
                     />
             </LinearLayout>
         </LinearLayout>

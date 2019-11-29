@@ -42,7 +42,7 @@ import cn.jpush.android.api.JPushInterface;
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 private TabLayout tablayout;
 private TextView getmsmpass_TX,tv_forgot,tv_register;
-private EditText ed_phone,ed_password;
+private EditText ed_phone,ed_password,ed_code;
 private Button btn_login;
 private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     @Override
@@ -58,6 +58,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         getmsmpass_TX.setOnClickListener(this);
         ed_phone = findViewById(R.id.ed_phone);
         ed_password = findViewById(R.id.ed_password);
+        ed_code = findViewById(R.id.ed_code);
         tv_forgot = findViewById(R.id.tv_forgot);
         tv_forgot.setOnClickListener(this);
         tv_register = findViewById(R.id.tv_register);
@@ -79,16 +80,17 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                 if(tab.getPosition()==0) {
                     getmsmpass_TX.setVisibility(View.VISIBLE);
                     tv_forgot.setVisibility(View.INVISIBLE);
+                    ed_code.setVisibility(View.VISIBLE);
+                    ed_password.setVisibility(View.GONE);
                     ed_phone.setHint("请输入手机号");
-                    ed_password.setHint("请输入验证码");
-                    ed_password.setInputType(InputType.TYPE_CLASS_TEXT);
                     TYPE = 0;
                 } else {
                     getmsmpass_TX.setVisibility(View.GONE);
                     tv_forgot.setVisibility(View.VISIBLE);
+                    ed_code.setVisibility(View.GONE);
+                    ed_password.setVisibility(View.VISIBLE);
                     ed_phone.setHint("请输入账号");
                     ed_password.setHint("请输入密码");
-                    ed_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     TYPE = 1;
                 }
             }

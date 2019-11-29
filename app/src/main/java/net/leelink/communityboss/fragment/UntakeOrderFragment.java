@@ -50,6 +50,7 @@ private RecyclerView list_order;
 private OrderListAdapter orderListAdapter;
 private List<OrderBean> list = new ArrayList<>();
     private TwinklingRefreshLayout refreshLayout;
+        private int page;
     @Override
     public void handleCallBack(Message msg) {
 
@@ -60,15 +61,20 @@ private List<OrderBean> list = new ArrayList<>();
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_untake_order,container,false);
         init(view);
+        initData();
         initRefreshLayout(view);
         return view;
     }
 
     public void init(View view){
+        list_order = view.findViewById(R.id.list_order);
+    }
+
+    public void initData(){
 
         //获取订单列表
-        list_order = view.findViewById(R.id.list_order);
-            OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+2+"&orderId="+0)
+
+            OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+2+"&orderId="+page)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
@@ -150,6 +156,8 @@ private List<OrderBean> list = new ArrayList<>();
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
+
+                        initData();
                     }
                 }, 1000);
             }

@@ -95,14 +95,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLength="16"
+            android:id="@+id/ed_code"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/x45"
+            android:hint="请输入验证码"
+            android:textColorHint="#a9a9a9"
+            android:inputType="number"
+            android:textColor="@color/text_black"
+            android:layout_marginLeft="@dimen/x32"
+
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="16"
             android:id="@+id/ed_password"
             android:background="@null"
             android:layout_centerVertical="true"
             android:textSize="@dimen/x45"
             android:hint="请输入密码"
+            android:inputType="textPassword"
             android:textColorHint="#a9a9a9"
             android:textColor="@color/text_black"
             android:layout_marginLeft="@dimen/x32"
+            android:visibility="gone"
             />
     </RelativeLayout>
     <View
