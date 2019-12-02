@@ -44,7 +44,7 @@ import java.util.List;
 public class MineFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service;
     private ImageView img_head,img_change,img_setting;
-    private TextView tv_income,tv_order_number,tv_phone;
+    private TextView tv_income,tv_order_number,tv_phone,tv_name;
     @Override
     public void handleCallBack(Message msg) {
 
@@ -60,6 +60,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     }
 
     public void init(View view){
+        tv_name = view.findViewById(R.id.tv_name);
         rl_comment = view.findViewById(R.id.rl_comment);
         rl_comment.setOnClickListener(this);
         img_head = view.findViewById(R.id.img_head);
@@ -85,6 +86,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     public void initdata(){
         Glide.with(getContext()).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/Image/"+CommunityBossApplication.storeInfo.getHeadImage()).into(img_head);
+        tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
         tv_phone.setText(CommunityBossApplication.storeInfo.getPhoneNumber());
 
         OkGo.<String>get(Urls.STOREHOME+"?appToken="+ CommunityBossApplication.token)

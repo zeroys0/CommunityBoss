@@ -42,24 +42,27 @@
         android:layout_height="@dimen/y342"
         android:background="@color/blue">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/x195"
+            android:layout_height="@dimen/y195"
             android:src="@mipmap/head_default"
             android:layout_marginTop="@dimen/y65"
             android:layout_marginLeft="@dimen/x35"
+            android:id="@+id/img_head"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/x54"
             android:textColor="@color/white"
-            android:text="点击上传头像"
+            android:id="@+id/tv_name"
+            android:text="default"
             android:layout_marginLeft="@dimen/x284"
             android:layout_marginTop="@dimen/y108"
             android:includeFontPadding="false"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/tv_phone"
             android:textSize="@dimen/x45"
             android:textColor="@color/white"
             android:text="135xxxx3724"

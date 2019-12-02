@@ -4,16 +4,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 
 import net.leelink.communityboss.activity.BaseActivity;
+import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.fragment.CompleteOrderFragment;
 import net.leelink.communityboss.fragment.MineFragment;
 import net.leelink.communityboss.fragment.TakeOrderFragment;
 import net.leelink.communityboss.fragment.UntakeOrderFragment;
+import net.leelink.communityboss.utils.ToastUtil;
 import net.leelink.communityboss.utils.Utils;
 
 import java.util.ArrayList;
@@ -147,5 +150,21 @@ FragmentManager fm;
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    private long exitTime = 0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                ToastUtil.show(getApplicationContext(), "再按一次退出程序");
+                exitTime = System.currentTimeMillis();
+            } else {
+                CommunityBossApplication.getInstance().exit();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -65,6 +65,7 @@
         android:textSize="@dimen/x48"
         android:textColor="#333333"
         android:text="综合评分 4.5"
+        android:id="@+id/tv_total_score"
         android:layout_gravity="center_horizontal"
         android:includeFontPadding="false"
         android:layout_marginTop="@dimen/y42"/>
@@ -92,6 +93,7 @@
             app:selectedNumber="5"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/x428"
+            android:id="@+id/rt_attitude"
             />
     </RelativeLayout>
     <RelativeLayout
@@ -113,6 +115,7 @@
             android:layout_height="wrap_content"
             app:starEmptyRes="@mipmap/star"
             app:starSelectedRes="@mipmap/star_full"
+            android:id="@+id/rt_taste"
             app:starDistance="@dimen/x50"
             app:selectedNumber="5"
             android:layout_centerVertical="true"
@@ -135,6 +138,7 @@
         <net.leelink.communityboss.utils.RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/rt_hygiene"
             app:starEmptyRes="@mipmap/star"
             app:starSelectedRes="@mipmap/star_full"
             app:starDistance="@dimen/x50"
@@ -160,6 +164,7 @@
         <net.leelink.communityboss.utils.RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/rt_delivery"
             app:starEmptyRes="@mipmap/star"
             app:starSelectedRes="@mipmap/star_full"
             app:starDistance="@dimen/x50"
@@ -184,6 +189,7 @@
         <net.leelink.communityboss.utils.RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/rt_quality"
             app:starEmptyRes="@mipmap/star"
             app:starSelectedRes="@mipmap/star_full"
             app:starDistance="@dimen/x50"

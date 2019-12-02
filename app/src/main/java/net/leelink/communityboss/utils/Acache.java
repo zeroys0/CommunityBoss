@@ -79,7 +79,7 @@ public class Acache {
         }
         //最终默认调用的实例方法
         public static Acache get(File cacheDir, long max_zise, int max_count) {
-            //Map中的Key值为cacheDir.getAbsoluteFile() + myPid()，例如：/data/data/com.yangfuhai.asimplecachedemo/cache/ACache_16609
+            //Map中的Key值为cacheDir.getAbsoluteFile() + myPid()，例如：/data/data/com.community.asimplecachedemo/cache/ACache_16609
             Acache manager = mInstanceMap.get(cacheDir.getAbsoluteFile() + myPid());
             if (manager == null) {
                 manager = new Acache(cacheDir, max_zise, max_count);

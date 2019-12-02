@@ -2,6 +2,7 @@ package net.leelink.communityboss.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.StoreInfo;
+import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
 
 
@@ -50,6 +52,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
+        initLogin();
     }
 
 
@@ -107,6 +110,22 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         });
     }
 
+    public void initLogin(){
+        SharedPreferences sp = getSharedPreferences("sp",0);
+        if(sp.getString("AppToken","")==null ||sp.getString("AppToken","").equals("") ) {
+
+        } else {
+            CommunityBossApplication.token = sp.getString("AppToken","");
+            JSONObject jsonObject = Acache.get(this).getAsJSONObject("storeInfo");
+            Gson gson = new Gson();
+            CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(),StoreInfo.class);
+            Intent intent = new Intent(this,MainActivity.class);
+            startActivity(intent);
+        }
+
+
+    }
+
     // 获取短信验证码的页面显示
     private int time = 60;
 
@@ -155,8 +174,13 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             Log.d("验证码登录",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 CommunityBossApplication.token = json.getString("AppToken");
+                                SharedPreferences sp = getSharedPreferences("sp",0);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("AppToken",json.getString("AppToken"));
+                                editor.apply();
                                 Gson gson = new Gson();
                                 JSONObject jsonObject = json.getJSONObject("StoreInfo");
+                                Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
                                 if(jsonObject.getInt("StoreState")==0) {
                                     Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
                                     startActivity(intent);
@@ -194,12 +218,22 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             Log.d("用户名密码登录",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 CommunityBossApplication.token = json.getString("AppToken");
+                                SharedPreferences sp = getSharedPreferences("sp",0);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("AppToken",json.getString("AppToken"));
+                                editor.apply();
                                 Gson gson = new Gson();
                                 JSONObject jsonObject = json.getJSONObject("StoreInfo");
-                                StoreInfo storeInfo = gson.fromJson(jsonObject.toString(),StoreInfo.class);
-                                CommunityBossApplication.storeInfo = storeInfo;
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
+                                Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                if(jsonObject.getInt("StoreState")==0) {
+                                    Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                    CommunityBossApplication.storeInfo = storeInfo;
+                                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                    startActivity(intent);
+                                }
                                 finish();
                             } else {
                                 Toast.makeText(LoginActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();

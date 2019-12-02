@@ -47,7 +47,8 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/x54"
             android:textColor="@color/white"
-            android:text="点击上传头像"
+            android:id="@+id/tv_name"
+            android:text="default"
             android:layout_marginLeft="@dimen/x284"
             android:layout_marginTop="@dimen/y108"
             android:includeFontPadding="false"/>

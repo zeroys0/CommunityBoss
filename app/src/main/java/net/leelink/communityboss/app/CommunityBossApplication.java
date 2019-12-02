@@ -46,6 +46,21 @@ public class CommunityBossApplication extends Application {
 
     }
 
+    public static CommunityBossApplication getInstance() {
+        if (null == instance) {
+            instance = new CommunityBossApplication();
+        }
+        return instance;
+    }
+
+    // 遍历所有Activity并finish
+    public void exit() {
+        for (Activity activity : activityList) {
+            activity.finish();
+        }
+        System.exit(0);
+    }
+
     public void initokGO() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("commonHeaderKey1", "commonHeaderValue1");    //header不支持中文，不允许有特殊字符
