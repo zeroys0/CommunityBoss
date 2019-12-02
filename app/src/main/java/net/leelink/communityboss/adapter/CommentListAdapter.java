@@ -26,6 +26,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         this.list = list;
         this.onItemClickListener = onItemClickListener;
     }
+
+    public void update(List<CommentListBean.UserAppraiseListBean> list){
+        this.list = list;
+        notifyDataSetChanged();
+    }
     @Override
     public CommentListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item , parent, false); // 实例化viewholder

@@ -8,15 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.bean.QuestionBean;
 
 import java.util.List;
 
 public class QuestionAdapter extends   RecyclerView.Adapter<QuestionAdapter.ViewHolder> {
-    private List<String> list;
+    private List<QuestionBean> list;
     private Context context;
     private OnItemClickListener onItemClickListener;
 
-    public QuestionAdapter(List<String> list, Context context, OnItemClickListener onItemClickListener){
+    public QuestionAdapter(List<QuestionBean> list, Context context, OnItemClickListener onItemClickListener){
         this.list = list;
         this.context = context;
         this.onItemClickListener = onItemClickListener;
@@ -25,12 +26,18 @@ public class QuestionAdapter extends   RecyclerView.Adapter<QuestionAdapter.View
     public QuestionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_list_item, parent, false); // 实例化viewholder
         QuestionAdapter.ViewHolder viewHolder = new QuestionAdapter.ViewHolder(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(v);
+            }
+        });
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(QuestionAdapter.ViewHolder holder, int position) {
-        holder.tv_question.setText(list.get(position));
+        holder.tv_question.setText(list.get(position).getProblemName());
     }
 
     @Override

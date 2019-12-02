@@ -44,6 +44,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
     private OrderListAdapter orderListAdapter;
     private List<OrderBean> list = new ArrayList<>();
     private TwinklingRefreshLayout refreshLayout;
+    private String orderId = "0";
     @Override
     public void handleCallBack(Message msg) {
 
@@ -54,7 +55,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complete_order,container,false);
         init(view);
-        initData();
+        initData(orderId);
         initRefreshLayout(view);
         return view;
     }
@@ -67,10 +68,10 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
         list_order.setAdapter(orderListAdapter);
     }
 
-    public void initData(){
+    public void initData(String orderId){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type=5,6"+"&orderId="+0)
+        OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type=5,6"+"&orderId="+orderId)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -83,7 +84,8 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                             if (json.getInt("ResultCode") == 200) {
                                 Gson gson = new Gson();
                                 JSONArray jsonArray = json.getJSONArray("ObjectData");
-                                list = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                List<OrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                list.addAll(orderBeanslist);
                                 orderListAdapter = new OrderListAdapter(list,getContext(),CompleteOrderFragment.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
                                 list_order.setLayoutManager(layoutManager);
@@ -127,7 +129,9 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
-                        initData();
+                        list.clear();
+                        orderId = "0";
+                        initData(orderId);
                     }
                 }, 1000);
             }
@@ -138,6 +142,10 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                     @Override
                     public void run() {
                         refreshLayout.finishLoadmore();
+                        orderId = list.get(list.size()-1).getOrderId();
+                        initData(orderId);
+                        orderListAdapter.update(list);
+                        list_order.scrollToPosition(orderListAdapter.getItemCount()-1);
                     }
                 }, 1000);
             }

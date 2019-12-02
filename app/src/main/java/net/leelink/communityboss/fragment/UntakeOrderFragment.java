@@ -50,7 +50,7 @@ private RecyclerView list_order;
 private OrderListAdapter orderListAdapter;
 private List<OrderBean> list = new ArrayList<>();
     private TwinklingRefreshLayout refreshLayout;
-        private int page;
+        private String orderId = "0";
     @Override
     public void handleCallBack(Message msg) {
 
@@ -61,7 +61,7 @@ private List<OrderBean> list = new ArrayList<>();
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_untake_order,container,false);
         init(view);
-        initData();
+        initData(orderId);
         initRefreshLayout(view);
         return view;
     }
@@ -70,11 +70,11 @@ private List<OrderBean> list = new ArrayList<>();
         list_order = view.findViewById(R.id.list_order);
     }
 
-    public void initData(){
+    public void initData(String orderId){
 
         //获取订单列表
 
-            OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+2+"&orderId="+page)
+            OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+2+"&orderId="+orderId)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
@@ -87,15 +87,16 @@ private List<OrderBean> list = new ArrayList<>();
                                 if (json.getInt("ResultCode") == 200) {
                                     Gson gson = new Gson();
                                     JSONArray jsonArray = json.getJSONArray("ObjectData");
-                                    list = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                    List<OrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                    list.addAll(orderBeanslist);
                                     orderListAdapter = new OrderListAdapter(list,getContext(),UntakeOrderFragment.this);
                                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
                                     list_order.setLayoutManager(layoutManager);
                                     list_order.setAdapter(orderListAdapter);
                                 } else {
-                                    
+                                    Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                                 }
-                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -156,8 +157,9 @@ private List<OrderBean> list = new ArrayList<>();
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
-
-                        initData();
+                        list.clear();
+                        orderId = "0";
+                        initData(orderId);
                     }
                 }, 1000);
             }
@@ -168,6 +170,10 @@ private List<OrderBean> list = new ArrayList<>();
                     @Override
                     public void run() {
                         refreshLayout.finishLoadmore();
+                        orderId = list.get(list.size()-1).getOrderId();
+                        initData(orderId);
+                        orderListAdapter.update(list);
+                        list_order.scrollToPosition(orderListAdapter.getItemCount()-1);
                     }
                 }, 1000);
             }

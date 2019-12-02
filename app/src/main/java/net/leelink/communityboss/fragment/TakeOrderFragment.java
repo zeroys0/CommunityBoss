@@ -48,6 +48,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
     private TabLayout tablayout;
     private int type = 3;
     private TwinklingRefreshLayout refreshLayout;
+    private String orderId = "0";
     @Override
     public void handleCallBack(Message msg) {
 
@@ -58,7 +59,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_take_order,container,false);
         init(view);
-        initData();
+        initData(type,orderId);
         initRefreshLayout(view);
         return view;
     }
@@ -76,12 +77,14 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
         tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                list.clear();
+                orderId = "0";
                 if(tab.getPosition() == 0){
                     type = 3;
-                    initData();
+                    initData(type,orderId);
                 } else {
                     type = 4;
-                    initData();
+                    initData(type,orderId);
                 }
             }
 
@@ -98,10 +101,10 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
         list_order = view.findViewById(R.id.list_order);
     }
 
-    public void initData(){
+    public void initData(int type,String orderId){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+type+"&orderId="+0)
+        OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+type+"&orderId="+orderId)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -114,15 +117,16 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                             if (json.getInt("ResultCode") == 200) {
                                 Gson gson = new Gson();
                                 JSONArray jsonArray = json.getJSONArray("ObjectData");
-                                list = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                List<OrderBean> orderBeanlist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                list.addAll(orderBeanlist);
                                 orderListAdapter = new OrderListAdapter(list,getContext(),TakeOrderFragment.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
                                 list_order.setLayoutManager(layoutManager);
                                 list_order.setAdapter(orderListAdapter);
                             } else {
-
+                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -191,7 +195,9 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
-                        initData();
+                        orderId = "0";
+                        list.clear();
+                        initData(type,orderId);
                     }
                 }, 1000);
             }
@@ -202,6 +208,9 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                     @Override
                     public void run() {
                         refreshLayout.finishLoadmore();
+                        orderId = list.get(list.size()-1).getOrderId();
+                        initData(type,orderId);
+                        orderListAdapter.update(list);
                     }
                 }, 1000);
             }

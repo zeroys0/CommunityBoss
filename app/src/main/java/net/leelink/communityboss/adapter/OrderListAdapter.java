@@ -23,6 +23,11 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         this.context = context;
         this.onOrderListener = onOrderListener;
     }
+
+    public void update(List<OrderBean> list){
+        this.list = list;
+        notifyDataSetChanged();
+    }
     @Override
     public OrderListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.orderlist_item, parent, false); // 实例化viewholder

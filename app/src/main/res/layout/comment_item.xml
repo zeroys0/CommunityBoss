@@ -6,8 +6,8 @@
     android:paddingTop="@dimen/y10">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/x93"
+            android:layout_height="@dimen/y93"
             android:id="@+id/img_head"
             android:src="@mipmap/comment_head"
             android:layout_marginLeft="@dimen/x36"/>

@@ -1,5 +1,6 @@
 package net.leelink.communityboss.activity;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -37,15 +42,18 @@ private RecyclerView comment_list;
 private CommentListAdapter commentListAdapter;
 private CommentListBean commentListBean;
 private RelativeLayout rl_back;
-private String page = "0";
+private String orderId = "0";
 private TextView tv_total_score;
 private RatingBar rt_attitude,rt_taste,rt_hygiene,rt_delivery,rt_quality;
+private TwinklingRefreshLayout refreshLayout;
+private List<CommentListBean.UserAppraiseListBean> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_list);
         init();
-        initData(page);
+        initData(orderId);
+        initRefreshLayout();
     }
 
     public void init(){
@@ -66,8 +74,8 @@ private RatingBar rt_attitude,rt_taste,rt_hygiene,rt_delivery,rt_quality;
         rt_delivery.setUntouchable();
     }
 
-    public  void initData(String page){
-        OkGo.<String>get(Urls.APPRAISELIST+"?model.appToken="+ CommunityBossApplication.token+"&model.orderId="+page)
+    public  void initData(String orderId){
+        OkGo.<String>get(Urls.APPRAISELIST+"?model.appToken="+ CommunityBossApplication.token+"&model.orderId="+orderId)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -78,20 +86,24 @@ private RatingBar rt_attitude,rt_taste,rt_hygiene,rt_delivery,rt_quality;
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("评价列表",json.toString());
                             if (json.getInt("ResultCode") == 200) {
-                                json = json.getJSONObject("ObjectData");
-                                Gson gson = new Gson();
-                                commentListBean =gson.fromJson(json.toString(),CommentListBean.class);
-                                commentListAdapter = new CommentListAdapter(CommentListActivity.this,commentListBean.getUserAppraiseList(),CommentListActivity.this);
-                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(CommentListActivity.this,LinearLayoutManager.VERTICAL,false);
-                                comment_list.setLayoutManager(layoutManager);
-                                comment_list.setAdapter(commentListAdapter);
-                                tv_total_score.setText("综合评分: "+commentListBean.getStoreScore());
-                                rt_attitude.setSelectedNumber(getStar(commentListBean.getStoreAttitude()));
-                                rt_taste.setSelectedNumber(getStar(commentListBean.getStoreTaste()));
-                                rt_hygiene.setSelectedNumber(getStar(commentListBean.getStorePack()));
-                                rt_delivery.setSelectedNumber(getStar(commentListBean.getStoreDelivery()));
-                                rt_quality.setSelectedNumber(getStar(commentListBean.getStoreQuality()));
-
+                                if(!json.isNull("ObjectData")) {
+                                    json = json.getJSONObject("ObjectData");
+                                    Gson gson = new Gson();
+                                    commentListBean = gson.fromJson(json.toString(), CommentListBean.class);
+                                    list.addAll(commentListBean.getUserAppraiseList());
+                                    tv_total_score.setText("综合评分: " + commentListBean.getStoreScore());
+                                    rt_attitude.setSelectedNumber(getStar(commentListBean.getStoreAttitude()));
+                                    rt_taste.setSelectedNumber(getStar(commentListBean.getStoreTaste()));
+                                    rt_hygiene.setSelectedNumber(getStar(commentListBean.getStorePack()));
+                                    rt_delivery.setSelectedNumber(getStar(commentListBean.getStoreDelivery()));
+                                    rt_quality.setSelectedNumber(getStar(commentListBean.getStoreQuality()));
+                                }else {
+                                    Toast.makeText(CommentListActivity.this, "没有更多的数据了", Toast.LENGTH_SHORT).show();
+                                }
+                                    commentListAdapter = new CommentListAdapter(CommentListActivity.this, list, CommentListActivity.this);
+                                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(CommentListActivity.this, LinearLayoutManager.VERTICAL, false);
+                                    comment_list.setLayoutManager(layoutManager);
+                                    comment_list.setAdapter(commentListAdapter);
                             } else {
 
                             }
@@ -135,5 +147,52 @@ private RatingBar rt_attitude,rt_taste,rt_hygiene,rt_delivery,rt_quality;
             return 1;
         }
         return 0;
+    }
+
+    public void initRefreshLayout() {
+        refreshLayout = (TwinklingRefreshLayout) findViewById(R.id.refreshLayout);
+        SinaRefreshView headerView = new SinaRefreshView(this);
+        headerView.setTextColor(0xff745D5C);
+//        refreshLayout.setHeaderView((new ProgressLayout(getActivity())));
+        refreshLayout.setHeaderView(headerView);
+        refreshLayout.setBottomView(new LoadingView(this));
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.finishRefreshing();
+                        list.clear();
+                        orderId = "0";
+                        initData(orderId);
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.finishLoadmore();
+                        orderId = list.get(list.size()-1).getOrderId();
+                        initData(orderId);
+                        commentListAdapter.update(list);
+                        Log.d( "run:最后评分 ",list.get(1).getUserScore()+"");
+                        comment_list.scrollToPosition(commentListAdapter.getItemCount()-1);
+                    }
+                }, 1000);
+            }
+
+        });
+        // 是否允许开启越界回弹模式
+        refreshLayout.setEnableOverScroll(false);
+        //禁用掉加载更多效果，即上拉加载更多
+        refreshLayout.setEnableLoadmore(true);
+        // 是否允许越界时显示刷新控件
+        refreshLayout.setOverScrollRefreshShow(true);
+
+
     }
 }

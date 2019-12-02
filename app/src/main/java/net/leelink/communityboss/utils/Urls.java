@@ -23,4 +23,5 @@ public class Urls {
     public static final String CASHOUT = WEBSITE +"CashOut";    //申请提现
     public static final String LOGOUT =WEBSITE+"Logout";    //退出登录
     public static final String APPRAISELIST = WEBSITE +"AppraiseList";  //获取评价列表
+    public static final String STOREFAQ = WEBSITE +"StoreFaq";  //常见问题列表
 }

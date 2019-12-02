@@ -54,6 +54,7 @@
         <activity android:name=".activity.WithdrawActivity" />
         <activity android:name=".activity.ConfirmWithdrawActivity" />
         <activity android:name=".activity.ExamineActivity" />
+        <activity android:name=".activity.AnswerActivity"/>
         <activity android:name=".activity.MyServiceActivity" />
 
         <!-- 这个Service要继承JCommonService -->

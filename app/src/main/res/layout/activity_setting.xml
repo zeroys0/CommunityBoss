@@ -72,6 +72,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/img_change"
             android:src="@mipmap/change_phone"
             android:layout_marginLeft="@dimen/x604"
             android:layout_marginTop="@dimen/y198"

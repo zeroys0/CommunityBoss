@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 private RelativeLayout rl_back,rl_logout;
-private ImageView img_head;
+private ImageView img_head,img_change;
 private TextView tv_name,tv_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,8 @@ private TextView tv_name,tv_phone;
         rl_logout = findViewById(R.id.rl_logout);
         rl_logout.setOnClickListener(this);
         img_head = findViewById(R.id.img_head);
+        img_change = findViewById(R.id.img_change);
+        img_change.setOnClickListener(this);
         tv_name = findViewById(R.id.tv_name);
         tv_phone = findViewById(R.id.tv_phone);
         Glide.with(this).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/Image/"+CommunityBossApplication.storeInfo.getHeadImage()).into(img_head);
@@ -55,6 +57,10 @@ private TextView tv_name,tv_phone;
                 break;
             case R.id.rl_logout:
                 logout();
+                break;
+            case R.id.img_change:       //修改绑定电话
+                Intent intent = new Intent(this,ChangePhoneActivity.class);
+                startActivity(intent);
                 break;
                 default:
                     break;
