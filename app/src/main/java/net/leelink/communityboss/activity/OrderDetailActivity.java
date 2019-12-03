@@ -84,6 +84,10 @@ private Button btn_confirm;
             ll_comment.setVisibility(View.GONE);
             tv_state.setText("订单已完成");
             btn_confirm.setVisibility(View.GONE);
+        } else if(type ==4){
+            ll_comment.setVisibility(View.GONE);
+            tv_state.setText("退款订单");
+            btn_confirm.setVisibility(View.GONE);
         }
         tv_store_name = findViewById(R.id.tv_store_name);
     }
@@ -151,13 +155,13 @@ private Button btn_confirm;
             case R.id.btn_confirm:
                 if(type == 0) { //未接单
 
-                    takeOrder(1);
+                    takeOrder(1);       //确认接单
                 } else if(type ==1) {   //已接单
 
-                    takeOrder(2);
+                    takeOrder(2);       //确认送出
                 } else if(type ==2) {   //已送出
 
-                    takeOrder(3);
+                    takeOrder(3);       //确认送达
                 }
                 break;
 

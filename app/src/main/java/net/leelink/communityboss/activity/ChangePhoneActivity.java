@@ -47,6 +47,7 @@ private Button btn_complete;
         ed_phone = findViewById(R.id.ed_phone);
         btn_complete = findViewById(R.id.btn_complete);
         btn_complete.setOnClickListener(this);
+
         ed_code = findViewById(R.id.ed_code);
     }
 

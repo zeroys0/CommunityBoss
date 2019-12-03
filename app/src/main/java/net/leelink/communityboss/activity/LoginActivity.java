@@ -228,13 +228,17 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                 if(jsonObject.getInt("StoreState")==0) {
                                     Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
                                     startActivity(intent);
-                                } else {
+                                }  else if(jsonObject.getInt("StoreState")==1) {
+                                    Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                    startActivity(intent);
+                                }  else {
                                     StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                     CommunityBossApplication.storeInfo = storeInfo;
                                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 }
-                                finish();
+
                             } else {
                                 Toast.makeText(LoginActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }

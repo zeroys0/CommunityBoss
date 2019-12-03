@@ -1,5 +1,6 @@
 package net.leelink.communityboss.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -92,7 +93,11 @@ private RecyclerView refund_list;
 
     @Override
     public void onItemClick(View view) {
-
+        int position = refund_list.getChildLayoutPosition(view);
+        Intent intent = new Intent(this, OrderDetailActivity.class);
+        intent.putExtra("orderId",list.get(position).getOrderId());
+        intent.putExtra("type",4);
+        startActivity(intent);
     }
 
     @Override
