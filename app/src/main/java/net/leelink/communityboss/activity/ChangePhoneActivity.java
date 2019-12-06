@@ -1,6 +1,8 @@
 package net.leelink.communityboss.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -81,11 +83,19 @@ private Button btn_complete;
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("修改绑定电话",json.toString());
                             if (json.getInt("ResultCode") == 200) {
+                                SharedPreferences sp = getSharedPreferences("sp",0);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.remove("AppToken");
+                                editor.apply();
+                                Intent intent = new Intent(ChangePhoneActivity.this,LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                                 finish();
+                                Toast.makeText(ChangePhoneActivity.this, "修改成功请重新登录", Toast.LENGTH_LONG).show();
                             } else {
-
+                                Toast.makeText(ChangePhoneActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(ChangePhoneActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

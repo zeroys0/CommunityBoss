@@ -24,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
-private RelativeLayout rl_back,rl_logout;
+private RelativeLayout rl_back,rl_logout,rl_change_password;
 private ImageView img_head,img_change;
 private TextView tv_name,tv_phone;
     @Override
@@ -47,6 +47,8 @@ private TextView tv_name,tv_phone;
         Glide.with(this).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/Image/"+CommunityBossApplication.storeInfo.getHeadImage()).into(img_head);
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
         tv_phone.setText(CommunityBossApplication.storeInfo.getUsername());
+        rl_change_password = findViewById(R.id.rl_change_password);
+        rl_change_password.setOnClickListener(this);
     }
 
     @Override
@@ -61,6 +63,10 @@ private TextView tv_name,tv_phone;
             case R.id.img_change:       //修改绑定电话
                 Intent intent = new Intent(this,ChangePhoneActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.rl_change_password:
+                Intent intent1 = new Intent(this,ChangePasswordActivity.class);
+                startActivity(intent1);
                 break;
                 default:
                     break;
