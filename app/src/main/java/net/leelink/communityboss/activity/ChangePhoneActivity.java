@@ -26,7 +26,7 @@ import org.json.JSONObject;
 
 public class ChangePhoneActivity extends BaseActivity implements View.OnClickListener {
 private RelativeLayout rl_back;
-private TextView tv_phone,getmsmpass_TX;
+private TextView getmsmpass_TX;
 private EditText ed_phone,ed_code;
 private Button btn_complete;
     private int time = 60;
@@ -40,8 +40,6 @@ private Button btn_complete;
     public void init(){
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
-        tv_phone = findViewById(R.id.tv_phone);
-        tv_phone.setText("向"+ CommunityBossApplication.storeInfo.getPhoneNumber()+"手机号发送验证码");
         getmsmpass_TX = findViewById(R.id.getmsmpass_TX);
         getmsmpass_TX.setOnClickListener(this);
         ed_phone = findViewById(R.id.ed_phone);
@@ -70,10 +68,10 @@ private Button btn_complete;
 
     //修改绑定电话
     public void changePhone(){
-        OkGo.<String>post(Urls.PHONENUMBER)
-                .tag(this)
+        OkGo.<String>post(Urls.PHONENUMBER+"?appToken="+CommunityBossApplication.token)
                 .params("phoneNumber", ed_phone.getText().toString().trim())
                 .params("smscode",ed_code.getText().toString().trim())
+                .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -99,7 +97,7 @@ private Button btn_complete;
     public void send(){
         OkGo.<String>get(Urls.SENDSMSCODE)
                 .tag(this)
-                .params("phone", CommunityBossApplication.storeInfo.getPhoneNumber())
+                .params("phone", ed_phone.getText().toString().trim())
                 .params("used",3)
                 .execute(new StringCallback() {
                     @Override

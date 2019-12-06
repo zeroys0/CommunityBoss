@@ -128,8 +128,39 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
             @Override
             public void onTimeSelect(Date date, View v) {
                 tv_close_time.setText(sdf1.format(date));
+                storeIncome();
             }
         }).setType(type).build();
 
+    }
+
+    public void storeIncome(){
+        OkGo.<String>get(Urls.STOREINCOME+"?appToken="+ CommunityBossApplication.token)
+                .params("beginDate",tv_open_time.getText().toString().trim())
+                .params("endDate",tv_close_time.getText().toString().trim())
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            body = body.substring(1,body.length()-1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            Log.d("查询收入",json.toString());
+                            if (json.getInt("ResultCode") == 200) {
+                                JSONObject jsonObject = json.getJSONObject("ObjectData");
+                                tv_income.setText(jsonObject.getString("Balance"));
+                                tv_order_number.setText(jsonObject.getString("OrderNumber")+"单");
+                                tv_total_income.setText("￥"+jsonObject.getString("Income"));
+                                tv_royalty.setText("￥"+jsonObject.getString("Royalty"));
+                            } else {
+
+                            }
+                            Toast.makeText(IncomeActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 }

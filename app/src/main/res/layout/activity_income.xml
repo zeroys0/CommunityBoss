@@ -76,17 +76,17 @@
             android:includeFontPadding="false"
             />
     </LinearLayout>
-    <TextView
-        android:layout_width="@dimen/x198"
-        android:layout_height="@dimen/y54"
-        android:background="@drawable/income_state"
-        android:textSize="@dimen/x39"
-        android:id="@+id/tv_state"
-        android:textColor="#008ccf"
-        android:gravity="center"
-        android:text="提现中"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/y20"/>
+<!--    <TextView-->
+<!--        android:layout_width="@dimen/x198"-->
+<!--        android:layout_height="@dimen/y54"-->
+<!--        android:background="@drawable/income_state"-->
+<!--        android:textSize="@dimen/x39"-->
+<!--        android:id="@+id/tv_state"-->
+<!--        android:textColor="#008ccf"-->
+<!--        android:gravity="center"-->
+<!--        android:text="提现中"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginTop="@dimen/y20"/>-->
 </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
