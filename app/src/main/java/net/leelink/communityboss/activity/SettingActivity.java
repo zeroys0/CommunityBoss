@@ -46,7 +46,7 @@ private TextView tv_name,tv_phone;
         tv_phone = findViewById(R.id.tv_phone);
         Glide.with(this).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/Image/"+CommunityBossApplication.storeInfo.getHeadImage()).into(img_head);
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
-        tv_phone.setText(CommunityBossApplication.storeInfo.getPhoneNumber());
+        tv_phone.setText(CommunityBossApplication.storeInfo.getUsername());
     }
 
     @Override

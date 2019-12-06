@@ -87,7 +87,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void initdata(){
         Glide.with(getContext()).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/Image/"+CommunityBossApplication.storeInfo.getHeadImage()).into(img_head);
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
-        tv_phone.setText(CommunityBossApplication.storeInfo.getPhoneNumber());
+        tv_phone.setText(CommunityBossApplication.storeInfo.getUsername());
 
         OkGo.<String>get(Urls.STOREHOME+"?appToken="+ CommunityBossApplication.token)
                 .tag(this)
