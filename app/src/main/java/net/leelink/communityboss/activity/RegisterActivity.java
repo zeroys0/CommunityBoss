@@ -86,6 +86,7 @@ private int time = 60;
                                     JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                     Log.d("账号注册",json.toString());
                                     if (json.getInt("ResultCode") == 200) {
+                                        Toast.makeText(RegisterActivity.this, "注册成功,请登录", Toast.LENGTH_SHORT).show();
                                         finish();
                                     } else {
                                         Toast.makeText(RegisterActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();

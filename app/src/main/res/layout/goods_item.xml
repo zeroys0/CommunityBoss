@@ -60,4 +60,11 @@
         android:includeFontPadding="false"
         android:id="@+id/tv_detail"
         android:layout_marginTop="@dimen/y207"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:background="@color/grey"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

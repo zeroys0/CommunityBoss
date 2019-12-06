@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.MyServiceActivity"
     android:background="#f3f3f3"
-     android:orientation="vertical">
+    android:orientation="vertical">
     <RelativeLayout
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
@@ -41,6 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
+        android:id="@+id/tv_servphone"
         android:textSize="@dimen/x48"
         android:layout_marginLeft="@dimen/x35"
         android:layout_marginTop="@dimen/y41"
@@ -52,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/rl_top"
+        android:id="@+id/img_call"
         android:src="@mipmap/service_phone"
         android:layout_marginRight="@dimen/x32"
         android:layout_marginTop="@dimen/y24"/>
@@ -64,8 +66,8 @@
         android:layout_below="@id/rl_top"
         android:layout_marginTop="@dimen/y132">
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="常见问题解答"
             android:textColor="@color/black"
             android:textSize="@dimen/x45"

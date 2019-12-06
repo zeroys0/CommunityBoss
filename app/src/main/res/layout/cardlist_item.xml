@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/x1014"
     android:layout_height="@dimen/y279"
-    android:background="@mipmap/card_bg"
+    android:background="@mipmap/img_card"
     android:layout_marginLeft="@dimen/x33"
     android:layout_marginTop="@dimen/y29"
     android:orientation="vertical">

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -183,7 +184,15 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("修改商户信息",json.toString());
                             if (json.getInt("ResultCode") == 200) {
-
+                                Toast.makeText(InformationActivity.this, "信息已提交审核,请重新登录", Toast.LENGTH_SHORT).show();
+                                SharedPreferences sp = getSharedPreferences("sp",0);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.remove("AppToken");
+                                editor.apply();
+                                Intent intent = new Intent(InformationActivity.this,LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(InformationActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
@@ -210,6 +219,15 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                                 JSONObject json = new JSONObject(body.replaceAll("\\\\", ""));
                                 Log.d("上传图片", json.toString());
                                 if (json.getInt("ResultCode") == 200) {
+                                    Toast.makeText(InformationActivity.this, "信息已提交审核,请重新登录", Toast.LENGTH_SHORT).show();
+                                    SharedPreferences sp = getSharedPreferences("sp",0);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.remove("AppToken");
+                                    editor.apply();
+                                    Intent intent = new Intent(InformationActivity.this,LoginActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
                                 } else {
                                     Toast.makeText(InformationActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                                 }

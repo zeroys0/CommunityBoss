@@ -1,12 +1,15 @@
 package net.leelink.communityboss.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -34,6 +37,9 @@ private RecyclerView question_list;
 private QuestionAdapter questionAdapter;
 private List<QuestionBean> list = new ArrayList<>();
 private RelativeLayout rl_back;
+private ImageView img_call;
+private String phone = "0553-55525553";
+private TextView tv_servphone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,18 @@ private RelativeLayout rl_back;
                 finish();
             }
         });
+        tv_servphone = findViewById(R.id.tv_servphone);
+
+        img_call = findViewById(R.id.img_call);
+        img_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                Uri data = Uri.parse("tel:" + phone);
+                intent.setData(data);
+                startActivity(intent);
+            }
+        });
     }
     public void initData() {
         OkGo.<String>get(Urls.STOREFAQ)
@@ -66,7 +84,9 @@ private RelativeLayout rl_back;
                             Log.d("问题列表",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 Gson gson = new Gson();
-                                JSONArray jsonArray = json.getJSONArray("ObjectData");
+                                JSONArray jsonArray = json.getJSONObject("ObjectData").getJSONArray("FaqList");
+                                phone = json.getJSONObject("ObjectData").getString("ServicePhone");
+                                tv_servphone.setText("客服电话:"+phone);
                                 list = gson.fromJson(jsonArray.toString(),new TypeToken<List<QuestionBean>>(){}.getType());
                                 questionAdapter = new QuestionAdapter(list,MyServiceActivity.this,MyServiceActivity.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyServiceActivity.this,LinearLayoutManager.VERTICAL,false);

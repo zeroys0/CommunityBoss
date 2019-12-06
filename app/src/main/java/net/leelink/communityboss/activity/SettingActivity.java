@@ -68,6 +68,13 @@ private TextView tv_name,tv_phone;
     }
 
     public void logout(){
+        SharedPreferences sp = getSharedPreferences("sp",0);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove("AppToken");
+        editor.apply();
+        Intent intent = new Intent(SettingActivity.this,LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         OkGo.<String>get(Urls.LOGOUT+"?appToken="+ CommunityBossApplication.token)
                 .tag(this)
                 .execute(new StringCallback() {
@@ -79,13 +86,7 @@ private TextView tv_name,tv_phone;
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("退出登录",json.toString());
                             if (json.getInt("ResultCode") == 200) {
-                                SharedPreferences sp = getSharedPreferences("sp",0);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.remove("AppToken");
-                                editor.apply();
-                                Intent intent = new Intent(SettingActivity.this,LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+
                                 finish();
                             } else {
 

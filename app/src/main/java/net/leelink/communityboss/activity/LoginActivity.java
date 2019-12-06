@@ -115,12 +115,14 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         if(sp.getString("AppToken","")==null ||sp.getString("AppToken","").equals("") ) {
 
         } else {
-            CommunityBossApplication.token = sp.getString("AppToken","");
-            JSONObject jsonObject = Acache.get(this).getAsJSONObject("storeInfo");
-            Gson gson = new Gson();
-            CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(),StoreInfo.class);
-            Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
+
+                CommunityBossApplication.token = sp.getString("AppToken", "");
+                JSONObject jsonObject = Acache.get(this).getAsJSONObject("storeInfo");
+                Gson gson = new Gson();
+                CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+
         }
 
 
@@ -184,6 +186,11 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                 if(jsonObject.getInt("StoreState")==0) {
                                     Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
                                     startActivity(intent);
+                                }else if(jsonObject.getInt("StoreState")==1) {
+                                    editor.putInt("state",1);
+                                    editor.apply();
+                                    Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                    startActivity(intent);
                                 } else {
                                     StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                     CommunityBossApplication.storeInfo = storeInfo;
@@ -229,6 +236,8 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                     Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
                                     startActivity(intent);
                                 }  else if(jsonObject.getInt("StoreState")==1) {
+                                    editor.putInt("state",1);
+                                    editor.apply();
                                     Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
                                     startActivity(intent);
                                 }  else {

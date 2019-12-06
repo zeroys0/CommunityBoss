@@ -81,6 +81,7 @@
         android:layout_height="@dimen/y54"
         android:background="@drawable/income_state"
         android:textSize="@dimen/x39"
+        android:id="@+id/tv_state"
         android:textColor="#008ccf"
         android:gravity="center"
         android:text="提现中"

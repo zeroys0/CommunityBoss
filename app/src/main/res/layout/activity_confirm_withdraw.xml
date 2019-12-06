@@ -81,7 +81,8 @@
             android:inputType="numberDecimal"
             android:textSize="@dimen/x117"
             android:background="@null"
-            android:text="225"
+            android:hint="请输入提现金额"
+            android:textColorHint="@color/grey"
             android:layout_marginLeft="@dimen/x150"
             />
         <TextView
@@ -89,6 +90,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/x45"
             android:textColor="@color/blue"
+            android:id="@+id/tv_allin"
             android:text="全部"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

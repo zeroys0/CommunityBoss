@@ -100,6 +100,7 @@ private Button btn_confirm;
             OkGo.<String>get(Urls.SENDSMSCODE)
                     .tag(this)
                     .params("phone", ed_phone.getText().toString().trim())
+                    .params("used",2)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {

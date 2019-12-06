@@ -4,11 +4,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
 
 import net.leelink.communityboss.activity.BaseActivity;
 import net.leelink.communityboss.app.CommunityBossApplication;
@@ -19,6 +27,7 @@ import net.leelink.communityboss.fragment.UntakeOrderFragment;
 import net.leelink.communityboss.utils.ToastUtil;
 import net.leelink.communityboss.utils.Utils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +66,7 @@ FragmentManager fm;
         }
         ft.add(R.id.fragment_view, untakeOrderFragment, "untake");
         ft.commit();
-
+        setBottomNavigationItem(8,20);
 
 
         int a = 0;
@@ -66,6 +75,38 @@ FragmentManager fm;
         list.add("阿里发发");
         list.add("新的商店");
 
+    }
+
+    private void setBottomNavigationItem(int space, int imgLen) {
+        float contentLen = 36;
+        Class barClass = nv_bottom.getClass();
+        Field[] fields = barClass.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.setAccessible(true);
+            if (field.getName().equals("mTabContainer")) {
+                try { //反射得到 mTabContainer
+                    LinearLayout mTabContainer = (LinearLayout) field.get(nv_bottom);
+                    for (int j = 0; j < mTabContainer.getChildCount(); j++) {
+                        //获取到容器内的各个 Tab
+                        View view = mTabContainer.getChildAt(j);
+                        //获取到Tab内的各个显示控件
+                        // 获取到Tab内的文字控件
+                        TextView labelView = (TextView) view.findViewById(com.ashokvarma.bottomnavigation.R.id.fixed_bottom_navigation_title);
+                        //计算文字的高度DP值并设置，setTextSize为设置文字正方形的对角线长度，所以：文字高度（总内容高度减去间距和图片高度）*根号2即为对角线长度，此处用DP值，设置该值即可。
+                        labelView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (Math.sqrt(2) * (contentLen - imgLen - space)));
+                        //获取到Tab内的图像控件
+                        ImageView iconView = (ImageView) view.findViewById(com.ashokvarma.bottomnavigation.R.id.fixed_bottom_navigation_icon);
+                        //设置图片参数，其中，MethodUtils.dip2px()：换算dp值
+                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int) DensityUtil.dp2px(this, imgLen), (int) DensityUtil.dp2px(this, imgLen));
+                        params.gravity = Gravity.CENTER;
+                        iconView.setLayoutParams(params);
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

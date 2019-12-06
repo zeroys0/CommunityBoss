@@ -28,7 +28,7 @@ import java.util.Date;
 
 public class IncomeActivity extends BaseActivity implements View.OnClickListener {
 private RelativeLayout rl_back,rl_get_money,rl_open_time,rl_close_time;
-private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty,tv_order_number;
+private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty,tv_order_number,tv_state;
     private TimePickerView pvTime,pvTime1;
     private SimpleDateFormat sdf,sdf1;
     @Override
@@ -56,6 +56,8 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
         tv_total_income = findViewById(R.id.tv_total_income);
         tv_royalty = findViewById(R.id.tv_royalty);
         tv_order_number = findViewById(R.id.tv_order_number);
+        tv_state = findViewById(R.id.tv_state);
+
     }
 
     @Override
@@ -66,6 +68,7 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                 break;
             case R.id.rl_get_money:     //去提现
                 Intent intent = new Intent(this,WithdrawActivity.class);
+                intent.putExtra("balance",tv_income.getText().toString().trim());
                 startActivity(intent);
                 break;
             case R.id.rl_open_time: //查询开始时间

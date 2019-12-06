@@ -85,5 +85,11 @@
             android:layout_marginLeft="@dimen/x147"
             android:layout_marginTop="@dimen/x116"
             android:includeFontPadding="false"/>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/grey"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_marginRight="@dimen/x20"
+                android:layout_alignParentBottom="true"/>
 </RelativeLayout>
