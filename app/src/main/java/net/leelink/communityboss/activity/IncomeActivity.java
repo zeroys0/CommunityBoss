@@ -100,9 +100,9 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                                 tv_total_income.setText("￥"+jsonObject.getString("Income"));
                                 tv_royalty.setText("￥"+jsonObject.getString("Royalty"));
                             } else {
-
+                                Toast.makeText(IncomeActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(IncomeActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

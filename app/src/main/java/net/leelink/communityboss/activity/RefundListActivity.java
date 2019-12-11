@@ -81,9 +81,9 @@ private RecyclerView refund_list;
                                 refund_list.setLayoutManager(layoutManager);
                                 refund_list.setAdapter(refundAdapter);
                             } else {
-
+                                Toast.makeText(RefundListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(RefundListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
