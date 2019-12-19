@@ -1,5 +1,6 @@
 package net.leelink.communityboss.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,12 +24,15 @@ import com.google.gson.JsonObject;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.utils.Acache;
+import net.leelink.communityboss.utils.Logger;
 import net.leelink.communityboss.utils.Urls;
 
 
@@ -39,6 +43,7 @@ import org.w3c.dom.Text;
 import java.lang.reflect.Field;
 
 import cn.jpush.android.api.JPushInterface;
+import io.reactivex.functions.Consumer;
 
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
@@ -51,6 +56,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        requestPermissions();
         init();
         initLogin();
     }
@@ -349,5 +355,43 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
             child.setLayoutParams(params);
             child.invalidate();
         }
+    }
+
+    static int index_rx = 0;
+    @SuppressLint("CheckResult")
+    private void requestPermissions() {
+        RxPermissions rxPermission = new RxPermissions(LoginActivity.this);
+        rxPermission.requestEach(android.Manifest.permission.ACCESS_FINE_LOCATION,//获取位置
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,//写外部存储器
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,//读取外部存储器
+//                        Manifest.permission.READ_CALENDAR,//读取日历
+//                        Manifest.permission.READ_CALL_LOG,//看电话记录
+//                Manifest.permission.READ_CONTACTS,//读取通讯录
+//                        Manifest.permission.READ_PHONE_STATE,//读取手机状态
+//                        Manifest.permission.READ_SMS,//读取信息 　
+//                          Manifest.permission.SEND_SMS,//发信息
+//                Manifest.permission.CALL_PHONE,//打电话
+                Manifest.permission.CAMERA)//照相机
+                .subscribe(new Consumer<Permission>() {
+                    @Override
+                    public void accept(Permission permission) throws Exception {
+                        if (permission.granted) {
+                            // 用户已经同意该权限
+                            Logger.i("用户已经同意该权限", permission.name + " is granted.");
+                        } else if (permission.shouldShowRequestPermissionRationale) {
+                            // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                            Logger.i("用户拒绝了该权限,没有选中『不再询问』", permission.name + " is denied. More info should be provided.");
+                        } else {
+                            // 用户拒绝了该权限，并且选中『不再询问』
+                            Logger.i("用户拒绝了该权限,并且选中『不再询问』", permission.name + " is denied.");
+                        }
+                        index_rx++;
+                        if (index_rx == 4) {
+                            index_rx = 0;
+                        }
+
+                    }
+                });
+
     }
 }

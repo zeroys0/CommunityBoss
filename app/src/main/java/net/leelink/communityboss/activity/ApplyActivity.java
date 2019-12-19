@@ -243,10 +243,7 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("上传图片",json.toString());
                             if (json.getInt("ResultCode") == 200) {
-                                Toast.makeText(ApplyActivity.this, "信息提交成功,请等待审核", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(ApplyActivity.this,ExamineActivity.class);
-                                startActivity(intent);
-                                finish();
+
                             } else {
                                 Toast.makeText(ApplyActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
@@ -307,6 +304,10 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("上传图片",json.toString());
                             if (json.getInt("ResultCode") == 200) {
+                                Toast.makeText(ApplyActivity.this, "信息提交成功,请等待审核", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ApplyActivity.this,ExamineActivity.class);
+                                startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(ApplyActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
                             }
