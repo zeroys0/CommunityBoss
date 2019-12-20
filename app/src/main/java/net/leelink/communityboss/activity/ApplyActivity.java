@@ -48,7 +48,7 @@ import java.util.Date;
 public class ApplyActivity extends BaseActivity implements View.OnClickListener {
 private Button btn_submit;
 private EditText ed_name,ed_phone,ed_address;
-private RelativeLayout rl_open_time,rl_close_time;
+private RelativeLayout rl_open_time,rl_close_time,rl_back;
 private TextView tv_open_time,tv_close_time;
 private ImageView img_store_head,img_publicity,img_license,img_permit;
     private PopupWindow popuPhoneW;
@@ -89,6 +89,8 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         img_license.setOnClickListener(this);
         img_permit = findViewById(R.id.img_permit);
         img_permit.setOnClickListener(this);
+        rl_back = findViewById(R.id.rl_back);
+        rl_back.setOnClickListener(this);
     }
 
     @Override
@@ -152,6 +154,9 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                 Intent intent1 = new Intent(Intent.ACTION_PICK);
                 intent1.setType("image/*");
                 startActivityForResult(intent1, 1);
+                break;
+            case R.id.rl_back:
+                finish();
                 break;
                 default:
                     break;

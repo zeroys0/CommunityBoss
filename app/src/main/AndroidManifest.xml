@@ -22,12 +22,13 @@
 
     <application
         android:allowBackup="true"
+        android:name=".app.CommunityBossApplication"
         android:icon="@mipmap/android_template"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/android_template_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".activity.CheckActivity"></activity>
+<!--        <activity android:name=".activity.CheckActivity"></activity>-->
         <activity android:name=".activity.ChangeGoodsActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>

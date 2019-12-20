@@ -23,6 +23,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.adapter.OnCollectListener;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.DeleteEvent;
 import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.bean.GoodListBean;
 import net.leelink.communityboss.utils.Urls;
@@ -53,6 +54,7 @@ List<Integer> idList = new ArrayList<>();
         init();
         initlist();
     }
+
     public void init(){
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);

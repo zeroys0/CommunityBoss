@@ -128,6 +128,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                 CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                finish();
 
         }
 
@@ -170,7 +171,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         OkGo.<String>post(Urls.LOGINBYCODE)
                 .tag(this)
                 .params("username", ed_phone.getText().toString().trim())
-                .params("smscode",ed_password.getText().toString().trim())
+                .params("smscode",ed_code.getText().toString().trim())
                 .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
                 .execute(new StringCallback() {
                     @Override

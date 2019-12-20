@@ -34,9 +34,12 @@ import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.DeleteEvent;
+import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.Urls;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,15 +49,16 @@ import java.util.concurrent.ExecutionException;
 public class ChangeGoodsActivity extends BaseActivity implements View.OnClickListener {
 
     private RelativeLayout rl_back;
-    private ImageView img_head,img_del;
+    private ImageView img_head, img_del;
     private File file;
     private View popview;
     private PopupWindow popupWindow;
-    private Button btn_album,btn_photograph,btn_upload;
-    private EditText ed_name,ed_price,ed_detail;
+    private Button btn_album, btn_photograph, btn_upload;
+    private EditText ed_name, ed_price, ed_detail;
     private Bitmap bitmap;
     private int commodityId;
     private String url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +67,7 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
         popu_head();
     }
 
-    public void init(){
+    public void init() {
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
         img_head = findViewById(R.id.img_head);
@@ -76,21 +80,21 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
         img_del = findViewById(R.id.img_del);
         img_del.setOnClickListener(this);
 
-        commodityId = getIntent().getIntExtra("commodityId",0);
+        commodityId = getIntent().getIntExtra("commodityId", 0);
         ed_name.setText(getIntent().getStringExtra("name"));
-        float price = getIntent().getFloatExtra("price",0);
+        float price = getIntent().getFloatExtra("price", 0);
         ed_price.setText(Float.toString(price));
         ed_detail.setText(getIntent().getStringExtra("details"));
         url = getIntent().getStringExtra("image");
-        Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+url).into(img_head);
+        Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL + "Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/CommodityImage/" + url).into(img_head);
 
         //将网络地址转化为file
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Bitmap bitmap =Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                    file =  BitmapCompress.compressImage(bitmap);
+                    Bitmap bitmap = Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL + "Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/CommodityImage/" + url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                    file = BitmapCompress.compressImage(bitmap);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -102,7 +106,7 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.rl_back:
                 finish();
                 break;
@@ -141,27 +145,31 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
                 intent1.setType("image/*");
                 startActivityForResult(intent1, 1);
                 break;
+            case R.id.img_del:  //删除商品
+                delete();
+                break;
+
             default:
                 break;
         }
     }
 
-    public void commit(){
-        OkGo.<String>post(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
+    public void commit() {
+        OkGo.<String>post(Urls.COMMODITY + "?appToken=" + CommunityBossApplication.token)
                 .tag(this)
-                .params("commodityId",commodityId)
+                .params("commodityId", commodityId)
                 .params("details", ed_detail.getText().toString().trim())
-                .params("name",ed_name.getText().toString().trim())
-                .params("price",ed_price.getText().toString().trim())
-                .params("file",file)
+                .params("name", ed_name.getText().toString().trim())
+                .params("price", ed_price.getText().toString().trim())
+                .params("file", file)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("编辑商品",json.toString());
+                            body = body.substring(1, body.length() - 1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\", ""));
+                            Log.d("编辑商品", json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 finish();
                             } else {
@@ -184,7 +192,7 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
                     Uri uri = data.getData();
                     bitmap = BitmapCompress.decodeUriBitmap(ChangeGoodsActivity.this, uri);
                     img_head.setImageBitmap(bitmap);
-                    file =  BitmapCompress.compressImage(bitmap);
+                    file = BitmapCompress.compressImage(bitmap);
                     break;
                 case 2:
                     Bundle bundle = data.getExtras();
@@ -199,6 +207,33 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
                     break;
             }
         }
+    }
+
+    public void delete() {
+
+        OkGo.<String>delete(Urls.COMMODITY + "?appToken=" + CommunityBossApplication.token + "&commodityIds=" + commodityId)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            body = body.substring(1, body.length() - 1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\", ""));
+                            Log.d("用户信息", json.toString());
+                            if (json.getInt("ResultCode") == 200) {
+                                EventBus.getDefault().post(new Event());
+                                finish();
+                            } else {
+
+                            }
+                            Toast.makeText(ChangeGoodsActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
     }
 
     //获取图片
