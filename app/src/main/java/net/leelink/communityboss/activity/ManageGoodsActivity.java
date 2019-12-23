@@ -40,6 +40,7 @@ import net.leelink.communityboss.adapter.CommentListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.utils.BitmapCompress;
+import net.leelink.communityboss.utils.LoadDialog;
 import net.leelink.communityboss.utils.Urls;
 import net.leelink.communityboss.utils.Utils;
 
@@ -175,6 +176,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void commit(){
+        LoadDialog.start(this);
         OkGo.<String>put(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
                 .tag(this)
                 .params("details", ed_detail.getText().toString().trim())
@@ -184,6 +186,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        LoadDialog.stop();
                         try {
                             String body = response.body();
                             body = body.substring(1,body.length()-1);
@@ -199,6 +202,12 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        LoadDialog.stop();
+                        Toast.makeText(ManageGoodsActivity.this, "网络连接超时,请检查网络", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

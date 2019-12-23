@@ -36,6 +36,7 @@ import com.lzy.okgo.model.Response;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.utils.BitmapCompress;
+import net.leelink.communityboss.utils.LoadDialog;
 import net.leelink.communityboss.utils.Urls;
 
 import org.json.JSONException;
@@ -208,6 +209,7 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
 
     //修改商户信息
     public void storeInfo(){
+        LoadDialog.start(this);
         OkGo.<String>post(Urls.STOREINFO+"?appToken="+CommunityBossApplication.token)
                 .tag(this)
                 .params("address", ed_address.getText().toString().trim())
@@ -303,6 +305,7 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        LoadDialog.stop();
                         try {
                             String body = response.body();
                             body = body.substring(1,body.length()-1);
@@ -319,6 +322,12 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        LoadDialog.stop();
+                        Toast.makeText(ApplyActivity.this, "上传失败,请检查网络连接", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

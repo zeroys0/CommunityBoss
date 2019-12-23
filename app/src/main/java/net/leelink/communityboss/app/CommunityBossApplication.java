@@ -73,7 +73,7 @@ public class CommunityBossApplication extends Application {
 
         //超时时间设置，默认60秒
         builder.readTimeout(OkGo.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);      //全局的读取超时时间
-        builder.writeTimeout(OkGo.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);     //全局的写入超时时间
+        builder.writeTimeout(10000, TimeUnit.MILLISECONDS);     //全局的写入超时时间
         builder.connectTimeout(OkGo.DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);   //全局的连接超时时间
 
         //自动管理cookie（或者叫session的保持），以下几种任选其一就行
@@ -89,6 +89,7 @@ public class CommunityBossApplication extends Application {
                 .setRetryCount(3)                               //全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
                 .addCommonHeaders(headers)                      //全局公共头
                 .addCommonParams(params);                       //全局公共参数
+
     }
 
     public void initJPush(){

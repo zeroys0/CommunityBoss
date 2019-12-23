@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -155,6 +156,7 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void commit() {
+
         OkGo.<String>post(Urls.COMMODITY + "?appToken=" + CommunityBossApplication.token)
                 .tag(this)
                 .params("commodityId", commodityId)
