@@ -124,11 +124,13 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
                 CommunityBossApplication.token = sp.getString("AppToken", "");
                 JSONObject jsonObject = Acache.get(this).getAsJSONObject("storeInfo");
-                Gson gson = new Gson();
-                CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                if(jsonObject!=null) {
+                    Gson gson = new Gson();
+                    CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
 
         }
 
