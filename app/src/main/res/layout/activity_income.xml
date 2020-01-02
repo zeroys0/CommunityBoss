@@ -11,7 +11,7 @@
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y194"
-        android:background="#008ccf">
+        android:background="@color/blue">
 
         <TextView
             android:id="@+id/text_title"
@@ -41,7 +41,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="@dimen/y491"
-    android:background="#008ccf"
+    android:background="@color/blue"
     android:orientation="vertical">
 <TextView
     android:layout_width="wrap_content"

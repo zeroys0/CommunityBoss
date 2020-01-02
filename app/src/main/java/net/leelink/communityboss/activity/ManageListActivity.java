@@ -65,6 +65,7 @@ List<Integer> idList = new ArrayList<>();
         tv_done.setOnClickListener(this);
         btn_del = findViewById(R.id.btn_del);
         btn_del.setOnClickListener(this);
+        list_goods.setNestedScrollingEnabled(false);
         EventBus.getDefault().register(this);
     }
 
@@ -117,9 +118,12 @@ List<Integer> idList = new ArrayList<>();
             case R.id.tv_done:  //编辑
                 if(type == 0) {
                     type = 1;
+                    btn_del.setVisibility(View.VISIBLE);
+                    btn_del.setText("删除");
                     goodListAdapter.setType(type);
                 }else {
                     type = 0;
+                    btn_del.setVisibility(View.INVISIBLE);
                     goodListAdapter.setType(type);
                 }
                 goodListAdapter.notifyDataSetChanged();
@@ -179,6 +183,8 @@ List<Integer> idList = new ArrayList<>();
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("用户信息",json.toString());
                             if (json.getInt("ResultCode") == 200) {
+                                type = 0;
+                                btn_del.setVisibility(View.INVISIBLE);
                                 initlist();
                             } else {
 
