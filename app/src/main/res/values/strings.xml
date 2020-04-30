@@ -3,4 +3,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="default_array">
+        <item>范围一</item>
+        <item>范围二</item>
+        <item>范围三</item>
+        <item>范围四</item>
+        <item>范围五</item>
+    </string-array>
 </resources>

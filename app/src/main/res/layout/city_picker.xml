@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:su="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="horizontal" >
+
+    <net.leelink.leelinkservice.city.ScrollerNumberPicker
+        android:id="@+id/province"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        su:itemNumber="3"
+        su:lineColor="#E5E5E5"
+        android:gravity="center"
+        su:maskHight="@dimen/y70"
+        su:noEmpty="true"
+        su:normalTextColor="#777"
+        su:normalTextSize="12sp"
+        su:selecredTextColor="#ff000000"
+        su:selecredTextSize="13sp"
+        su:unitHight="@dimen/y120" />
+
+    <net.leelink.leelinkservice.city.ScrollerNumberPicker
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        su:itemNumber="3"
+        su:lineColor="#E5E5E5"
+        su:maskHight="@dimen/y70"
+        android:gravity="center"
+        su:noEmpty="true"
+        su:normalTextColor="#777"
+        su:normalTextSize="12sp"
+        su:selecredTextColor="#ff000000"
+        su:selecredTextSize="13sp"
+        su:unitHight="@dimen/y120" />
+
+    <net.leelink.leelinkservice.city.ScrollerNumberPicker
+        android:id="@+id/couny"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        su:itemNumber="3"
+        android:gravity="center"
+        su:lineColor="#E5E5E5"
+        su:maskHight="@dimen/y70"
+        su:noEmpty="true"
+        su:normalTextColor="#777"
+        su:normalTextSize="12sp"
+        su:selecredTextColor="#ff000000"
+        su:selecredTextSize="13sp"
+        su:unitHight="@dimen/y120" />
+
+</LinearLayout>

@@ -27,6 +27,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.BoundaryActivity;
 import net.leelink.communityboss.activity.ChangePhoneActivity;
 import net.leelink.communityboss.activity.CommentListActivity;
 import net.leelink.communityboss.activity.IncomeActivity;
@@ -47,7 +48,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
-    private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service;
+    private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary;
     private ImageView img_head,img_change,img_setting;
     private TextView tv_income,tv_order_number,tv_phone,tv_name;
     private TwinklingRefreshLayout refreshLayout;
@@ -91,6 +92,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         img_change.setOnClickListener(this);
         img_setting = view.findViewById(R.id.img_setting);
         img_setting.setOnClickListener(this);
+        rl_boundary = view.findViewById(R.id.rl_boundary);
+        rl_boundary.setOnClickListener(this);
     }
 
     public void initdata(){
@@ -155,6 +158,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.img_setting:
                 Intent intent7 = new Intent(getContext(), SettingActivity.class);
                 startActivity(intent7);
+                break;
+            case R.id.rl_boundary:
+                Intent intent8 = new Intent(getContext(), BoundaryActivity.class);
+                startActivity(intent8);
                 break;
                 default:
                     break;

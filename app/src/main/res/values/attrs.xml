@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GroupRecyclerView">
+        <attr name="group_height" format="dimension" />
+        <attr name="group_child_offset" format="dimension" />
+        <attr name="group_background" format="color" />
+        <attr name="group_text_color" format="color" />
+        <attr name="group_text_size" format="dimension" />
+        <attr name="group_center" format="boolean" />
+        <attr name="group_padding_left" format="dimension" />
+        <attr name="group_padding_right" format="dimension" />
+        <attr name="group_has_header" format="boolean" />
+        <attr name="selected_theme_color" format="color" /> <!--选中颜色-->
+        <attr name="selected_text_color" format="color" /> <!--选中文本颜色-->
+        <attr name="selected_lunar_text_color" format="color" /> <!--选中农历文本颜色-->
+    </declare-styleable>
+    <declare-styleable name="NumberPicker">
+        <attr name="normalTextColor" format="color" />
+        <attr name="normalTextSize" format="dimension" />
+        <attr name="selecredTextColor" format="color" />
+        <attr name="selecredTextSize" format="dimension" />
+        <attr name="unitHight" format="dimension" />
+        <attr name="itemNumber" format="integer" />
+        <attr name="lineColor" format="color" />
+        <attr name="maskHight" format="dimension" />
+        <attr name="noEmpty" format="boolean" />
+        <attr name="isEnable" format="boolean" />
+    </declare-styleable>
+
+
+
+</resources>

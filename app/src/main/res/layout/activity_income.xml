@@ -76,6 +76,14 @@
             android:includeFontPadding="false"
             />
     </LinearLayout>
+    <TextView
+        android:layout_width="@dimen/x284"
+        android:layout_height="@dimen/y54"
+        android:layout_gravity="center_horizontal"
+        android:text="机构提成20%"
+        android:background="@drawable/bg_profit"
+        android:textColor="@color/blue"
+        android:gravity="center"/>
 <!--    <TextView-->
 <!--        android:layout_width="@dimen/x198"-->
 <!--        android:layout_height="@dimen/y54"-->

@@ -21,14 +21,15 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:allowBackup="true"
         android:name=".app.CommunityBossApplication"
+        android:allowBackup="true"
         android:icon="@mipmap/android_template"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/android_template_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-<!--        <activity android:name=".activity.CheckActivity"></activity>-->
+        <activity android:name=".activity.BoundaryActivity"></activity>
+        <!-- <activity android:name=".activity.CheckActivity"></activity> -->
         <activity android:name=".activity.ChangeGoodsActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
@@ -166,6 +167,8 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="fe64a86563c6aa575b955ade" />
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="8868bd6ed288eaf214fb3e976a899d31">
+        </meta-data>
     </application>
 
 </manifest>

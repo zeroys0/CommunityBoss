@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
-            android:text="姓名"
+            android:text="卡号"
             android:layout_marginLeft="@dimen/x32"
             android:layout_centerVertical="true"
             />
@@ -74,15 +74,15 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
-            android:text="身份证号"
+            android:text="银行"
             android:layout_marginLeft="@dimen/x32"
             android:layout_centerVertical="true"
             />
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
-            android:id="@+id/ed_ID"
+            android:id="@+id/tv_bank"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
             android:background="@null"
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
-            android:text="开户行"
+            android:text="持卡人"
             android:layout_marginLeft="@dimen/x32"
             android:layout_centerVertical="true"
             />
@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
-            android:text="卡号"
+            android:text="身份证"
             android:layout_marginLeft="@dimen/x32"
             android:layout_centerVertical="true"
             />
@@ -141,12 +141,50 @@
             android:layout_height="match_parent"
             android:inputType="number"
             android:maxLines="1"
-            android:id="@+id/ed_card_number"
+            android:id="@+id/ed_card"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
             android:background="@null"
             android:text=""
             android:layout_marginLeft="@dimen/x300"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"
+        android:background="@color/grey"
+        android:layout_marginLeft="@dimen/x32"
+        android:layout_marginRight="@dimen/x32"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y162">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="11"
+            android:inputType="phone"
+            android:id="@+id/ed_phone"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/x45"
+            android:hint="请输入手机号"
+            android:textColor="@color/text_black"
+            android:textColorHint="#a9a9a9"
+            android:layout_marginLeft="@dimen/x32"
+            />
+        <TextView
+            android:layout_width="@dimen/x291"
+            android:layout_height="@dimen/y99"
+            android:textColor="@color/text_grey"
+            android:textSize="@dimen/x45"
+            android:background="@color/grey"
+            android:text="获取验证码"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x32"
+            android:id="@+id/getmsmpass_TX"
+            android:layout_centerVertical="true"
+            />
+
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -162,7 +200,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
-            android:text="开户手机号"
+            android:text="输入验证码"
             android:layout_marginLeft="@dimen/x32"
             android:layout_centerVertical="true"
             />
@@ -171,7 +209,7 @@
             android:layout_height="match_parent"
             android:maxLines="1"
             android:inputType="number"
-            android:id="@+id/ed_phone"
+            android:id="@+id/ed_code"
             android:background="@null"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"

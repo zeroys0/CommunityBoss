@@ -43,9 +43,9 @@ private EditText ed_name,ed_ID,ed_bank,ed_card_number,ed_phone;
         btn_submit = findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(this);
         ed_name = findViewById(R.id.ed_name);
-        ed_ID = findViewById(R.id.ed_ID);
+//        ed_ID = findViewById(R.id.ed_ID);
         ed_bank = findViewById(R.id.ed_bank);
-        ed_card_number = findViewById(R.id.ed_card_number);
+//        ed_card_number = findViewById(R.id.ed_card_number);
         ed_phone = findViewById(R.id.ed_phone);
     }
 
