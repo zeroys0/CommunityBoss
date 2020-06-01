@@ -37,7 +37,7 @@ public class QuestionAdapter extends   RecyclerView.Adapter<QuestionAdapter.View
 
     @Override
     public void onBindViewHolder(QuestionAdapter.ViewHolder holder, int position) {
-        holder.tv_question.setText(list.get(position).getProblemName());
+        holder.tv_question.setText(list.get(position).getQuestion());
     }
 
     @Override

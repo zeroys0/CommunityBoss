@@ -38,7 +38,7 @@ public class PreOrderAdapter extends RecyclerView.Adapter<PreOrderAdapter.ViewHo
     @Override
     public void onBindViewHolder(PreOrderAdapter.ViewHolder holder, int position) {
         holder.tv_name.setText(list.get(position).getCommodityName());
-        Glide.with(context).load(Urls.IMAGEURL+"/Store/"+ CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+list.get(position).getCommodityImage()).into(holder.img_head);
+        Glide.with(context).load(Urls.IMAGEURL+"/Store/"+ CommunityBossApplication.storeInfo.getStoreFontPath()).into(holder.img_head);
         holder.tv_count.setText("x"+list.get(position).getSales());
         holder.tv_price.setText("￥"+list.get(position).getPrice());
     }

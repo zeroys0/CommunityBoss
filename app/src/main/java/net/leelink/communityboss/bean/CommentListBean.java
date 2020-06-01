@@ -1,130 +1,114 @@
 package net.leelink.communityboss.bean;
 
-import java.util.List;
-
 public class CommentListBean {
 
-    /**
-     * StoreScore : 4.6
-     * StoreTaste : 4.5
-     * StorePack : 4.5
-     * StoreDelivery : 4.5
-     * StoreQuality : 5
-     * StoreAttitude : 4.5
-     * UserAppraiseList : [{"OrderId":86,"Username":"18222728241","UserHeadImage":"4b53fef998dc483cb0d4fa30ae1d1474.png","UserScore":5,"UserMessage":"好厚"},{"OrderId":74,"Username":"15122478510","UserHeadImage":"29ff25e39a024e558a490e6f66af7d19.png","UserScore":4.2,"UserMessage":"很不错"}]
-     */
+    private double tasteStar;
+    private double totalStar;
+    private String orderNo;
+    private String image1_path;
+    private double productStar;
+    private String image3_path;
+    private String telephone;
+    private String id;
+    private double customTotalStar;
+    private String image2_path;
+    private String content;
+    private String reply;
+    private String elderlyImgPath;
 
-    private double StoreScore;
-    private double StoreTaste;
-    private double StorePack;
-    private double StoreDelivery;
-    private double StoreQuality;
-    private double StoreAttitude;
-    private List<UserAppraiseListBean> UserAppraiseList;
-
-    public double getStoreScore() {
-        return StoreScore;
+    public String getReply() {
+        return reply;
     }
 
-    public void setStoreScore(double StoreScore) {
-        this.StoreScore = StoreScore;
+    public void setReply(String reply) {
+        this.reply = reply;
     }
 
-    public double getStoreTaste() {
-        return StoreTaste;
+    public double getTasteStar() {
+        return tasteStar;
     }
 
-    public void setStoreTaste(double StoreTaste) {
-        this.StoreTaste = StoreTaste;
+    public void setTasteStar(double tasteStar) {
+        this.tasteStar = tasteStar;
     }
 
-    public double getStorePack() {
-        return StorePack;
+    public double getTotalStar() {
+        return totalStar;
     }
 
-    public void setStorePack(double StorePack) {
-        this.StorePack = StorePack;
+    public void setTotalStar(double totalStar) {
+        this.totalStar = totalStar;
     }
 
-    public double getStoreDelivery() {
-        return StoreDelivery;
+    public String getOrderNo() {
+        return orderNo;
     }
 
-    public void setStoreDelivery(double StoreDelivery) {
-        this.StoreDelivery = StoreDelivery;
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 
-    public double getStoreQuality() {
-        return StoreQuality;
+    public String getImage1_path() {
+        return image1_path;
     }
 
-    public void setStoreQuality(double StoreQuality) {
-        this.StoreQuality = StoreQuality;
+    public void setImage1_path(String image1_path) {
+        this.image1_path = image1_path;
     }
 
-    public double getStoreAttitude() {
-        return StoreAttitude;
+    public double getProductStar() {
+        return productStar;
     }
 
-    public void setStoreAttitude(double StoreAttitude) {
-        this.StoreAttitude = StoreAttitude;
+    public void setProductStar(double productStar) {
+        this.productStar = productStar;
     }
 
-    public List<UserAppraiseListBean> getUserAppraiseList() {
-        return UserAppraiseList;
+    public String getImage3_path() {
+        return image3_path;
     }
 
-    public void setUserAppraiseList(List<UserAppraiseListBean> UserAppraiseList) {
-        this.UserAppraiseList = UserAppraiseList;
+    public void setImage3_path(String image3_path) {
+        this.image3_path = image3_path;
     }
 
-    public static class UserAppraiseListBean {
+    public String getTelephone() {
+        return telephone;
+    }
 
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
-        private String OrderId;
-        private String Username;
-        private String UserHeadImage;
-        private double UserScore;
-        private String UserMessage;
+    public String getId() {
+        return id;
+    }
 
-        public String getOrderId() {
-            return OrderId;
-        }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-        public void setOrderId(String OrderId) {
-            this.OrderId = OrderId;
-        }
+    public double getCustomTotalStar() {
+        return customTotalStar;
+    }
 
-        public String getUsername() {
-            return Username;
-        }
+    public void setCustomTotalStar(double customTotalStar) {
+        this.customTotalStar = customTotalStar;
+    }
 
-        public void setUsername(String Username) {
-            this.Username = Username;
-        }
+    public String getImage2_path() {
+        return image2_path;
+    }
 
-        public String getUserHeadImage() {
-            return UserHeadImage;
-        }
+    public void setImage2_path(String image2_path) {
+        this.image2_path = image2_path;
+    }
 
-        public void setUserHeadImage(String UserHeadImage) {
-            this.UserHeadImage = UserHeadImage;
-        }
+    public String getContent() {
+        return content;
+    }
 
-        public double getUserScore() {
-            return UserScore;
-        }
-
-        public void setUserScore(double UserScore) {
-            this.UserScore = UserScore;
-        }
-
-        public String getUserMessage() {
-            return UserMessage;
-        }
-
-        public void setUserMessage(String UserMessage) {
-            this.UserMessage = UserMessage;
-        }
+    public void setContent(String content) {
+        this.content = content;
     }
 }

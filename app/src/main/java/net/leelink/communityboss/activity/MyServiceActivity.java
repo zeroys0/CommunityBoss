@@ -72,28 +72,28 @@ private TextView tv_servphone;
         });
     }
     public void initData() {
-        OkGo.<String>get(Urls.STOREFAQ)
+        OkGo.<String>get(Urls.FAQ)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("问题列表",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 Gson gson = new Gson();
-                                JSONArray jsonArray = json.getJSONObject("ObjectData").getJSONArray("FaqList");
-                                phone = json.getJSONObject("ObjectData").getString("ServicePhone");
-                                tv_servphone.setText("客服电话:"+phone);
+                                JSONArray jsonArray = json.getJSONArray("data");
+//                                phone = json.getJSONObject("ObjectData").getString("ServicePhone");
+//                                tv_servphone.setText("客服电话:"+phone);
+
                                 list = gson.fromJson(jsonArray.toString(),new TypeToken<List<QuestionBean>>(){}.getType());
                                 questionAdapter = new QuestionAdapter(list,MyServiceActivity.this,MyServiceActivity.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MyServiceActivity.this,LinearLayoutManager.VERTICAL,false);
                                 question_list.setLayoutManager(layoutManager);
                                 question_list.setAdapter(questionAdapter);
                             } else {
-                                Toast.makeText(MyServiceActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(MyServiceActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {

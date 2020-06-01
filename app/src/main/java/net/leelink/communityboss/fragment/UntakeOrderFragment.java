@@ -51,6 +51,7 @@ private OrderListAdapter orderListAdapter;
 private List<OrderBean> list = new ArrayList<>();
     private TwinklingRefreshLayout refreshLayout;
         private String orderId = "0";
+        private int page = 1;
     @Override
     public void handleCallBack(Message msg) {
 
@@ -74,19 +75,22 @@ private List<OrderBean> list = new ArrayList<>();
 
         //获取订单列表
 
-            OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+2+"&orderId="+orderId)
+            OkGo.<String>get(Urls.ORDERLIST)
+                    .params("state",2)
+                    .params("pageNum",1)
+                    .params("pageSize",5)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
                             try {
                                 String body = response.body();
-                                body = body.substring(1,body.length()-1);
-                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                                JSONObject json = new JSONObject(body);
                                 Log.d("未接订单",json.toString());
-                                if (json.getInt("ResultCode") == 200) {
+                                if (json.getInt("status") == 200) {
                                     Gson gson = new Gson();
-                                    JSONArray jsonArray = json.getJSONArray("ObjectData");
+                                    json = json.getJSONObject("data");
+                                    JSONArray jsonArray = json.getJSONArray("list");
                                     List<OrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
                                     list.addAll(orderBeanslist);
                                     orderListAdapter = new OrderListAdapter(list,getContext(),UntakeOrderFragment.this);
@@ -94,7 +98,7 @@ private List<OrderBean> list = new ArrayList<>();
                                     list_order.setLayoutManager(layoutManager);
                                     list_order.setAdapter(orderListAdapter);
                                 } else {
-                                    Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                                 }
 
                             } catch (JSONException e) {
@@ -117,25 +121,25 @@ private List<OrderBean> list = new ArrayList<>();
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
-        OkGo.<String>post(Urls.ORDEROPERATION+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>post(Urls.ORDERSTATE)
                 .params("orderId",list.get(position).getOrderId())
-                .params("operation",1)
+                .params("state",3)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("确认订单",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 list.remove(position);
                                 orderListAdapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), "订单已确认,请尽快完成吧~", Toast.LENGTH_SHORT).show();
                             } else {
 
                             }
-                            Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -157,6 +161,8 @@ private List<OrderBean> list = new ArrayList<>();
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
+                        page = 1;
+
                         list.clear();
                         orderId = "0";
                         initData(orderId);

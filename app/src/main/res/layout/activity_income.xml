@@ -77,12 +77,15 @@
             />
     </LinearLayout>
     <TextView
-        android:layout_width="@dimen/x284"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/y54"
         android:layout_gravity="center_horizontal"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
         android:text="机构提成20%"
         android:background="@drawable/bg_profit"
         android:textColor="@color/blue"
+        android:id="@+id/tv_profit"
         android:gravity="center"/>
 <!--    <TextView-->
 <!--        android:layout_width="@dimen/x198"-->

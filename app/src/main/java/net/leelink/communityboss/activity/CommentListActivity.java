@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -28,6 +29,7 @@ import net.leelink.communityboss.bean.CommentListBean;
 import net.leelink.communityboss.utils.RatingBar;
 import net.leelink.communityboss.utils.Urls;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,9 +46,9 @@ private CommentListBean commentListBean;
 private RelativeLayout rl_back;
 private String orderId = "0";
 private TextView tv_total_score;
-private RatingBar rt_attitude,rt_taste,rt_hygiene,rt_delivery,rt_quality;
+private RatingBar rl_total,rt_taste,rt_pack,rt_quality;
 private TwinklingRefreshLayout refreshLayout;
-private List<CommentListBean.UserAppraiseListBean> list = new ArrayList<>();
+private List<CommentListBean> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,50 +64,36 @@ private List<CommentListBean.UserAppraiseListBean> list = new ArrayList<>();
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
         tv_total_score = findViewById(R.id.tv_total_score);
-        rt_attitude = findViewById(R.id.rt_attitude);
-        rt_attitude.setUntouchable();
+        rl_total = findViewById(R.id.rt_total);
+        rl_total.setUntouchable();
         rt_taste = findViewById(R.id.rt_taste);
         rt_taste.setUntouchable();
-        rt_hygiene = findViewById(R.id.rt_hygiene);
-        rt_hygiene.setUntouchable();
-        rt_quality = findViewById(R.id.rt_quality);
-        rt_quality.setUntouchable();
-        rt_delivery = findViewById(R.id.rt_delivery);
-        rt_delivery.setUntouchable();
+        rt_pack = findViewById(R.id.rt_pack);
+        rt_pack.setUntouchable();
     }
 
     public  void initData(String orderId){
-        OkGo.<String>get(Urls.APPRAISELIST+"?model.appToken="+ CommunityBossApplication.token+"&model.orderId="+orderId)
+        OkGo.<String>get(Urls.APPRAISELIST)
+                .params("pageNum",1)
+                .params("pageSize",5)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("评价列表",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                if(!json.isNull("ObjectData")) {
-                                    json = json.getJSONObject("ObjectData");
-                                    Gson gson = new Gson();
-                                    commentListBean = gson.fromJson(json.toString(), CommentListBean.class);
-                                    list.addAll(commentListBean.getUserAppraiseList());
-                                    tv_total_score.setText("综合评分: " + commentListBean.getStoreScore());
-                                    rt_attitude.setSelectedNumber(getStar(commentListBean.getStoreAttitude()));
-                                    rt_taste.setSelectedNumber(getStar(commentListBean.getStoreTaste()));
-                                    rt_hygiene.setSelectedNumber(getStar(commentListBean.getStorePack()));
-                                    rt_delivery.setSelectedNumber(getStar(commentListBean.getStoreDelivery()));
-                                    rt_quality.setSelectedNumber(getStar(commentListBean.getStoreQuality()));
-                                }else {
-                                    Toast.makeText(CommentListActivity.this, "没有更多的数据了", Toast.LENGTH_SHORT).show();
-                                }
-                                    commentListAdapter = new CommentListAdapter(CommentListActivity.this, list, CommentListActivity.this);
+                            if (json.getInt("status") == 200) {
+                                    json =  json.getJSONObject("data");
+                                    JSONArray jsonArray = json.getJSONArray("list");
+                                    commentListAdapter = new CommentListAdapter(CommentListActivity.this, jsonArray, CommentListActivity.this);
                                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(CommentListActivity.this, LinearLayoutManager.VERTICAL, false);
                                     comment_list.setLayoutManager(layoutManager);
                                     comment_list.setAdapter(commentListAdapter);
-                            } else {
 
+                            } else {
+                                Toast.makeText(CommentListActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -176,10 +164,8 @@ private List<CommentListBean.UserAppraiseListBean> list = new ArrayList<>();
                     @Override
                     public void run() {
                         refreshLayout.finishLoadmore();
-                        orderId = list.get(list.size()-1).getOrderId();
                         initData(orderId);
-                        commentListAdapter.update(list);
-                        Log.d( "run:最后评分 ",list.get(1).getUserScore()+"");
+                     //   commentListAdapter.update(j);
                         comment_list.scrollToPosition(commentListAdapter.getItemCount()-1);
                     }
                 }, 1000);

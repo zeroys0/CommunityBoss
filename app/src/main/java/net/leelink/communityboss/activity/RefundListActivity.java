@@ -62,26 +62,29 @@ private RecyclerView refund_list;
     public void initData(){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type=7,8,9"+"&orderId="+0)
+        OkGo.<String>get(Urls.ORDERLIST)
+                .params("state","8,9,10")
+                .params("pageNum",1)
+                .params("pageSize",5)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("退款订单",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 Gson gson = new Gson();
-                                JSONArray jsonArray = json.getJSONArray("ObjectData");
+                                json = json.getJSONObject("data");
+                                JSONArray jsonArray = json.getJSONArray("list");
                                 list = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
                                 refundAdapter = new RefundAdapter(list,RefundListActivity.this,RefundListActivity.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(RefundListActivity.this,LinearLayoutManager.VERTICAL,false);
                                 refund_list.setLayoutManager(layoutManager);
                                 refund_list.setAdapter(refundAdapter);
                             } else {
-                                Toast.makeText(RefundListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(RefundListActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {

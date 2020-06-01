@@ -188,6 +188,49 @@
             android:textColor="@color/text_black"
             android:maxLength="50"/>
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y111"
+        android:layout_below="@id/img_head"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/y557"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/x36"
+            android:layout_marginLeft="@dimen/x30"
+            android:text="商品下架"
+            android:layout_centerVertical="true"/>
+<RadioGroup
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:orientation="horizontal"
+    android:layout_centerVertical="true">
+    <android.support.v7.widget.AppCompatRadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_black"
+        android:theme="@style/My_RadioButtion"
+        android:id="@+id/cb_up"
+        android:text="上架">
+
+    </android.support.v7.widget.AppCompatRadioButton>
+    <android.support.v7.widget.AppCompatRadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_black"
+        android:theme="@style/My_RadioButtion"
+        android:id="@+id/cb_down"
+        android:text="下架">
+
+    </android.support.v7.widget.AppCompatRadioButton>
+</RadioGroup>
+
+    </RelativeLayout>
     <Button
         android:layout_width="@dimen/x1014"
         android:layout_height="@dimen/y129"

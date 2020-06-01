@@ -3,76 +3,37 @@ package net.leelink.communityboss.bean;
 public class CardBean {
 
 
-    private int Id;
-    private int StoreId;
-    private String UserName;
-    private String IdNumber;
-    private String Bank;
-    private String CardNumber;
-    private String PhoneNumber;
-    private String AddTime;
+    /**
+     * bindId : 6
+     * bankCard : 5775444226
+     * bankName : 建设银行
+     */
 
-    public int getId() {
-        return Id;
+    private int bindId;
+    private String bankCard;
+    private String bankName;
+
+    public int getBindId() {
+        return bindId;
     }
 
-    public void setId(int Id) {
-        this.Id = Id;
+    public void setBindId(int bindId) {
+        this.bindId = bindId;
     }
 
-    public int getStoreId() {
-        return StoreId;
+    public String getBankCard() {
+        return bankCard;
     }
 
-    public void setStoreId(int StoreId) {
-        this.StoreId = StoreId;
+    public void setBankCard(String bankCard) {
+        this.bankCard = bankCard;
     }
 
-    public String getUserName() {
-        return UserName;
+    public String getBankName() {
+        return bankName;
     }
 
-    public void setUserName(String UserName) {
-        this.UserName = UserName;
-    }
-
-    public String getIdNumber() {
-        return IdNumber;
-    }
-
-    public void setIdNumber(String IdNumber) {
-        this.IdNumber = IdNumber;
-    }
-
-    public String getBank() {
-        return Bank;
-    }
-
-    public void setBank(String Bank) {
-        this.Bank = Bank;
-    }
-
-    public String getCardNumber() {
-        return CardNumber;
-    }
-
-    public void setCardNumber(String CardNumber) {
-        this.CardNumber = CardNumber;
-    }
-
-    public String getPhoneNumber() {
-        return PhoneNumber;
-    }
-
-    public void setPhoneNumber(String PhoneNumber) {
-        this.PhoneNumber = PhoneNumber;
-    }
-
-    public String getAddTime() {
-        return AddTime;
-    }
-
-    public void setAddTime(String AddTime) {
-        this.AddTime = AddTime;
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

@@ -68,25 +68,24 @@ private Button btn_confirm;
 
     //修改密码(忘记密码)
     public void resetPassword(){
-        OkGo.<String>post(Urls.RESETPASSWORD)
+        OkGo.<String>post(Urls.CHANGEPASSWORD)
                 .tag(this)
-                .params("username", ed_phone.getText().toString().trim())
-                .params("smscode",ed_code.getText().toString().trim())
+                .params("telephone", ed_phone.getText().toString().trim())
+                .params("smsCode",ed_code.getText().toString().trim())
                 .params("password",ed_password.getText().toString().trim())
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("忘记密码",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 finish();
                             } else {
 
                             }
-                            Toast.makeText(ChangePasswordActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ChangePasswordActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -97,26 +96,25 @@ private Button btn_confirm;
     //发送短信验证码
     public void sendSmsCode(){
         if(!ed_phone.getText().toString().trim().equals("")){
-            OkGo.<String>get(Urls.SENDSMSCODE)
+            OkGo.<String>post(Urls.SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
                     .tag(this)
-                    .params("phone", ed_phone.getText().toString().trim())
-                    .params("used",2)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
                             try {
                                 String body = response.body();
-                                body = body.substring(1,body.length()-1);
-                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                                JSONObject json = new JSONObject(body);
+//                                body = body.substring(1,body.length()-1);
+//                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                 Log.d("获取验证码",json.toString());
-                                if (json.getInt("ResultCode") == 200) {
+                                if (json.getInt("status") == 200) {
                                     if(time == 60) {
                                         new Thread(new ChangePasswordActivity.TimeRun()).start();
                                     }else {
                                         getmsmpass_TX.setEnabled(false);
                                     }
                                 } else {
-                                    Toast.makeText(ChangePasswordActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ChangePasswordActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

@@ -104,19 +104,22 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
     public void initData(int type,String orderId){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type="+type+"&orderId="+orderId)
+        OkGo.<String>get(Urls.ORDERLIST)
+                .params("state",type)
+                .params("pageNum",1)
+                .params("pageSize",5)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("已接单",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 Gson gson = new Gson();
-                                JSONArray jsonArray = json.getJSONArray("ObjectData");
+                                json = json.getJSONObject("data");
+                                JSONArray jsonArray = json.getJSONArray("list");
                                 List<OrderBean> orderBeanlist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
                                 list.addAll(orderBeanlist);
                                 orderListAdapter = new OrderListAdapter(list,getContext(),TakeOrderFragment.this);
@@ -124,7 +127,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                                 list_order.setLayoutManager(layoutManager);
                                 list_order.setAdapter(orderListAdapter);
                             } else {
-                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {
@@ -164,8 +167,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("确认订单",json.toString());
                             if (json.getInt("ResultCode") == 200) {
                                 list.remove(position);

@@ -57,9 +57,9 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
             holder.rl_check.setVisibility(View.GONE);
         }
         holder.tv_name.setText(list.get(position).getName());
-        holder.tv_price.setText("￥"+list.get(position).getPrice());
-        holder.tv_detail.setText(list.get(position).getDetails());
-        Glide.with(context).load(Urls.IMAGEURL+"Store/"+ CommunityBossApplication.storeInfo.getStoreId()+"/CommodityImage/"+list.get(position).getHeadImage()).into(holder.img_head);
+        holder.tv_price.setText("￥"+list.get(position).getUnitPrice());
+        holder.tv_detail.setText(list.get(position).getRemark());
+        Glide.with(context).load(Urls.IMG_URL+list.get(position).getProductImgPath()).into(holder.img_head);
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -33,6 +33,7 @@ public class BaseActivity extends FragmentActivity {
         }
         Utils.setStatusTextColor(true, this);//通知栏字体所需颜色
         setStatusBarFullTransparent();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @TargetApi(19)

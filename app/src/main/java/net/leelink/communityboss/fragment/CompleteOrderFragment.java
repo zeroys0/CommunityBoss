@@ -62,28 +62,31 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
 
     public void init(View view){
         list_order = view.findViewById(R.id.list_order);
-        orderListAdapter = new OrderListAdapter(list,getContext(),this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-        list_order.setLayoutManager(layoutManager);
-        list_order.setAdapter(orderListAdapter);
+//        orderListAdapter = new OrderListAdapter(list,getContext(),this);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+//        list_order.setLayoutManager(layoutManager);
+//        list_order.setAdapter(orderListAdapter);
     }
 
     public void initData(String orderId){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST+"?appToken="+ CommunityBossApplication.token+"&type=5,6"+"&orderId="+orderId)
+        OkGo.<String>get(Urls.ORDERLIST)
+                .params("state",5)
+                .params("pageNum",1)
+                .params("pageSize",5)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("已处理",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 Gson gson = new Gson();
-                                JSONArray jsonArray = json.getJSONArray("ObjectData");
+                                json = json.getJSONObject("data");
+                                JSONArray jsonArray = json.getJSONArray("list");
                                 List<OrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
                                 list.addAll(orderBeanslist);
                                 orderListAdapter = new OrderListAdapter(list,getContext(),CompleteOrderFragment.this);
@@ -91,7 +94,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                                 list_order.setLayoutManager(layoutManager);
                                 list_order.setAdapter(orderListAdapter);
                             } else {
-                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {

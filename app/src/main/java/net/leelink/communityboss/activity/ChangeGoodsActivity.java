@@ -13,6 +13,8 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +40,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.DeleteEvent;
 import net.leelink.communityboss.bean.Event;
+import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.Urls;
 
@@ -57,9 +61,11 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
     private Button btn_album, btn_photograph, btn_upload;
     private EditText ed_name, ed_price, ed_detail;
     private Bitmap bitmap;
+
     private int commodityId;
     private String url;
-
+    private int state =1;
+    private AppCompatRadioButton cb_up,cb_down;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,20 +87,32 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
         img_del = findViewById(R.id.img_del);
         img_del.setOnClickListener(this);
 
+
         commodityId = getIntent().getIntExtra("commodityId", 0);
         ed_name.setText(getIntent().getStringExtra("name"));
-        float price = getIntent().getFloatExtra("price", 0);
-        ed_price.setText(Float.toString(price));
+        double price = getIntent().getDoubleExtra("price", 0);
+        ed_price.setText(Double.toString(price));
         ed_detail.setText(getIntent().getStringExtra("details"));
         url = getIntent().getStringExtra("image");
-        Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL + "Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/CommodityImage/" + url).into(img_head);
+        state = getIntent().getIntExtra("state",0);
+        cb_up = findViewById(R.id.cb_up);
+        cb_down = findViewById(R.id.cb_down);
+        if(state == 0){
+
+            cb_down.setChecked(true);
+        }
+        if(state ==1) {
+            cb_up.setChecked(true);
+        }
+
+        Glide.with(ChangeGoodsActivity.this).load(Urls.IMG_URL + url).into(img_head);
 
         //将网络地址转化为file
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Bitmap bitmap = Glide.with(ChangeGoodsActivity.this).load(Urls.IMAGEURL + "Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/CommodityImage/" + url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                    Bitmap bitmap = Glide.with(ChangeGoodsActivity.this).load(Urls.IMG_URL + url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
                     file = BitmapCompress.compressImage(bitmap);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -150,34 +168,51 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
                 delete();
                 break;
 
+
+
             default:
                 break;
         }
     }
 
     public void commit() {
-
-        OkGo.<String>post(Urls.COMMODITY + "?appToken=" + CommunityBossApplication.token)
+        if(cb_down.isChecked()){
+            state = 0;
+        }
+        else if(cb_up.isChecked()){
+            state = 1;
+        }
+        JSONObject json = Acache.get(this).getAsJSONObject("storeInfo");
+        String id="";
+        Log.e( "commit: ",json.toString() );
+        try {
+            id = json.getString("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.e( "state: ",state+"" );
+        OkGo.<String>post(Urls.COMMODITYIMG )
                 .tag(this)
-                .params("commodityId", commodityId)
-                .params("details", ed_detail.getText().toString().trim())
+                .params("id",getIntent().getStringExtra("Id"))
+                .params("remark", ed_detail.getText().toString().trim())
                 .params("name", ed_name.getText().toString().trim())
-                .params("price", ed_price.getText().toString().trim())
-                .params("file", file)
+                .params("unitPrice", ed_price.getText().toString().trim())
+                .params("productFile", file)
+                .params("shStoreId",id)
+                .params("state",state)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1, body.length() - 1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\", ""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("编辑商品", json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 finish();
                             } else {
 
                             }
-                            Toast.makeText(ChangeGoodsActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ChangeGoodsActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

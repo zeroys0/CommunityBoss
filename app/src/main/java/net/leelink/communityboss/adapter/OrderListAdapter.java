@@ -44,28 +44,32 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
     @Override
     public void onBindViewHolder(OrderListAdapter.ViewHolder holder, final int position) {
         holder.tv_orderid.setText(list.get(position).getOrderId());
-        switch (list.get(position).getState()){
+        switch (list.get(position).getOrderState()){
             case 2:
                 holder.tv_state.setText("未接订单");
                 break;
             case 3:
-                holder.tv_state.setText("未派送");
-                holder.btn_confirm.setText("订单送出");
+                holder.tv_state.setText("待骑手抢单");
                 break;
             case 4:
-                holder.tv_state.setText("已送出");
+                holder.tv_state.setText("待取货");
+         //       holder.btn_confirm.setText("订单送出");
                 holder.btn_confirm.setVisibility(View.INVISIBLE);
                 break;
             case 5:
+                holder.tv_state.setText("已送出");
+                holder.btn_confirm.setVisibility(View.INVISIBLE);
+                break;
             case 6:
+            case 7:
                 holder.tv_state.setText("已完成");
                 holder.btn_confirm.setVisibility(View.INVISIBLE);
                 break;
             default:
                     break;
         }
-        holder.tv_time.setText("预约时间:"+list.get(position).getDeliveryTime());
-        holder.tv_total_price.setText("总价:￥"+list.get(position).getTotalPrice());
+        holder.tv_time.setText("预约时间:"+list.get(position).getAppointTime());
+        holder.tv_total_price.setText("总价:￥"+list.get(position).getActualPayPrice());
         holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

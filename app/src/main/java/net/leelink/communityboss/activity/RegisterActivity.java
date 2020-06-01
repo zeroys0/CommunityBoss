@@ -72,24 +72,25 @@ private int time = 60;
     public void regist(){
        if(!ed_code.getText().toString().trim().equals("")){
             if(ed_password.getText().toString().trim().equals(ed_confirm_password.getText().toString().trim())){
-                OkGo.<String>post(Urls.REGISTER)
+                OkGo.<String>post(Urls.REGIST)
                         .tag(this)
-                        .params("username", ed_phone.getText().toString().trim())
+                        .params("telephone", ed_phone.getText().toString().trim())
                         .params("password",ed_password.getText().toString().trim())
-                        .params("smscode",ed_code.getText().toString().trim())
+                        .params("code",ed_code.getText().toString().trim())
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(Response<String> response) {
                                 try {
                                     String body = response.body();
-                                    body = body.substring(1,body.length()-1);
-                                    JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                                    JSONObject json = new JSONObject(body);
+//                                    body = body.substring(1,body.length()-1);
+//                                    JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                     Log.d("账号注册",json.toString());
-                                    if (json.getInt("ResultCode") == 200) {
+                                    if (json.getInt("status") == 200) {
                                         Toast.makeText(RegisterActivity.this, "注册成功,请登录", Toast.LENGTH_SHORT).show();
                                         finish();
                                     } else {
-                                        Toast.makeText(RegisterActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(RegisterActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -107,26 +108,25 @@ private int time = 60;
     //发送短信验证码
     public void sendSmsCode(){
         if(!ed_phone.getText().toString().trim().equals("")){
-            OkGo.<String>get(Urls.SENDSMSCODE)
+            OkGo.<String>post(Urls.SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
                     .tag(this)
-                    .params("phone", ed_phone.getText().toString().trim())
-                    .params("used",0)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
                             try {
                                 String body = response.body();
-                                body = body.substring(1,body.length()-1);
-                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                                JSONObject json = new JSONObject(body);
+//                                body = body.substring(1,body.length()-1);
+//                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                 Log.d("获取验证码",json.toString());
-                                if (json.getInt("ResultCode") == 200) {
+                                if (json.getInt("status") == 200) {
                                     if(time == 60) {
                                         new Thread(new RegisterActivity.TimeRun()).start();
                                     }else {
                                         getmsmpass_TX.setEnabled(false);
                                     }
                                 } else {
-                                    Toast.makeText(RegisterActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RegisterActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

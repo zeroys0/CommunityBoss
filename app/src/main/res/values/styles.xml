@@ -58,4 +58,10 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
+    <style name="My_RadioButtion" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:colorControlActivated">@color/text_grey</item>
+        <item name="android:colorControlNormal">@color/grey</item>
+        <item name="android:textSize">@dimen/x30</item>
+    </style>
 </resources>

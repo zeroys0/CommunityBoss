@@ -13,6 +13,8 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -29,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
@@ -39,6 +42,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.CommentListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.Event;
+import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.LoadDialog;
 import net.leelink.communityboss.utils.Urls;
@@ -59,6 +63,8 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
     private Button btn_album,btn_photograph,btn_upload;
     private EditText ed_name,ed_price,ed_detail;
     private Bitmap bitmap;
+    private int state =1;
+    private AppCompatRadioButton cb_up,cb_down;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +125,10 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
         btn_upload.setOnClickListener(this);
         img_del = findViewById(R.id.img_del);
         img_del.setOnClickListener(this);
+        cb_up = findViewById(R.id.cb_up);
+        cb_down = findViewById(R.id.cb_down);
+        cb_up.setChecked(true);
+
     }
 
     @Override
@@ -176,29 +186,44 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void commit(){
+        if(cb_down.isChecked())
+        {
+            state = 0;
+        } else if(cb_up.isChecked()){
+            state = 1;
+        }
+        JSONObject json = Acache.get(this).getAsJSONObject("storeInfo");
+        Log.e( "commit: ",json.toString() );
+        String id="";
+        try {
+            id = json.getString("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         LoadDialog.start(this);
-        OkGo.<String>put(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>post(Urls.COMMODITY)
                 .tag(this)
-                .params("details", ed_detail.getText().toString().trim())
+                .params("remark", ed_detail.getText().toString().trim())
                 .params("name",ed_name.getText().toString().trim())
-                .params("price",ed_price.getText().toString().trim())
-                .params("file",file)
+                .params("unitPrice",ed_price.getText().toString().trim())
+                .params("productFile",file)
+                .params("shStoreId",id)
+                .params("state",state)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         LoadDialog.stop();
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("添加商品",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 finish();
                                 EventBus.getDefault().post(new Event());
                             } else {
 
                             }
-                            Toast.makeText(ManageGoodsActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ManageGoodsActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

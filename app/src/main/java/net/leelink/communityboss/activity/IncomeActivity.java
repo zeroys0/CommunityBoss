@@ -28,7 +28,7 @@ import java.util.Date;
 
 public class IncomeActivity extends BaseActivity implements View.OnClickListener {
 private RelativeLayout rl_back,rl_get_money,rl_open_time,rl_close_time;
-private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty,tv_order_number,tv_state;
+private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty,tv_order_number,tv_state,tv_profit;
     private TimePickerView pvTime,pvTime1;
     private SimpleDateFormat sdf,sdf1;
     @Override
@@ -47,6 +47,8 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
         rl_get_money = findViewById(R.id.rl_get_money);
         rl_get_money.setOnClickListener(this);
         tv_income = findViewById(R.id.tv_income);
+        tv_income.setText(CommunityBossApplication.storeInfo.getWallet()+"");
+
         tv_open_time = findViewById(R.id.tv_open_time);
         tv_close_time = findViewById(R.id.tv_close_time);
         rl_open_time = findViewById(R.id.rl_open_time);
@@ -57,7 +59,9 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
         tv_royalty = findViewById(R.id.tv_royalty);
         tv_order_number = findViewById(R.id.tv_order_number);
         tv_state = findViewById(R.id.tv_state);
-
+        tv_profit = findViewById(R.id.tv_profit);
+        double a = CommunityBossApplication.storeInfo.getProfit()*100;
+        tv_profit.setText("机构提成"+a+"%");
     }
 
     @Override
@@ -83,31 +87,33 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
     }
 
     public void initdata(){
-        OkGo.<String>get(Urls.STOREINCOME+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>get(Urls.STOREINCOME)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("查询收入",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                JSONObject jsonObject = json.getJSONObject("ObjectData");
-                                tv_income.setText(jsonObject.getString("Balance"));
-                                tv_order_number.setText(jsonObject.getString("OrderNumber")+"单");
-                                tv_total_income.setText("￥"+jsonObject.getString("Income"));
-                                tv_royalty.setText("￥"+jsonObject.getString("Royalty"));
-                            } else {
-                                Toast.makeText(IncomeActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
-                            }
+                            JSONObject json = new JSONObject(body);
+                            Log.d("获取收入统计",json.toString());
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
+                                tv_total_income.setText("￥"+json.get("totalPrice"));
+                                tv_order_number.setText(json.get("orderNum")+"单");
+                                double a = json.getDouble("totalPrice")*CommunityBossApplication.storeInfo.getProfit();
 
+                                tv_royalty.setText("￥"+a);
+
+//                                tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
+//                                tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
+                            } else {
+                                Toast.makeText(IncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                });
+                });;
     }
 
     private void initPickerView() {
@@ -135,9 +141,9 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
     }
 
     public void storeIncome(){
-        OkGo.<String>get(Urls.STOREINCOME+"?appToken="+ CommunityBossApplication.token)
-                .params("beginDate",tv_open_time.getText().toString().trim())
-                .params("endDate",tv_close_time.getText().toString().trim())
+        OkGo.<String>get(Urls.STOREINCOME)
+                .params("startTime",tv_open_time.getText().toString().trim())
+                .params("endTime",tv_close_time.getText().toString().trim())
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -147,16 +153,16 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                             body = body.substring(1,body.length()-1);
                             JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("查询收入",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                JSONObject jsonObject = json.getJSONObject("ObjectData");
-                                tv_income.setText(jsonObject.getString("Balance"));
-                                tv_order_number.setText(jsonObject.getString("OrderNumber")+"单");
-                                tv_total_income.setText("￥"+jsonObject.getString("Income"));
-                                tv_royalty.setText("￥"+jsonObject.getString("Royalty"));
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
+                                tv_total_income.setText("￥"+json.get("totalPrice"));
+                                tv_order_number.setText(json.get("orderNum")+"单");
+                                double a = json.getDouble("totalPrice")*CommunityBossApplication.storeInfo.getProfit();
+                                tv_royalty.setText("￥"+a);
                             } else {
 
                             }
-                            Toast.makeText(IncomeActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(IncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

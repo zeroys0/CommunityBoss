@@ -55,6 +55,11 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
         initSlide();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initdata();
+    }
 
     public void init(){
         card_list = findViewById(R.id.card_list);
@@ -66,18 +71,18 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
     }
 
     public void initdata(){
-        OkGo.<String>get(Urls.BANKCARD+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>get(Urls.BINDCARD)
+
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("银行卡列表",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                JSONArray jsonArray  = json.getJSONArray("ObjectData");
+                            if (json.getInt("status") == 200) {
+                                JSONArray jsonArray  = json.getJSONArray("data");
                                 Gson gson = new Gson();
                                 list = gson.fromJson(jsonArray.toString(),new TypeToken<List<CardBean>>(){}.getType());
                                 cardListAdapter = new CardListAdapter(WithdrawActivity.this,list,WithdrawActivity.this);
@@ -87,7 +92,7 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
                             } else {
 
                             }
-                            Toast.makeText(WithdrawActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(WithdrawActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -159,7 +164,7 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
                 // 菜单在Item中的Position：
                 int menuPosition = menuBridge.getPosition();
                 if (menuPosition == 0) {
-                    int id = list.get(position).getStoreId();
+//                    int id = list.get(position).getStoreId();
                     bind(position);
                     Toast.makeText(WithdrawActivity.this, "已删除", Toast.LENGTH_SHORT).show();
                 }
@@ -169,7 +174,7 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
             @Override
             public void onItemClick(View itemView, int position) {
                 Intent intent = new Intent(WithdrawActivity.this, ConfirmWithdrawActivity.class);
-                intent.putExtra("card_number", list.get(position).getId());
+                intent.putExtra("card_number", list.get(position).getBankCard());
                 intent.putExtra("balance",getIntent().getStringExtra("balance"));
                 startActivity(intent);
             }
@@ -178,7 +183,7 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
 
     }
     public void bind(int position){
-        OkGo.<String>delete(Urls.BANKCARD+"?appToken="+ CommunityBossApplication.token+"&id="+list.get(position).getId())
+        OkGo.<String>delete(Urls.BINDCARD+"?appToken="+ CommunityBossApplication.token+"&id="+list.get(position).getBindId())
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

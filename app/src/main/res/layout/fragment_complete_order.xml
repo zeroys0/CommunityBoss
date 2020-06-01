@@ -17,7 +17,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/y30"
             android:layout_marginTop="@dimen/y80"
-            android:text="未接订单"
+            android:text="完成订单"
             android:textColor="#ffffff"
             android:textSize="@dimen/x58" />
 

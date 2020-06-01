@@ -3,6 +3,7 @@ package net.leelink.communityboss.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,12 +22,15 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.maps.offlinemap.City;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
@@ -60,17 +64,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class ApplyActivity extends BaseActivity implements View.OnClickListener {
-private Button btn_submit;
-private EditText ed_name,ed_phone,ed_address;
-private RelativeLayout rl_open_time,rl_close_time,rl_back,rl_province,rl_city,rl_local,rl_organ;
-private TextView tv_open_time,tv_close_time,tv_province,tv_city,tv_local,tv_organ;
-private ImageView img_store_head,img_publicity,img_license,img_permit;
+    private Button btn_submit;
+    private EditText ed_name, ed_phone, ed_address, ed_number, ed_name_c, ed_phone_c;
+    private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s;
+    private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s;
+    private ImageView img_store_head, img_publicity, img_license, img_permit;
     private PopupWindow popuPhoneW;
-    private TimePickerView pvTime,pvTime1;
-    private SimpleDateFormat sdf,sdf1;
+    private TimePickerView pvTime, pvTime1;
+    private SimpleDateFormat sdf, sdf1;
     private Bitmap bitmap = null;
-    private File file0,file1,file2,file3;
+    private File file0, file1, file2, file3;
     private Button btn_album, btn_photograph;
     private View popview;
     List<String> province = new ArrayList<>();
@@ -79,9 +85,14 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
     private List<Cityinfo> province_list = new ArrayList<Cityinfo>();
     private HashMap<String, List<Cityinfo>> city_map = new HashMap<String, List<Cityinfo>>();
     private HashMap<String, List<Cityinfo>> couny_map = new HashMap<String, List<Cityinfo>>();
-    String province_id, city_id, local_id;
-    int organ_id,providerId, nature;
+    String province_id, city_id, local_id, province_id_s, city_id_s, local_id_s;
+    int organ_id, nature;
     int type;
+    private boolean ORGAN = true;
+    private boolean STORE = false;
+    ProgressBar mProgressBar;
+    Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,9 +101,10 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         initPickerView();
         initClose();
         popu_head();
+        createProgressBar();
     }
 
-    public void init(){
+    public void init() {
         btn_submit = findViewById(R.id.btn_submit);
         btn_submit.setOnClickListener(this);
         ed_name = findViewById(R.id.ed_name);
@@ -125,13 +137,25 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         tv_province = findViewById(R.id.tv_province);
         tv_city = findViewById(R.id.tv_city);
         tv_local = findViewById(R.id.tv_local);
-        tv_organ =  findViewById(R.id.tv_organ);
+        tv_organ = findViewById(R.id.tv_organ);
+        rl_province_s = findViewById(R.id.rl_province_s);
+        rl_province_s.setOnClickListener(this);
+        rl_city_s = findViewById(R.id.rl_city_s);
+        rl_city_s.setOnClickListener(this);
+        rl_local_s = findViewById(R.id.rl_local_s);
+        rl_local_s.setOnClickListener(this);
+        tv_province_s = findViewById(R.id.tv_province_s);
+        tv_city_s = findViewById(R.id.tv_city_s);
+        tv_local_s = findViewById(R.id.tv_local_s);
+        ed_number = findViewById(R.id.ed_number);
+        ed_name_c = findViewById(R.id.ed_name_c);
+        ed_phone_c = findViewById(R.id.ed_phone_c);
 
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_submit:   //提交审核
                 submit();
                 break;
@@ -195,51 +219,82 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                 finish();
                 break;
             case R.id.rl_province:
-                province();
+                province(ORGAN);
                 break;
             case R.id.rl_city:
-                city();
+                if (province_id != null) {
+                    city(ORGAN);
+                } else {
+                    Toast.makeText(this, "请先选择省份", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.rl_local:
-                local();
+                if (city_id != null) {
+                    local(ORGAN);
+                } else {
+                    Toast.makeText(this, "请先选择城市", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.rl_organ:
-                organ();
+                if (local_id != null) {
+                    organ();
+                } else {
+                    Toast.makeText(this, "请先选择地区", Toast.LENGTH_SHORT).show();
+                }
                 break;
-                default:
-                    break;
+            case R.id.rl_province_s:
+
+                province(STORE);
+                break;
+            case R.id.rl_city_s:
+                if (province_id_s != null) {
+                    city(STORE);
+                } else {
+                    Toast.makeText(this, "请先选择省份", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.rl_local_s:
+                if(city_id_s != null) {
+                    local(STORE);
+                }else {
+                    Toast.makeText(this, "请先选择城市", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
     //提交审核
-    public void submit(){
-        if(ed_address.getText().toString().trim()!=null || !ed_address.getText().toString().trim().equals("")) {
-            if (ed_name.getText().toString().trim()!=null || !ed_name.getText().toString().trim().equals("")) {
-                if (ed_phone.getText().toString().trim()!=null || !ed_phone.getText().toString().trim().equals("")) {
-                    if (tv_open_time.getText().toString()!=null || !tv_open_time.getText().toString().equals("")){
-                        if (tv_close_time.getText().toString()!=null || !tv_close_time.getText().toString().equals("")){
-                            if(file0!=null){
-                                if(file1!=null){
-                                    if(file2!=null){
-                                        if(file3!=null){
+    public void submit() {
+        if (ed_address.getText().toString().trim() != null || !ed_address.getText().toString().trim().equals("")) {
+            if (ed_name.getText().toString().trim() != null || !ed_name.getText().toString().trim().equals("")) {
+                if (ed_phone.getText().toString().trim() != null || !ed_phone.getText().toString().trim().equals("")) {
+                    if (tv_open_time.getText().toString() != null || !tv_open_time.getText().toString().equals("")) {
+                        if (tv_close_time.getText().toString() != null || !tv_close_time.getText().toString().equals("")) {
+                            if (file0 != null) {
+                                if (file1 != null) {
+                                    if (file2 != null) {
+                                        if (file3 != null) {
                                             storeInfo();
 
-                                        }else {
+                                        } else {
                                             Toast.makeText(this, "请上传食品流通许可", Toast.LENGTH_SHORT).show();
                                         }
-                                    }else {
+                                    } else {
                                         Toast.makeText(this, "请上传营业执照", Toast.LENGTH_SHORT).show();
                                     }
-                                }else {
+                                } else {
                                     Toast.makeText(this, "请上传宣传图片", Toast.LENGTH_SHORT).show();
                                 }
-                            }else {
+                            } else {
                                 Toast.makeText(this, "请上传商家头像", Toast.LENGTH_SHORT).show();
                             }
-                        }else {
+                        } else {
                             Toast.makeText(this, "请选择闭店时间", Toast.LENGTH_SHORT).show();
                         }
-                    }else {
+                    } else {
                         Toast.makeText(this, "请选择开店时间", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -255,133 +310,69 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
 
 
     //修改商户信息
-    public void storeInfo(){
-        LoadDialog.start(this);
-        OkGo.<String>post(Urls.STOREINFO+"?appToken="+CommunityBossApplication.token)
+    public void storeInfo() {
+        Log.e( "address: ",ed_address.getText().toString().trim() );
+        Log.e( "areaId: ",local_id_s );
+        Log.e( "businessNo: ", ed_number.getText().toString().trim() );
+        Log.e( "cityId: ",city_id_s );
+        Log.e( "contact: ",ed_name_c.getText().toString().trim() );
+        Log.e( "contactPhone: ",ed_phone_c.getText().toString().trim() );
+        Log.e( "deviceToken: ", JPushInterface.getRegistrationID(this) );
+        Log.e( "endTime: ","2000-01-01 "+tv_close_time.getText().toString()+":00");
+        Log.e( "startTime: ","2000-01-01 "+tv_open_time.getText().toString()+":00" );
+        Log.e( "orderPhone: ",ed_phone.getText().toString().trim() );
+        Log.e( "organId: ",organ_id+"" );
+        Log.e( "provinceId: ",province_id_s );
+        Log.e( "storeName: ", ed_name.getText().toString().trim() );
+        Log.e( "serverTypeId: ","1" );
+        mProgressBar.setVisibility(View.VISIBLE);
+        OkGo.<String>post(Urls.REGISTER)
                 .tag(this)
                 .params("address", ed_address.getText().toString().trim())
-                .params("name",ed_name.getText().toString().trim())
-                .params("phoneNumber",ed_phone.getText().toString().trim())
-                .params("time",tv_open_time.getText().toString()+"-"+tv_close_time.getText().toString())
+                .params("areaId", local_id_s)
+                .params("businessNo", ed_number.getText().toString().trim())
+                .params("cityId", city_id_s)
+                .params("contact", ed_name_c.getText().toString().trim())
+                .params("contactPhone", ed_phone_c.getText().toString().trim())
+                .params("deviceToken", JPushInterface.getRegistrationID(this))
+                .params("endTime", "2000-01-01 "+tv_close_time.getText().toString()+":00")
+                .params("startTime", "2000-01-01 "+tv_open_time.getText().toString()+":00")
+                .params("healthfile", file3)
+                .params("licensefile", file2)
+                .params("orderPhone", ed_phone.getText().toString().trim())
+                .params("organId", organ_id)
+                .params("provinceId", province_id_s)
+                .params("registfile", file0)
+                .params("storeFontfile", file1)
+                .params("storeName", ed_name.getText().toString().trim())
+                .params("serverTypeId",1)
+                .params("id",getIntent().getStringExtra("id"))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("修改商户信息",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                updateImage();
-                            } else {
-                                Toast.makeText(ApplyActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-    }
-
-    //上传图片
-    public void updateImage(){
-        OkGo.<String>post(Urls.UPLOADIMAGE+"?appToken="+ CommunityBossApplication.token+"&type=1")
-                .tag(this)
-                .params("file", file0)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("上传图片",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-
-                            } else {
-                                Toast.makeText(ApplyActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-        OkGo.<String>post(Urls.UPLOADIMAGE+"?appToken="+ CommunityBossApplication.token+"&type=2")
-                .tag(this)
-                .params("file", file1)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("上传图片",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                            } else {
-                                Toast.makeText(ApplyActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-        OkGo.<String>post(Urls.UPLOADIMAGE+"?appToken="+ CommunityBossApplication.token+"&type=3")
-                .tag(this)
-                .params("file", file2)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("上传图片",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                            } else {
-                                Toast.makeText(ApplyActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-        OkGo.<String>post(Urls.UPLOADIMAGE+"?appToken="+ CommunityBossApplication.token+"&type=4")
-                .tag(this)
-                .params("file", file3)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        LoadDialog.stop();
-                        try {
-                            String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("上传图片",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                Toast.makeText(ApplyActivity.this, "信息提交成功,请等待审核", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(ApplyActivity.this,ExamineActivity.class);
-                                startActivity(intent);
+                            JSONObject json = new JSONObject(body);
+                            Log.d("修改商户信息", json.toString());
+                            if (json.getInt("status") == 200) {
+                                mProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(ApplyActivity.this, "提交成功,请等待审核", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
-                                Toast.makeText(ApplyActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(ApplyActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
-                    @Override
-                    public void onError(Response<String> response) {
-                        LoadDialog.stop();
-                        Toast.makeText(ApplyActivity.this, "上传失败,请检查网络连接", Toast.LENGTH_SHORT).show();
-                    }
                 });
     }
 
+
     CityPicker.JSONParser parser = new CityPicker.JSONParser();
+
     //选择省份
-    public void province() {
+    public void province(final boolean organ) {
         province.clear();
 
         String area_str = FileUtil.readAssets(this, "area.json");
@@ -395,8 +386,14 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         OptionsPickerView pvOptions = new OptionsPickerBuilder(ApplyActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                tv_province.setText(province.get(options1));
-                province_id = province_list.get(options1).getId();
+                if (organ) {
+                    tv_province.setText(province.get(options1));
+                    province_id = province_list.get(options1).getId();
+                } else {
+                    tv_province_s.setText(province.get(options1));
+                    province_id_s = province_list.get(options1).getId();
+
+                }
             }
         })
                 .setDividerColor(Color.parseColor("#A0A0A0"))
@@ -409,9 +406,14 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
     }
 
     //城市选择
-    public void city() {
+    public void city(final boolean organ) {
         city.clear();
-        final List<Cityinfo> cityinfoList = city_map.get(province_id);
+        final List<Cityinfo> cityinfoList;
+        if (organ) {
+            cityinfoList = city_map.get(province_id);
+        } else {
+            cityinfoList = city_map.get(province_id_s);
+        }
         for (Cityinfo cityinfo : cityinfoList) {
             city.add(cityinfo.getCity_name());
         }
@@ -419,8 +421,13 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         OptionsPickerView pvOptions = new OptionsPickerBuilder(ApplyActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                tv_city.setText(city.get(options1));
-                city_id = cityinfoList.get(options1).getId();
+                if (organ) {
+                    tv_city.setText(city.get(options1));
+                    city_id = cityinfoList.get(options1).getId();
+                } else {
+                    tv_city_s.setText(city.get(options1));
+                    city_id_s = cityinfoList.get(options1).getId();
+                }
             }
         })
                 .setDividerColor(Color.parseColor("#A0A0A0"))
@@ -433,9 +440,14 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
     }
 
     //地区选择
-    public void local() {
+    public void local(final boolean organ) {
         local.clear();
-        final List<Cityinfo> cityinfoList = couny_map.get(city_id);
+        final List<Cityinfo> cityinfoList;
+        if (organ) {
+            cityinfoList = couny_map.get(city_id);
+        } else {
+            cityinfoList = couny_map.get(city_id_s);
+        }
         for (Cityinfo cityinfo : cityinfoList) {
             local.add(cityinfo.getCity_name());
         }
@@ -443,8 +455,13 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         OptionsPickerView pvOptions = new OptionsPickerBuilder(ApplyActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                tv_local.setText(local.get(options1));
-                local_id = cityinfoList.get(options1).getId();
+                if (organ) {
+                    tv_local.setText(local.get(options1));
+                    local_id = cityinfoList.get(options1).getId();
+                } else {
+                    tv_local_s.setText(local.get(options1));
+                    local_id_s = cityinfoList.get(options1).getId();
+                }
             }
         })
                 .setDividerColor(Color.parseColor("#A0A0A0"))
@@ -495,7 +512,7 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         OptionsPickerView pvOptions = new OptionsPickerBuilder(ApplyActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                if(list.size()!=0) {
+                if (list.size() != 0) {
                     tv_organ.setText(list.get(options1).getOrganName());
                     organ_id = list.get(options1).getId();
                 }
@@ -518,7 +535,7 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                 case 1:
                     Uri uri = data.getData();
                     bitmap = BitmapCompress.decodeUriBitmap(ApplyActivity.this, uri);
-                    switch (type){
+                    switch (type) {
                         case 0:
                             img_store_head.setImageBitmap(bitmap);
                             file0 = BitmapCompress.compressImage(bitmap);
@@ -543,7 +560,7 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                     Bundle bundle = data.getExtras();
                     if (bundle != null) {
                         bitmap = (Bitmap) bundle.get("data");
-                        switch (type){
+                        switch (type) {
                             case 0:
                                 img_store_head.setImageBitmap(bitmap);
                                 file0 = BitmapCompress.compressImage(bitmap);
@@ -634,7 +651,8 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
             }
         }).setType(type).build();
     }
-    private void initClose(){
+
+    private void initClose() {
 
         boolean[] type = {false, false, false, true, true, false};
         sdf1 = new SimpleDateFormat("HH:mm");
@@ -645,5 +663,18 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
             }
         }).setType(type).build();
 
+    }
+
+    private void createProgressBar(){
+        mContext=this;
+        //整个Activity布局的最终父布局,参见参考资料
+        FrameLayout rootFrameLayout=(FrameLayout) findViewById(android.R.id.content);
+        FrameLayout.LayoutParams layoutParams=
+                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity= Gravity.CENTER;
+        mProgressBar=new ProgressBar(mContext);
+        mProgressBar.setLayoutParams(layoutParams);
+        mProgressBar.setVisibility(View.GONE);
+        rootFrameLayout.addView(mProgressBar);
     }
 }

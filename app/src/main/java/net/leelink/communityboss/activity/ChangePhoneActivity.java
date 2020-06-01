@@ -58,7 +58,11 @@ private Button btn_complete;
                 finish();
                 break;
             case  R.id.getmsmpass_TX:   //发送验证码
-                send();
+                if(ed_phone.getText().toString().trim() !="") {
+                    send();
+                }else {
+                    Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btn_complete:     //修改绑定电话
                 changePhone();
@@ -70,22 +74,21 @@ private Button btn_complete;
 
     //修改绑定电话
     public void changePhone(){
-        OkGo.<String>post(Urls.PHONENUMBER+"?appToken="+CommunityBossApplication.token)
-                .params("phoneNumber", ed_phone.getText().toString().trim())
-                .params("smscode",ed_code.getText().toString().trim())
+        OkGo.<String>post(Urls.PHONENUMBER)
+                .params("newPhone", ed_phone.getText().toString().trim())
+                .params("smsCode",ed_code.getText().toString().trim())
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("修改绑定电话",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 SharedPreferences sp = getSharedPreferences("sp",0);
                                 SharedPreferences.Editor editor = sp.edit();
-                                editor.remove("AppToken");
+//                                editor.remove("secretKey");
                                 editor.apply();
                                 Intent intent = new Intent(ChangePhoneActivity.this,LoginActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -93,7 +96,7 @@ private Button btn_complete;
                                 finish();
                                 Toast.makeText(ChangePhoneActivity.this, "修改成功请重新登录", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(ChangePhoneActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(ChangePhoneActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {
@@ -108,23 +111,23 @@ private Button btn_complete;
         OkGo.<String>get(Urls.SENDSMSCODE)
                 .tag(this)
                 .params("phone", ed_phone.getText().toString().trim())
-                .params("used",3)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
+//                            body = body.substring(1,body.length()-1);
+//                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("获取验证码",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 if(time == 60) {
                                     new Thread(new ChangePhoneActivity.TimeRun()).start();
                                 }else {
                                     getmsmpass_TX.setEnabled(false);
                                 }
                             } else {
-                                Toast.makeText(ChangePhoneActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(ChangePhoneActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

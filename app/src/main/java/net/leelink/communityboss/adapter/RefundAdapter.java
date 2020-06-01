@@ -39,8 +39,8 @@ public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.ViewHolder
     @Override
     public void onBindViewHolder(RefundAdapter.ViewHolder holder, final int position) {
         holder.tv_orderid.setText(list.get(position).getOrderId());
-        holder.tv_time.setText("预约时间:"+list.get(position).getDeliveryTime());
-        holder.tv_total_price.setText("总价:￥"+list.get(position).getTotalPrice());
+        holder.tv_time.setText("预约时间:"+list.get(position).getAppointTime());
+        holder.tv_total_price.setText("总价:￥"+list.get(position).getActualPayPrice());
         holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,15 +53,15 @@ public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.ViewHolder
                 onCancelListener.onCancel(v,position);
             }
         });
-        if(list.get(position).getState()==7) {
+        if(list.get(position).getOrderState()==8) {
             holder.tv_state.setText("退款申请中");
             holder.btn_confirm.setVisibility(View.VISIBLE);
             holder.btn_cancel.setVisibility(View.VISIBLE);
-        } else if(list.get(position).getState()==8){
+        } else if(list.get(position).getOrderState()==9){
             holder.tv_state.setText("退款中");
             holder.btn_confirm.setVisibility(View.GONE);
             holder.btn_cancel.setVisibility(View.GONE);
-        } else if(list.get(position).getState()==9){
+        } else if(list.get(position).getOrderState()==10){
             holder.tv_state.setText("退款完成");
             holder.btn_confirm.setVisibility(View.GONE);
             holder.btn_cancel.setVisibility(View.GONE);

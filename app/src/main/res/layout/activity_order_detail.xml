@@ -351,7 +351,7 @@
                 />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y1028"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x30"
                 android:layout_marginRight="@dimen/x30"
                 android:id="@+id/ll_comment"
@@ -375,7 +375,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="服务态度"
+                        android:text="综合"
                         android:textColor="@color/black"
                         android:textSize="@dimen/x42"
                         android:layout_centerVertical="true"
@@ -401,7 +401,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="菜品"
+                        android:text="包装"
                         android:textColor="@color/black"
                         android:textSize="@dimen/x42"
                         android:layout_centerVertical="true"
@@ -426,7 +426,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="卫生"
+                        android:text="味道"
                         android:textColor="@color/black"
                         android:textSize="@dimen/x42"
                         android:layout_centerVertical="true"
@@ -439,57 +439,6 @@
                         app:starEmptyRes="@mipmap/star"
                         app:starSelectedRes="@mipmap/star_full"
                         android:id="@+id/rt_hygiene"
-                        app:starDistance="@dimen/x50"
-                        app:selectedNumber="5"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x428"
-                        />
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/y90"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="配送速度"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/x42"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x200"
-                        />
-
-                    <net.leelink.communityboss.utils.RatingBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:starEmptyRes="@mipmap/star"
-                        android:id="@+id/rt_speed"
-                        app:starSelectedRes="@mipmap/star_full"
-                        app:starDistance="@dimen/x50"
-                        app:selectedNumber="5"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x428"
-                        />
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/y90">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="服务质量"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/x42"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x200"
-                        />
-
-                    <net.leelink.communityboss.utils.RatingBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:starEmptyRes="@mipmap/star"
-                        android:id="@+id/rt_quality"
-                        app:starSelectedRes="@mipmap/star_full"
                         app:starDistance="@dimen/x50"
                         app:selectedNumber="5"
                         android:layout_centerVertical="true"
@@ -557,6 +506,42 @@
                         android:text="非常好吃,好吃到爆,包装很好,配送十分快,下次也会关顾的"
                         android:layout_marginLeft="@dimen/x147"
                         android:layout_marginTop="@dimen/x96"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_comment"
+                    android:layout_marginLeft="@dimen/x147"
+                    android:layout_marginTop="@dimen/y10"
+                    android:id="@+id/rl_img">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/x425"
+                        android:layout_height="@dimen/y425"
+                        android:src="@color/white"
+                        android:id="@+id/img_main"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/ll_images">
+                        <ImageView
+                            android:layout_width="@dimen/x280"
+                            android:layout_height="@dimen/y280"
+                            android:id="@+id/img0"/>
+                        <ImageView
+                            android:layout_width="@dimen/x280"
+                            android:layout_height="@dimen/y280"
+                            android:id="@+id/img1"
+                            android:layout_marginLeft="@dimen/x15"/>
+                        <ImageView
+                            android:layout_width="@dimen/x280"
+                            android:layout_height="@dimen/y280"
+                            android:id="@+id/img2"
+                            android:layout_marginLeft="@dimen/x15"/>
+                    </LinearLayout>
                 </RelativeLayout>
                 <EditText
                     android:layout_width="match_parent"

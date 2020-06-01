@@ -3,6 +3,7 @@ package net.leelink.communityboss.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,9 +29,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
@@ -42,25 +47,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class InformationActivity extends BaseActivity implements View.OnClickListener {
 private RelativeLayout rl_back;
-private TextView tv_done,tv_time;
+private TextView tv_done,tv_close_time,tv_address,tv_province,tv_city,tv_local,tv_organ,tv_type,tv_name_c,ed_phone_c,tv_open_time,ed_businessNo;
 private EditText ed_name,ed_phone,ed_address;
 private ImageView img_store_head,img_publicity,img_license,img_permit;
+private RelativeLayout rl_open_time,rl_close_time;
     private Bitmap bitmap = null;
     private File file0,file1,file2,file3;
     private Button btn_album, btn_photograph;
     private View popview;
     int type;
     private PopupWindow popuPhoneW;
+    private TimePickerView pvTime, pvTime1;
+    private SimpleDateFormat sdf, sdf1;
 @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
         init();
         initData();
-    popu_head();
+        popu_head();
+    initPickerView();
+    initClose();
+
     }
 
     public void init(){
@@ -70,9 +83,9 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         tv_done.setOnClickListener(this);
         ed_name = findViewById(R.id.ed_name);
         ed_phone = findViewById(R.id.ed_phone);
-        ed_address = findViewById(R.id.ed_address);
-        tv_time = findViewById(R.id.tv_time);
-        tv_time.setOnClickListener(this);
+        tv_address = findViewById(R.id.tv_address);
+        tv_close_time = findViewById(R.id.tv_close_time);
+        tv_close_time.setOnClickListener(this);
         img_store_head = findViewById(R.id.img_store_head);
         img_store_head.setOnClickListener(this);
         img_publicity = findViewById(R.id.img_publicity);
@@ -81,25 +94,63 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
         img_license.setOnClickListener(this);
         img_permit = findViewById(R.id.img_permit);
         img_permit.setOnClickListener(this);
+        tv_province = findViewById(R.id.tv_province);
+        tv_city = findViewById(R.id.tv_city);
+        tv_local = findViewById(R.id.tv_local);
+        tv_organ = findViewById(R.id.tv_organ);
+        tv_type = findViewById(R.id.tv_type);
+        tv_name_c = findViewById(R.id.tv_name_c);
+        ed_phone_c = findViewById(R.id.ed_phone_c);
+        ed_businessNo = findViewById(R.id.ed_businessNo);
+        tv_open_time  = findViewById(R.id.tv_open_time);
+        rl_open_time = findViewById(R.id.rl_open_time);
+        rl_open_time.setOnClickListener(this);
+        rl_close_time = findViewById(R.id.rl_close_time);
+        rl_close_time.setOnClickListener(this);
     }
 
     public void initData(){
-        ed_name.setText(CommunityBossApplication.storeInfo.getStoreName());
-        ed_phone.setText(CommunityBossApplication.storeInfo.getPhoneNumber());
-        ed_address.setText(CommunityBossApplication.storeInfo.getAddress());
-        tv_time.setText(CommunityBossApplication.storeInfo.getBusinessHours());
-        if(!CommunityBossApplication.storeInfo.getHeadImage().equals("")) {
-            Glide.with(this).load(Urls.IMAGEURL + "/Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/Image/" + CommunityBossApplication.storeInfo.getHeadImage()).into(img_store_head);
+
+
+        tv_address.setText(CommunityBossApplication.storeInfo.getAddress());
+        tv_close_time.setText(CommunityBossApplication.storeInfo.getEndTime()) ;
+        tv_name_c.setText(CommunityBossApplication.storeInfo.getContact());
+        ed_phone_c.setText(CommunityBossApplication.storeInfo.getContactPhone());
+        ed_businessNo.setText(CommunityBossApplication.storeInfo.getBusinessNo());
+        if(!CommunityBossApplication.storeInfo.getLicensePath().equals("")) {
+            Glide.with(this).load(Urls.IMG_URL  + CommunityBossApplication.storeInfo.getLicensePath()).into(img_license);
         }
-        if(!CommunityBossApplication.storeInfo.getPropagandaImage().equals("")) {
-            Glide.with(this).load(Urls.IMAGEURL + "/Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/Image/" + CommunityBossApplication.storeInfo.getPropagandaImage()).into(img_publicity);
+        if(!CommunityBossApplication.storeInfo.getFoodHealthPath().equals("")) {
+            Glide.with(this).load(Urls.IMG_URL  + CommunityBossApplication.storeInfo.getFoodHealthPath()).into(img_permit);
         }
-        if(!CommunityBossApplication.storeInfo.getBusinessLicense().equals("")) {
-            Glide.with(this).load(Urls.IMAGEURL + "/Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/Image/" + CommunityBossApplication.storeInfo.getBusinessLicense()).into(img_license);
-        }
-        if(!CommunityBossApplication.storeInfo.getFoodLicence().equals("")) {
-            Glide.with(this).load(Urls.IMAGEURL + "/Store/" + CommunityBossApplication.storeInfo.getStoreId() + "/Image/" + CommunityBossApplication.storeInfo.getFoodLicence()).into(img_permit);
-        }
+
+        OkGo.<String>get(Urls.STOREHOME)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("获取个人信息",json.toString());
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
+                                ed_name.setText(json.getString("storeName"));
+                                ed_phone.setText(json.getString("orderPhone"));
+                                tv_open_time.setText(json.getString("startTime"));
+                                tv_close_time.setText(json.getString("endTime"));
+                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("registPath")).into(img_store_head);
+                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("storeFontPath")).into(img_publicity);
+
+                            } else {
+                                Toast.makeText(InformationActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -110,7 +161,7 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                 break;
             case R.id.tv_done:  //编辑
                 edit();
-                updateImage();
+               // updateImage();
                 break;
             case R.id.img_store_head:   //上传商店头像
                 popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
@@ -124,15 +175,15 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                 type = 1;
                 break;
             case R.id.img_license:  //上传执照图片
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
-                type = 2;
+//                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
+//                backgroundAlpha(0.5f);
+//                type = 2;
                 break;
 
             case R.id.img_permit:   //上传许可证书
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
-                type = 3;
+//                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
+//                backgroundAlpha(0.5f);
+//                type = 3;
                 break;
             case R.id.btn_photograph://拍照
                 popuPhoneW.dismiss();
@@ -162,6 +213,12 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
                 intent1.setType("image/*");
                 startActivityForResult(intent1, 1);
                 break;
+            case R.id.rl_open_time:     //开店时间
+                pvTime.show();
+                break;
+            case R.id.rl_close_time:    //闭店时间
+                pvTime1.show();
+                break;
                 default:
                     break;
         }
@@ -169,32 +226,34 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
 
     //编辑资料
     public void edit(){
-        OkGo.<String>post(Urls.STOREINFO+"?appToken="+CommunityBossApplication.token)
+        HttpParams params =new HttpParams();
+
+        if(file0 != null){
+            params.put("registfile",file0);
+        }
+        if(file1 != null){
+            params.put("storeFontfile",file1);
+        }
+        params.put("storeName",ed_name.getText().toString().trim());
+        params.put("orderPhone",ed_phone.getText().toString().trim());
+        params.put("startTime","2000-01-01 "+tv_open_time.getText().toString()+":00");
+        params.put("endTime","2000-01-01 "+tv_close_time.getText().toString()+":00");
+        params.put("id",CommunityBossApplication.storeInfo.getId());
+        OkGo.<String>post(Urls.UPDATESTOREINGO)
                 .tag(this)
-                .params("address", ed_address.getText().toString().trim())
-                .params("name",ed_name.getText().toString().trim())
-                .params("phoneNumber",ed_phone.getText().toString().trim())
-                .params("time",tv_time.getText().toString())
+                .params(params)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("修改商户信息",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                Toast.makeText(InformationActivity.this, "信息已提交审核,请重新登录", Toast.LENGTH_SHORT).show();
-                                SharedPreferences sp = getSharedPreferences("sp",0);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.remove("AppToken");
-                                editor.apply();
-                                Intent intent = new Intent(InformationActivity.this,LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                            if (json.getInt("status") == 200) {
+                                Toast.makeText(InformationActivity.this, "信息提交成功", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
-                                Toast.makeText(InformationActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(InformationActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -417,5 +476,30 @@ private ImageView img_store_head,img_publicity,img_license,img_permit;
             backgroundAlpha(1f);
         }
     }
+
+    private void initPickerView() {
+        boolean[] type = {false, false, false, true, true, false};
+        sdf = new SimpleDateFormat("HH:mm");
+        pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                tv_open_time.setText(sdf.format(date));
+            }
+        }).setType(type).build();
+    }
+
+    private void initClose() {
+
+        boolean[] type = {false, false, false, true, true, false};
+        sdf1 = new SimpleDateFormat("HH:mm");
+        pvTime1 = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {
+                tv_close_time.setText(sdf1.format(date));
+            }
+        }).setType(type).build();
+
+    }
+
 
 }

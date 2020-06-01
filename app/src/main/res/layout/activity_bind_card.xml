@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
-            android:id="@+id/ed_name"
+            android:id="@+id/ed_cardId"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
             android:text=""
@@ -68,7 +68,8 @@
         android:layout_marginRight="@dimen/x32"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y160">
+        android:layout_height="@dimen/y160"
+        android:id="@+id/rl_bank">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,6 +86,7 @@
             android:id="@+id/tv_bank"
             android:textSize="@dimen/x45"
             android:textColor="@color/text_black"
+            android:gravity="center_vertical"
             android:background="@null"
             android:text=""
             android:layout_marginLeft="@dimen/x300"/>
@@ -110,7 +112,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/ed_bank"
+            android:id="@+id/ed_name"
             android:maxLines="1"
             android:textSize="@dimen/x45"
             android:background="@null"
@@ -139,7 +141,6 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="number"
             android:maxLines="1"
             android:id="@+id/ed_card"
             android:textSize="@dimen/x45"

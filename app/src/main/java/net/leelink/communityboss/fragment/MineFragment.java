@@ -97,25 +97,27 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     }
 
     public void initdata(){
-        Glide.with(getContext()).load(Urls.IMAGEURL+"Store/"+CommunityBossApplication.storeInfo.getStoreId()+"/Image/"+CommunityBossApplication.storeInfo.getHeadImage()).into(img_head);
+        if(CommunityBossApplication.storeInfo.getStoreImg() != null) {
+            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
+        }
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
-        tv_phone.setText(CommunityBossApplication.storeInfo.getUsername());
+        tv_phone.setText(CommunityBossApplication.storeInfo.getOrderPhone());
 
-        OkGo.<String>get(Urls.STOREHOME+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>get(Urls.STOREHOME)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("用户信息",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                tv_income.setText("今日收入: ￥"+json.getJSONObject("ObjectData").getString("Income"));
-                                tv_order_number.setText("今日订单: "+json.getJSONObject("ObjectData").getString("OrderNumber")+"单");
+                            JSONObject json = new JSONObject(body);
+                            Log.d("获取个人信息",json.toString());
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
+                                tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
+                                tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
                             } else {
-                                Toast.makeText(getContext(), json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

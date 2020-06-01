@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import net.leelink.communityboss.utils.RatingBar;
 import net.leelink.communityboss.utils.Urls;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,11 +41,12 @@ private PreOrderAdapter preOrderAdapter;
 private List<OrderDetail.DetailsBean> list = new ArrayList<>();
 private TextView tv_state,tv_orderid,tv_time,tv_name,tv_phone,tv_address,tv_remark,tv_total_price,tv_refundRecord,tv_userphone,tv_comment,tv_store_name;
 private OrderDetail orderDetail;
-private RatingBar rt_attitude,rt_taste,rt_hygiene,rt_speed,rt_quality;
+private RatingBar rt_attitude,rt_taste,rt_hygiene;
 private ImageView img_head;
 private LinearLayout ll_comment;
 private int type;
 private Button btn_confirm;
+private RelativeLayout rl_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,8 @@ private Button btn_confirm;
         tv_refundRecord = findViewById(R.id.tv_refundRecord);
         btn_confirm = findViewById(R.id.btn_confirm);
         btn_confirm.setOnClickListener(this);
+        rl_back = findViewById(R.id.rl_back);
+        rl_back.setOnClickListener(this);
         type = getIntent().getIntExtra("type",0);
         if(type == 0) {
             ll_comment.setVisibility(View.GONE);
@@ -95,36 +100,37 @@ private Button btn_confirm;
     public void initData(){
         final String orderId = getIntent().getStringExtra("orderId");
         tv_orderid.setText(orderId);
-        OkGo.<String>get(Urls.ORDERDETAILS+"?appToken="+ CommunityBossApplication.token)
-                .params("orderId",orderId)
+        OkGo.<String>get(Urls.ORDERDETAILS+"/"+ orderId)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("订单详情",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                json = json.getJSONObject("ObjectData");
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
                                 Gson gson = new Gson();
                                 orderDetail = gson.fromJson(json.toString(),OrderDetail.class);
                                 if(!json.isNull("RefundRecord")) {
                                     tv_refundRecord.setVisibility(View.VISIBLE);
                                    tv_refundRecord.setText("退款原因:"+ json.getJSONObject("RefundRecord").getString("Reason"));
                                 }
-                                tv_name.setText(orderDetail.getDeliveryName());
-                                tv_store_name.setText(orderDetail.getStore().getStoreName());
-                                tv_time.setText(orderDetail.getDeliveryTime());
-                                tv_phone.setText(orderDetail.getDeliveryPhone());
-                                tv_address.setText(orderDetail.getDeliveryAddress());
-                                tv_remark.setText(orderDetail.getRemarks());
+                                String s = json.getString("goodList").trim();
+                                JSONArray jsonArray = json.getJSONArray("goodList");
+                                Log.e( "onSuccess: ",jsonArray.toString() );
+                                tv_time.setText(json.getString("appointTime"));
+                                tv_name.setText(json.getString("name"));
+                                tv_store_name.setText(CommunityBossApplication.storeInfo.getStoreName());
+                                tv_phone.setText(json.getString("telephone"));
+                                tv_address.setText(json.getString("address"));
+                                tv_remark.setText(json.getString("remark"));
                                 preOrderAdapter = new PreOrderAdapter(OrderDetailActivity.this,orderDetail.getDetails());
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(OrderDetailActivity.this,LinearLayoutManager.VERTICAL,false);
                                 goods_list.setLayoutManager(layoutManager);
                                 goods_list.setAdapter(preOrderAdapter);
-                                tv_total_price.setText("￥"+json.getString("TotalPrice"));
+                                tv_total_price.setText("￥"+json.getString("actualPayPrice"));
                                 if(!json.isNull("Appraise")) {
                                     JSONObject appraise = json.getJSONObject("Appraise");
                                     ll_comment.setVisibility(View.VISIBLE);
@@ -132,15 +138,13 @@ private Button btn_confirm;
                                     rt_attitude.setSelectedNumber(appraise.getInt("Attitude"));
                                     rt_taste.setSelectedNumber(appraise.getInt("Taste"));
                                     rt_hygiene.setSelectedNumber(appraise.getInt("Hygiene"));
-                                    rt_speed.setSelectedNumber(appraise.getInt("Speed"));
-                                    rt_quality.setSelectedNumber(appraise.getInt("Quality"));
                                     Glide.with(OrderDetailActivity.this).load(Urls.IMAGEHEAD+appraise.getString("UserHeadImage")).into(img_head);
                                     tv_comment.setText(appraise.getString("Message"));
                                     tv_userphone.setText(appraise.getString("Username"));
                                 }
 
                             } else {
-                                Toast.makeText(OrderDetailActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(OrderDetailActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -164,6 +168,9 @@ private Button btn_confirm;
                     takeOrder(3);       //确认送达
                 }
                 break;
+            case R.id.rl_back:
+                finish();
+                break;
 
                 default:
                     break;
@@ -177,10 +184,6 @@ private Button btn_confirm;
         rt_taste.setUntouchable();
         rt_hygiene = findViewById(R.id.rt_hygiene);
         rt_hygiene.setUntouchable();
-        rt_speed = findViewById(R.id.rt_speed);
-        rt_speed.setUntouchable();
-        rt_quality = findViewById(R.id.rt_quality);
-        rt_quality.setUntouchable();
         img_head = findViewById(R.id.img_head);
         tv_userphone = findViewById(R.id.tv_userphone);
         tv_comment = findViewById(R.id.tv_comment);

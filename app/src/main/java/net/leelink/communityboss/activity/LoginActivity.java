@@ -2,20 +2,27 @@ package net.leelink.communityboss.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,11 +59,14 @@ private TextView getmsmpass_TX,tv_forgot,tv_register;
 private EditText ed_phone,ed_password,ed_code;
 private Button btn_login;
 private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
+    Context mContext;
+    private ProgressBar mProgressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         requestPermissions();
+        createProgressBar();
         init();
         initLogin();
     }
@@ -170,21 +180,23 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     //短信验证码登录
     public void loginByCode(){
+        mProgressBar.setVisibility(View.VISIBLE);
         OkGo.<String>post(Urls.LOGINBYCODE)
                 .tag(this)
-                .params("username", ed_phone.getText().toString().trim())
-                .params("smscode",ed_code.getText().toString().trim())
+                .params("telephone", ed_phone.getText().toString().trim())
+                .params("code",ed_code.getText().toString().trim())
                 .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        mProgressBar.setVisibility(View.GONE);
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("验证码登录",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                CommunityBossApplication.token = json.getString("AppToken");
+                            if (json.getInt("status") == 200) {
+                             //   CommunityBossApplication.token = json.getString("AppToken");
+
                                 JSONObject jsonObject = json.getJSONObject("StoreInfo");
 
                                 if(jsonObject.getInt("StoreState")==0) {
@@ -196,7 +208,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                 } else {
                                     SharedPreferences sp = getSharedPreferences("sp",0);
                                     SharedPreferences.Editor editor = sp.edit();
-                                    editor.putString("AppToken",json.getString("AppToken"));
+                                    editor.putString("secretKey",json.getString("secretKey"));
                                     editor.apply();
                                     Gson gson = new Gson();
                                     Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
@@ -207,7 +219,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                 }
                                 finish();
                             } else {
-                                Toast.makeText(LoginActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -218,36 +230,39 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     //账号密码登录
     public void login(){
+        mProgressBar.setVisibility(View.VISIBLE);
         OkGo.<String>post(Urls.LOGIN)
                 .tag(this)
-                .params("username", ed_phone.getText().toString().trim())
+                .params("telephone", ed_phone.getText().toString().trim())
                 .params("password",ed_password.getText().toString().trim())
                 .params("deviceToken",JPushInterface.getRegistrationID(LoginActivity.this))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        mProgressBar.setVisibility(View.GONE);
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("用户名密码登录",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                CommunityBossApplication.token = json.getString("AppToken");
-                                JSONObject jsonObject = json.getJSONObject("StoreInfo");
-
-                                if(jsonObject.getInt("StoreState")==0) {
+                            if (json.getInt("status") == 200) {
+                                //CommunityBossApplication.token = json.getString("AppToken");
+                                JSONObject jsonObject = json.getJSONObject("data");
+                                Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                if(jsonObject.getInt("vertifyState")==0) {
                                     Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
+                                    intent.putExtra("id",jsonObject.getString("id"));
                                     startActivity(intent);
-                                }  else if(jsonObject.getInt("StoreState")==1) {
-                                    Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                }  else if(jsonObject.getInt("vertifyState")==1) {
+//                                    Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
                                 }  else {
                                     SharedPreferences sp = getSharedPreferences("sp",0);
                                     SharedPreferences.Editor editor = sp.edit();
-                                    editor.putString("AppToken",json.getString("AppToken"));
+                                  //  editor.putString("AppToken",json.getString("AppToken"));
                                     editor.apply();
                                     Gson gson = new Gson();
-                                    Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+
                                     StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                     CommunityBossApplication.storeInfo = storeInfo;
                                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
@@ -256,7 +271,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                 }
 
                             } else {
-                                Toast.makeText(LoginActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -268,26 +283,25 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     //发送短信验证码
     public void sendSmsCode(){
         if(!ed_phone.getText().toString().trim().equals("")){
-            OkGo.<String>get(Urls.SENDSMSCODE)
+            mProgressBar.setVisibility(View.VISIBLE);
+            OkGo.<String>post(Urls.SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
                     .tag(this)
-                    .params("phone", ed_phone.getText().toString().trim())
-                    .params("used",1)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
+                            mProgressBar.setVisibility(View.GONE);
                             try {
                                 String body = response.body();
-                                body = body.substring(1,body.length()-1);
-                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                                JSONObject json = new JSONObject(body);
                                 Log.d("获取验证码",json.toString());
-                                if (json.getInt("ResultCode") == 200) {
+                                if (json.getInt("status") == 200) {
                                     if(time == 60) {
                                         new Thread(new LoginActivity.TimeRun()).start();
                                     }else {
                                         getmsmpass_TX.setEnabled(false);
                                     }
                                 } else {
-                                    Toast.makeText(LoginActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -298,6 +312,19 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         } else {
             Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void createProgressBar(){
+        mContext=this;
+        //整个Activity布局的最终父布局,参见参考资料
+        FrameLayout rootFrameLayout=(FrameLayout) findViewById(android.R.id.content);
+        FrameLayout.LayoutParams layoutParams=
+                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity= Gravity.CENTER;
+        mProgressBar=new ProgressBar(mContext);
+        mProgressBar.setLayoutParams(layoutParams);
+        mProgressBar.setVisibility(View.GONE);
+        rootFrameLayout.addView(mProgressBar);
     }
 
     private class TimeRun implements Runnable {
@@ -397,4 +424,50 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                 });
 
     }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideInput(v, ev)) {
+                if(hideInputMethod(this, v)) {
+                    return true; //隐藏键盘时，其他控件不响应点击事件==》注释则不拦截点击事件
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时则不能隐藏
+     *
+     * @param v
+     * @param event
+     * @return
+     */
+    public static boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            int[] leftTop = { 0, 0 };
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0], top = leftTop[1], bottom = top + v.getHeight(), right = left
+                    + v.getWidth();
+            if (event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom) {
+                // 保留点击EditText的事件
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static Boolean hideInputMethod(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            return imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+        return false;
+    }
+
 }

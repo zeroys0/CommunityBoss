@@ -46,12 +46,18 @@ private List<GoodListBean> list = new ArrayList<>();
 private TextView tv_done;
 private Button btn_del;
 private int type = 0;
-List<Integer> idList = new ArrayList<>();
+List<String> idList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_list);
         init();
+        initlist();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         initlist();
     }
 
@@ -77,18 +83,20 @@ List<Integer> idList = new ArrayList<>();
 
     //获取商品列表
     public void initlist(){
-        OkGo.<String>get(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>get(Urls.COMMODITY)
                 .tag(this)
+                .params("pageNum",1)
+                .params("pageSize",5)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("商品列表",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                JSONArray jsonArray = json.getJSONArray("ObjectData");
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
+                                JSONArray jsonArray = json.getJSONArray("list");
                                 Gson gson = new Gson();
                                 list = gson.fromJson(jsonArray.toString(), new TypeToken<List<GoodListBean>>(){}.getType());
                                 goodListAdapter = new GoodListAdapter(list,ManageListActivity.this,ManageListActivity.this,0);
@@ -96,7 +104,7 @@ List<Integer> idList = new ArrayList<>();
                                 list_goods.setLayoutManager(layoutManager);
                                 list_goods.setAdapter(goodListAdapter);
                             } else {
-                                Toast.makeText(ManageListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(ManageListActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -141,11 +149,12 @@ List<Integer> idList = new ArrayList<>();
     public void onItemClick(View view) {
         int position = list_goods.getChildLayoutPosition(view);
         Intent intent = new Intent(this,ChangeGoodsActivity.class);
-        intent.putExtra("commodityId",list.get(position).getCommodityId());
+        intent.putExtra("Id",list.get(position).getId());
         intent.putExtra("name",list.get(position).getName());
-        intent.putExtra("price",list.get(position).getPrice());
-        intent.putExtra("details",list.get(position).getDetails());
-        intent.putExtra("image",list.get(position).getHeadImage());
+        intent.putExtra("price",list.get(position).getUnitPrice());
+        intent.putExtra("details",list.get(position).getRemark());
+        intent.putExtra("image",list.get(position).getProductImgPath());
+        intent.putExtra("state",list.get(position).getState());
         startActivity(intent);
 
 
@@ -154,10 +163,10 @@ List<Integer> idList = new ArrayList<>();
     @Override
     public void onCancelChecked(View view,int position,boolean state) {
         if(state==true){
-           idList.add(list.get(position).getCommodityId());
+           idList.add(list.get(position).getId());
         } else {
             for(int i=0;i<idList.size();i++){
-                if(idList.get(i)==list.get(position).getCommodityId()) {
+                if(idList.get(i)==list.get(position).getId()) {
                     idList.remove(i);
                 }
             }
@@ -172,24 +181,24 @@ List<Integer> idList = new ArrayList<>();
         }
         s = s.substring(0,s.length()-1);
         Log.d( "delete: ",s);
-        OkGo.<String>delete(Urls.COMMODITY+"?appToken="+ CommunityBossApplication.token+"&commodityIds="+s)
+        OkGo.<String>delete(Urls.COMMODITY)
+                .params("productIdList",s)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("用户信息",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            JSONObject json = new JSONObject(body);
+                            Log.d("删除商品",json.toString());
+                            if (json.getInt("status") == 200) {
                                 type = 0;
                                 btn_del.setVisibility(View.INVISIBLE);
                                 initlist();
                             } else {
 
                             }
-                            Toast.makeText(ManageListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ManageListActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
