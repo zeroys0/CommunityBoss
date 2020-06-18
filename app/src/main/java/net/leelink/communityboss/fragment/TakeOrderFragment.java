@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
     private OrderListAdapter orderListAdapter;
     private List<OrderBean> list = new ArrayList<>();
     private TabLayout tablayout;
-    private int type = 3;
+    private String type = "3,4";
     private TwinklingRefreshLayout refreshLayout;
     private String orderId = "0";
     @Override
@@ -74,16 +75,17 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                 setIndicator(tablayout, 36, 36);
             }
         });
+
         tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 list.clear();
                 orderId = "0";
                 if(tab.getPosition() == 0){
-                    type = 3;
+                    type = "3,4";
                     initData(type,orderId);
                 } else {
-                    type = 4;
+                    type = "5";
                     initData(type,orderId);
                 }
             }
@@ -101,13 +103,13 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
         list_order = view.findViewById(R.id.list_order);
     }
 
-    public void initData(int type,String orderId){
+    public void initData(String type,String orderId){
         //获取订单列表
 
         OkGo.<String>get(Urls.ORDERLIST)
                 .params("state",type)
                 .params("pageNum",1)
-                .params("pageSize",5)
+                .params("pageSize",10)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -142,7 +144,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         intent.putExtra("orderId",list.get(position).getOrderId());
-        if(type==3) {
+        if(type.equals("3,4")) {
             intent.putExtra("type",1);
         } else {
             intent.putExtra("type",2);
@@ -153,7 +155,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
     @Override
     public void onButtonClick(View view, final int position) {
         int operation;
-        if(type == 3){
+        if(type .equals( "3,4")){
             operation = 2;  //开始派送
         } else  {
             operation = 3;  //确认送达

@@ -12,18 +12,20 @@ import com.bumptech.glide.Glide;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.GoodsBean;
 import net.leelink.communityboss.bean.OrderDetail;
 import net.leelink.communityboss.utils.Urls;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class PreOrderAdapter extends RecyclerView.Adapter<PreOrderAdapter.ViewHolder> {
     private Context context;
-    private List<OrderDetail.DetailsBean> list;
+    private List<GoodsBean> list;
 
 
 
-    public PreOrderAdapter(Context context, List<OrderDetail.DetailsBean> list) {
+    public PreOrderAdapter(Context context, List<GoodsBean> list) {
         this.context =context;
         this.list = list;
     }
@@ -37,10 +39,10 @@ public class PreOrderAdapter extends RecyclerView.Adapter<PreOrderAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(PreOrderAdapter.ViewHolder holder, int position) {
-        holder.tv_name.setText(list.get(position).getCommodityName());
-        Glide.with(context).load(Urls.IMAGEURL+"/Store/"+ CommunityBossApplication.storeInfo.getStoreFontPath()).into(holder.img_head);
-        holder.tv_count.setText("x"+list.get(position).getSales());
-        holder.tv_price.setText("￥"+list.get(position).getPrice());
+        holder.tv_name.setText(list.get(position).getName());
+        Glide.with(context).load(Urls.IMG_URL+list.get(position).getImageUrl()).into(holder.img_head);
+        holder.tv_count.setText("x"+list.get(position).getNumber());
+        holder.tv_price.setText("￥"+big2(list.get(position).getPrice()));
     }
 
     @Override
@@ -58,5 +60,12 @@ public class PreOrderAdapter extends RecyclerView.Adapter<PreOrderAdapter.ViewHo
             tv_count = itemView.findViewById(R.id.tv_count);
             tv_price = itemView.findViewById(R.id.tv_price);
         }
+    }
+
+    private static String big2(double d) {
+        BigDecimal d1 = new BigDecimal(Double.toString(d));
+        BigDecimal d2 = new BigDecimal(Integer.toString(1));
+        // 四舍五入,保留2位小数
+        return d1.divide(d2,2,BigDecimal.ROUND_HALF_UP).toString();
     }
 }

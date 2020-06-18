@@ -108,19 +108,19 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
         Glide.with(ChangeGoodsActivity.this).load(Urls.IMG_URL + url).into(img_head);
 
         //将网络地址转化为file
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Bitmap bitmap = Glide.with(ChangeGoodsActivity.this).load(Urls.IMG_URL + url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                    file = BitmapCompress.compressImage(bitmap);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Bitmap bitmap = Glide.with(ChangeGoodsActivity.this).load(Urls.IMG_URL + url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+//                    file = BitmapCompress.compressImage(bitmap);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     @Override

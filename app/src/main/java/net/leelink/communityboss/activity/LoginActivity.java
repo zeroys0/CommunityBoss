@@ -38,6 +38,7 @@ import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.StoreInfo;
+import net.leelink.communityboss.housekeep.HousekeepMainActivity;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Logger;
 import net.leelink.communityboss.utils.Urls;
@@ -197,25 +198,44 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             if (json.getInt("status") == 200) {
                              //   CommunityBossApplication.token = json.getString("AppToken");
 
-                                JSONObject jsonObject = json.getJSONObject("StoreInfo");
+                                JSONObject jsonObject = json.getJSONObject("data");
 
-                                if(jsonObject.getInt("StoreState")==0) {
-                                    Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
+                                if(jsonObject.getInt("serverTypeId")==100) {
+                                    Intent intent = new Intent(LoginActivity.this, ChooseIdentityActivity.class);
+                                    intent.putExtra("id",jsonObject.getString("id"));
                                     startActivity(intent);
-                                }else if(jsonObject.getInt("StoreState")==1) {
-                                    Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    SharedPreferences sp = getSharedPreferences("sp",0);
-                                    SharedPreferences.Editor editor = sp.edit();
-                                    editor.putString("secretKey",json.getString("secretKey"));
-                                    editor.apply();
-                                    Gson gson = new Gson();
-                                    Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
-                                    StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
-                                    CommunityBossApplication.storeInfo = storeInfo;
-                                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                                    startActivity(intent);
+                                }else if(jsonObject.getInt("serverTypeId")==1) {
+                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                        Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                        startActivity(intent);
+                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                        SharedPreferences.Editor editor = sp.edit();
+                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.apply();
+                                        Gson gson = new Gson();
+                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                        CommunityBossApplication.storeInfo = storeInfo;
+                                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                } else if(jsonObject.getInt("serverTypeId")==2) {
+                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                        Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                        startActivity(intent);
+                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                        SharedPreferences.Editor editor = sp.edit();
+                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.apply();
+                                        Gson gson = new Gson();
+                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                        CommunityBossApplication.storeInfo = storeInfo;
+                                        Intent intent = new Intent(LoginActivity.this,HousekeepMainActivity.class);
+                                        startActivity(intent);
+                                    }
                                 }
                                 finish();
                             } else {
@@ -245,30 +265,46 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             JSONObject json = new JSONObject(body);
                             Log.d("用户名密码登录",json.toString());
                             if (json.getInt("status") == 200) {
-                                //CommunityBossApplication.token = json.getString("AppToken");
                                 JSONObject jsonObject = json.getJSONObject("data");
-                                Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
-                                if(jsonObject.getInt("vertifyState")==0) {
-                                    Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
+
+                                if(jsonObject.getInt("serverTypeId")==100) {
+                                    Intent intent = new Intent(LoginActivity.this, ChooseIdentityActivity.class);
                                     intent.putExtra("id",jsonObject.getString("id"));
                                     startActivity(intent);
-                                }  else if(jsonObject.getInt("vertifyState")==1) {
-//                                    Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                }  else {
-                                    SharedPreferences sp = getSharedPreferences("sp",0);
-                                    SharedPreferences.Editor editor = sp.edit();
-                                  //  editor.putString("AppToken",json.getString("AppToken"));
-                                    editor.apply();
-                                    Gson gson = new Gson();
-
-                                    StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
-                                    CommunityBossApplication.storeInfo = storeInfo;
-                                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                }else if(jsonObject.getInt("serverTypeId")==1) {
+                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                        Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                        startActivity(intent);
+                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                        SharedPreferences.Editor editor = sp.edit();
+                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.apply();
+                                        Gson gson = new Gson();
+                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                        CommunityBossApplication.storeInfo = storeInfo;
+                                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                } else if(jsonObject.getInt("serverTypeId")==2) {
+                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                        Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                        startActivity(intent);
+                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                        SharedPreferences.Editor editor = sp.edit();
+                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.apply();
+                                        Gson gson = new Gson();
+                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                        CommunityBossApplication.storeInfo = storeInfo;
+                                        Intent intent = new Intent(LoginActivity.this,HousekeepMainActivity.class);
+                                        startActivity(intent);
+                                    }
                                 }
+                                finish();
 
                             } else {
                                 Toast.makeText(LoginActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();

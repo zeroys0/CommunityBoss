@@ -3,6 +3,7 @@ package net.leelink.communityboss.utils;
 public class Urls {
     //   public static final String WEBSITE = "http://122.225.60.118:6280/xdapp/api/Store/";
     public static final String WEBSITE = "http://192.168.16.91:8888/sh/storeApp/";
+    public static final String HS_WEBSITE = "http://192.168.16.91:8888/sh/homeStore/";
     public static final String IMAGEHEAD = "http://122.225.60.118:6280/xdapp/Image/Customer/HeadImage/";    //用户端头像
     public static final String IMAGEURL = "http://122.225.60.118:6280/xdapp/Image/";     //图片地址
     public static final String IMG_URL = "http://192.168.16.91:8888/files";
@@ -41,5 +42,11 @@ public class Urls {
     public static final String APPRAISELIST = WEBSITE +"appraiseList";  //评价列表
     public static final String UPDATESTOREINGO = WEBSITE +"updateStoreInfo";    //修改商家信息
     public static final String ORDERSTATE = WEBSITE +"orderState";  //修改订单状态
+    public static final String REPLYAPPRAISE = WEBSITE +"replyAppraise";    //商家回复评价
+    public static final String REFUND = WEBSITE +"refund";  //订单退款
 
+
+    //家政接口
+    public static final String VERTIFYSER = HS_WEBSITE +"vertifySer";  //员工审核
+    public static final String PRODUCT = HS_WEBSITE+"product";  //服务项目
 }

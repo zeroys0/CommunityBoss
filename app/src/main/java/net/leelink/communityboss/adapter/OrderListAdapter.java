@@ -50,6 +50,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
                 break;
             case 3:
                 holder.tv_state.setText("待骑手抢单");
+                holder.btn_confirm.setVisibility(View.INVISIBLE);
                 break;
             case 4:
                 holder.tv_state.setText("待取货");
@@ -61,6 +62,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
                 holder.btn_confirm.setVisibility(View.INVISIBLE);
                 break;
             case 6:
+                holder.tv_state.setText("待评价");
             case 7:
                 holder.tv_state.setText("已完成");
                 holder.btn_confirm.setVisibility(View.INVISIBLE);

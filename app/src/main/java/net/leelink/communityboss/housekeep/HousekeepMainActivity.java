@@ -1,0 +1,215 @@
+package net.leelink.communityboss.housekeep;
+
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
+
+import net.leelink.communityboss.MainActivity;
+import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.BaseActivity;
+import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.fragment.CompleteOrderFragment;
+import net.leelink.communityboss.fragment.MineFragment;
+import net.leelink.communityboss.fragment.TakeOrderFragment;
+import net.leelink.communityboss.fragment.UntakeOrderFragment;
+import net.leelink.communityboss.housekeep.fragment.HsCompleteFragment;
+import net.leelink.communityboss.housekeep.fragment.HsMineFragment;
+import net.leelink.communityboss.housekeep.fragment.HsTakeFragment;
+import net.leelink.communityboss.housekeep.fragment.HsUntakeFragment;
+import net.leelink.communityboss.utils.ToastUtil;
+import net.leelink.communityboss.utils.Utils;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+public class HousekeepMainActivity extends BaseActivity implements BottomNavigationBar.OnTabSelectedListener{
+    private BottomNavigationBar nv_bottom;
+    private HsUntakeFragment untakeOrderFragment;
+    private HsTakeFragment takeOrderFragment;
+    private HsCompleteFragment completeOrderFragment;
+    private HsMineFragment mineFragment;
+    FragmentManager fm;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_housekeep_main);
+        init();
+    }
+    public void init(){
+        nv_bottom = findViewById(R.id.nv_bottom);
+        nv_bottom.setTabSelectedListener(HousekeepMainActivity.this);
+        nv_bottom.setMode(BottomNavigationBar.MODE_FIXED);
+        nv_bottom.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
+        nv_bottom.setBarBackgroundColor(R.color.white);
+        nv_bottom
+                .addItem(new BottomNavigationItem(R.mipmap.untake_order_selected, "待接单").setInactiveIcon(getResources().getDrawable(R.mipmap.untake_order_unselect)).setActiveColorResource(R.color.blue))
+                .addItem(new BottomNavigationItem(R.mipmap.take_order_selected, "已接单").setInactiveIcon(getResources().getDrawable(R.mipmap.take_order_unselect)).setActiveColorResource(R.color.blue))
+                .addItem(new BottomNavigationItem(R.mipmap.complete_order_selected, "已完成").setInactiveIcon(getResources().getDrawable(R.mipmap.complete_order_unselect)).setActiveColorResource(R.color.blue))
+                .addItem(new BottomNavigationItem(R.mipmap.mine_selected, "我的").setInactiveIcon(getResources().getDrawable(R.mipmap.mine_unselect)).setActiveColorResource(R.color.blue))
+                .setFirstSelectedPosition(0)
+                .initialise();
+        fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        untakeOrderFragment = (HsUntakeFragment) fm.findFragmentByTag("untake");
+        if (untakeOrderFragment == null) {
+            untakeOrderFragment = new HsUntakeFragment();
+        }
+        ft.add(R.id.fragment_view, untakeOrderFragment, "untake");
+        ft.commit();
+        setBottomNavigationItem(8,20);
+
+
+        int a = 0;
+        List<String> list = new ArrayList();
+        list.add("友鹏财管");
+        list.add("阿里发发");
+        list.add("新的商店");
+
+    }
+
+    private void setBottomNavigationItem(int space, int imgLen) {
+        float contentLen = 36;
+        Class barClass = nv_bottom.getClass();
+        Field[] fields = barClass.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.setAccessible(true);
+            if (field.getName().equals("mTabContainer")) {
+                try { //反射得到 mTabContainer
+                    LinearLayout mTabContainer = (LinearLayout) field.get(nv_bottom);
+                    for (int j = 0; j < mTabContainer.getChildCount(); j++) {
+                        //获取到容器内的各个 Tab
+                        View view = mTabContainer.getChildAt(j);
+                        //获取到Tab内的各个显示控件
+                        // 获取到Tab内的文字控件
+                        TextView labelView = (TextView) view.findViewById(com.ashokvarma.bottomnavigation.R.id.fixed_bottom_navigation_title);
+                        //计算文字的高度DP值并设置，setTextSize为设置文字正方形的对角线长度，所以：文字高度（总内容高度减去间距和图片高度）*根号2即为对角线长度，此处用DP值，设置该值即可。
+                        labelView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, (float) (Math.sqrt(2) * (contentLen - imgLen - space)));
+                        //获取到Tab内的图像控件
+                        ImageView iconView = (ImageView) view.findViewById(com.ashokvarma.bottomnavigation.R.id.fixed_bottom_navigation_icon);
+                        //设置图片参数，其中，MethodUtils.dip2px()：换算dp值
+                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int) DensityUtil.dp2px(this, imgLen), (int) DensityUtil.dp2px(this, imgLen));
+                        params.gravity = Gravity.CENTER;
+                        iconView.setLayoutParams(params);
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void onTabSelected(int position) {
+        FragmentTransaction ft = getFragmentTransaction();
+        switch (position) {
+            case 0:
+                if (untakeOrderFragment == null) {
+                    ft.add(R.id.fragment_view, new HsUntakeFragment(), "untake");
+                } else {
+                    ft.show(untakeOrderFragment);
+                }
+                Utils.setStatusTextColor(true, HousekeepMainActivity.this);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
+                break;
+            case 1:
+                if(takeOrderFragment ==null) {
+                    ft.add(R.id.fragment_view, new HsTakeFragment(),"take");
+                } else {
+                    ft.show(takeOrderFragment);
+                }
+                Utils.setStatusTextColor(true,HousekeepMainActivity.this);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
+                break;
+            case 2:
+                if(completeOrderFragment ==null) {
+                    ft.add(R.id.fragment_view, new HsCompleteFragment(),"complete");
+                } else {
+                    ft.show(completeOrderFragment);
+                }
+                Utils.setStatusTextColor(true,HousekeepMainActivity.this);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
+                break;
+            case 3:
+                if(mineFragment ==null) {
+                    ft.add(R.id.fragment_view, new HsMineFragment(),"mine");
+                } else {
+                    ft.show(mineFragment);
+                }
+                Utils.setStatusTextColor(true,HousekeepMainActivity.this);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(int position) {
+
+    }
+
+    @Override
+    public void onTabReselected(int position) {
+
+    }
+    protected FragmentTransaction getFragmentTransaction() {
+        // TODO Auto-generated method stub
+        FragmentManager fm = getSupportFragmentManager();
+        untakeOrderFragment = (HsUntakeFragment) fm.findFragmentByTag("untake");
+        takeOrderFragment = (HsTakeFragment) fm.findFragmentByTag("take");
+        completeOrderFragment = (HsCompleteFragment) fm.findFragmentByTag("complete");
+        mineFragment = (HsMineFragment) fm.findFragmentByTag("mine");
+        FragmentTransaction ft = fm.beginTransaction();
+        /** 如果存在hide掉 */
+        if (untakeOrderFragment != null)
+            ft.hide(untakeOrderFragment);
+        if (takeOrderFragment != null)
+            ft.hide(takeOrderFragment);
+        if (completeOrderFragment != null)
+            ft.hide(completeOrderFragment);
+        if(mineFragment != null)
+            ft.hide(mineFragment);
+        return ft;
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    private long exitTime = 0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                ToastUtil.show(getApplicationContext(), "再按一次退出程序");
+                exitTime = System.currentTimeMillis();
+            } else {
+                CommunityBossApplication.getInstance().exit();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+}

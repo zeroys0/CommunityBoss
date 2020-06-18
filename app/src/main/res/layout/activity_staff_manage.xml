@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".housekeep.StaffManageActivity">
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y194"
+        android:background="@color/blue">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/y44"
+            android:layout_marginTop="@dimen/y80"
+            android:text="员工管理"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/x58"
+            />
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/y185">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x45"
+                android:layout_marginTop="@dimen/y95"
+                android:src="@mipmap/back" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <android.support.design.widget.TabLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y130"
+    app:tabIndicatorColor="#1a9cff"
+    app:tabMode="fixed"
+    app:tabSelectedTextColor="@color/black"
+    app:tabTextAppearance="@android:style/TextAppearance.Holo.Small"
+    app:tabTextColor="@color/black"
+        android:background="@color/white"
+    android:id="@+id/tablayout">
+
+</android.support.design.widget.TabLayout>
+<android.support.v7.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/list"
+    android:background="#f3f3f3"
+    />
+</LinearLayout>

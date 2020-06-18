@@ -91,7 +91,6 @@ private List<CommentListBean> list = new ArrayList<>();
                                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(CommentListActivity.this, LinearLayoutManager.VERTICAL, false);
                                     comment_list.setLayoutManager(layoutManager);
                                     comment_list.setAdapter(commentListAdapter);
-
                             } else {
                                 Toast.makeText(CommentListActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
                             }
@@ -166,7 +165,6 @@ private List<CommentListBean> list = new ArrayList<>();
                         refreshLayout.finishLoadmore();
                         initData(orderId);
                      //   commentListAdapter.update(j);
-                        comment_list.scrollToPosition(commentListAdapter.getItemCount()-1);
                     }
                 }, 1000);
             }

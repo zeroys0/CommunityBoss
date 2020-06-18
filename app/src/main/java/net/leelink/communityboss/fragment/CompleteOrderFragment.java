@@ -62,19 +62,16 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
 
     public void init(View view){
         list_order = view.findViewById(R.id.list_order);
-//        orderListAdapter = new OrderListAdapter(list,getContext(),this);
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-//        list_order.setLayoutManager(layoutManager);
-//        list_order.setAdapter(orderListAdapter);
+
     }
 
     public void initData(String orderId){
         //获取订单列表
 
         OkGo.<String>get(Urls.ORDERLIST)
-                .params("state",5)
+                .params("state","6,7")
                 .params("pageNum",1)
-                .params("pageSize",5)
+                .params("pageSize",10)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

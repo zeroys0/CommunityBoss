@@ -105,33 +105,30 @@ private RecyclerView refund_list;
 
     @Override
     public void onButtonClick(View view, int position) {
-        operation(position,4);
+        operation(position,1);
     }
 
     @Override
     public void onCancel(View view, int position) {
-        operation(position,5);
+        operation(position,0);
     }
 
     public void operation(final int position , int operation){
-        OkGo.<String>post(Urls.ORDEROPERATION+"?appToken="+ CommunityBossApplication.token)
-                .params("orderId",list.get(position).getOrderId())
-                .params("operation",operation)
+        OkGo.<String>post(Urls.REFUND+"/"+list.get(position).getOrderId()+"/"+operation)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-                            Log.d("确认订单",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
+                            JSONObject json = new JSONObject(body);
+                            Log.d("确认退款",json.toString());
+                            if (json.getInt("status") == 200) {
                                 initData();
                             } else {
 
                             }
-                            Toast.makeText(RefundListActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(RefundListActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

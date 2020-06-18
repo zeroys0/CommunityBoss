@@ -50,8 +50,8 @@ private RecyclerView list_order;
 private OrderListAdapter orderListAdapter;
 private List<OrderBean> list = new ArrayList<>();
     private TwinklingRefreshLayout refreshLayout;
-        private String orderId = "0";
         private int page = 1;
+        private  boolean hasNextPage = false;
     @Override
     public void handleCallBack(Message msg) {
 
@@ -62,7 +62,7 @@ private List<OrderBean> list = new ArrayList<>();
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_untake_order,container,false);
         init(view);
-        initData(orderId);
+        initData();
         initRefreshLayout(view);
         return view;
     }
@@ -71,14 +71,14 @@ private List<OrderBean> list = new ArrayList<>();
         list_order = view.findViewById(R.id.list_order);
     }
 
-    public void initData(String orderId){
+    public void initData(){
 
         //获取订单列表
 
             OkGo.<String>get(Urls.ORDERLIST)
                     .params("state",2)
-                    .params("pageNum",1)
-                    .params("pageSize",5)
+                    .params("pageNum",page)
+                    .params("pageSize",10)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
@@ -90,6 +90,7 @@ private List<OrderBean> list = new ArrayList<>();
                                 if (json.getInt("status") == 200) {
                                     Gson gson = new Gson();
                                     json = json.getJSONObject("data");
+                                    hasNextPage = json.getBoolean("hasNextPage");
                                     JSONArray jsonArray = json.getJSONArray("list");
                                     List<OrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
                                     list.addAll(orderBeanslist);
@@ -164,8 +165,7 @@ private List<OrderBean> list = new ArrayList<>();
                         page = 1;
 
                         list.clear();
-                        orderId = "0";
-                        initData(orderId);
+                        initData();
                     }
                 }, 1000);
             }
@@ -176,8 +176,10 @@ private List<OrderBean> list = new ArrayList<>();
                     @Override
                     public void run() {
                         refreshLayout.finishLoadmore();
-                        orderId = list.get(list.size()-1).getOrderId();
-                        initData(orderId);
+                        if(hasNextPage){
+                            page++;
+                            initData();
+                        }
                         orderListAdapter.update(list);
                         list_order.scrollToPosition(orderListAdapter.getItemCount()-1);
                     }

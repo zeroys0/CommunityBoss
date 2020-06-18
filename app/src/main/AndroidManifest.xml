@@ -28,8 +28,17 @@
         android:roundIcon="@mipmap/android_template_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".activity.BoundaryActivity"></activity>
-        <!-- <activity android:name=".activity.CheckActivity"></activity> -->
+        <activity android:name=".housekeep.StaffCheckActivity"></activity>
+        <activity android:name=".housekeep.ServiceItemActivity" />
+        <activity android:name=".housekeep.StaffManageActivity" />
+        <activity android:name=".housekeep.StaffDetailActivity" />
+        <activity android:name=".housekeep.DelegateActivity" />
+        <activity android:name=".housekeep.HsOrderDetailActivity" />
+        <activity android:name=".housekeep.HousekeepMainActivity" />
+        <activity android:name=".housekeep.HousekeepApplyActivity" />
+        <activity android:name=".activity.ChooseIdentityActivity" />
+        <activity android:name=".activity.HKApplyActivity" />
+        <activity android:name=".activity.BoundaryActivity" /> <!-- <activity android:name=".activity.CheckActivity"></activity> -->
         <activity android:name=".activity.ChangeGoodsActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
@@ -167,8 +176,9 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="fe64a86563c6aa575b955ade" />
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="8868bd6ed288eaf214fb3e976a899d31">
-        </meta-data>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="8868bd6ed288eaf214fb3e976a899d31" />
     </application>
 
 </manifest>

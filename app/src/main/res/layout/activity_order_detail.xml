@@ -513,7 +513,8 @@
                     android:layout_below="@+id/tv_comment"
                     android:layout_marginLeft="@dimen/x147"
                     android:layout_marginTop="@dimen/y10"
-                    android:id="@+id/rl_img">
+                    android:id="@+id/rl_img"
+                    android:visibility="gone">
 
 
                     <ImageView
@@ -543,16 +544,30 @@
                             android:layout_marginLeft="@dimen/x15"/>
                     </LinearLayout>
                 </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="回复"
+                    android:textSize="@dimen/x35"
+                    android:textColor="@color/blue"
+                    android:id="@+id/tv_reply"
+                    android:layout_marginLeft="@dimen/x157"
+                    />
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y160"
                     android:maxHeight="@dimen/y160"
+                    android:layout_marginLeft="@dimen/x147"
                     android:gravity="top"
-                    android:padding="@dimen/x15"
-                    android:hint="回复"
+                    android:padding="@dimen/x18"
+                    android:hint="商家回复"
+                    android:textColor="@color/text_grey"
                     android:textColorHint="#8e8e8e"
                     android:textSize="@dimen/x39"
-                    android:visibility="invisible"
+                    android:visibility="visible"
+                    android:id="@+id/ed_reply"
+                    android:background="@mipmap/reply_bg"
+                    android:layout_marginBottom="@dimen/y40"
                     />
             </LinearLayout>
         </LinearLayout>
