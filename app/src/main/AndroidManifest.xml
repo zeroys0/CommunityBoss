@@ -28,7 +28,11 @@
         android:roundIcon="@mipmap/android_template_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".housekeep.StaffCheckActivity"></activity>
+        <activity android:name=".housekeep.StaffOrderActivity"></activity>
+        <activity android:name=".housekeep.HsIncomeActivity" />
+        <activity android:name=".housekeep.AllServiceActivity" />
+        <activity android:name=".housekeep.StaffServiceActivity" />
+        <activity android:name=".housekeep.StaffCheckActivity" />
         <activity android:name=".housekeep.ServiceItemActivity" />
         <activity android:name=".housekeep.StaffManageActivity" />
         <activity android:name=".housekeep.StaffDetailActivity" />

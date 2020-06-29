@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".housekeep.StaffManageActivity">
+    android:background="@color/background"
+    tools:context=".housekeep.StaffServiceActivity">
     <RelativeLayout
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/y44"
             android:layout_marginTop="@dimen/y80"
-            android:text="员工管理"
+            android:text="服务管理"
             android:textColor="#ffffff"
             android:textSize="@dimen/x58"
             />
@@ -36,23 +37,19 @@
                 android:layout_marginTop="@dimen/y95"
                 android:src="@mipmap/back" />
         </RelativeLayout>
-    </RelativeLayout>
-    <android.support.design.widget.TabLayout
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/y130"
-    app:tabIndicatorColor="#1a9cff"
-    app:tabMode="fixed"
-    app:tabSelectedTextColor="@color/black"
-    app:tabTextAppearance="@android:style/TextAppearance.Holo.Small"
-    app:tabTextColor="@color/black"
-        android:background="@color/white"
-    android:id="@+id/tablayout">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y95"
+            android:src="@mipmap/img_add_service"
+            android:id="@+id/img_add"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x30"
+            />
 
-</android.support.design.widget.TabLayout>
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/fragment_view"
-    android:background="#f3f3f3"
-    />
+    </RelativeLayout>
+    <com.yanzhenjie.recyclerview.SwipeRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/service_list"/>
 </LinearLayout>

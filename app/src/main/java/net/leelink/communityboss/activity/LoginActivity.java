@@ -251,6 +251,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     //账号密码登录
     public void login(){
         mProgressBar.setVisibility(View.VISIBLE);
+        Log.e( "login: ",JPushInterface.getRegistrationID(LoginActivity.this) );
         OkGo.<String>post(Urls.LOGIN)
                 .tag(this)
                 .params("telephone", ed_phone.getText().toString().trim())

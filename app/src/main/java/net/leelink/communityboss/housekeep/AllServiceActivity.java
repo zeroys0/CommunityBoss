@@ -1,8 +1,6 @@
 package net.leelink.communityboss.housekeep;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,9 +19,10 @@ import com.lzy.okgo.model.Response;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.BaseActivity;
 import net.leelink.communityboss.adapter.OnOrderListener;
-import net.leelink.communityboss.bean.DelegateBean;
-import net.leelink.communityboss.housekeep.adapter.StaffListAdapter;
+import net.leelink.communityboss.bean.ServiceBean;
+import net.leelink.communityboss.housekeep.adapter.StaffServiceAdapter;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.view.RecycleViewDivider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,40 +30,37 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Delayed;
 
-public class DelegateActivity extends BaseActivity implements OnOrderListener {
-    private RecyclerView staff_list;
-    private StaffListAdapter staffListAdapter;
-    private Context context;
+public class AllServiceActivity extends BaseActivity implements OnOrderListener {
+private RelativeLayout rl_back;
+    private List<ServiceBean> list = new ArrayList<>();
+    private StaffServiceAdapter staffServiceAdapter;
     private int page = 1;
-    private RelativeLayout rl_back;
-    private List<DelegateBean> list = new ArrayList<>();
+    private RecyclerView service_list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delegate);
+        setContentView(R.layout.activity_all_service);
         init();
         initData();
     }
 
     public void init(){
-        staff_list = findViewById(R.id.staff_list);
-        context = this;
-        rl_back = findViewById(R.id.rl_back);
+        rl_back= findViewById(R.id.rl_back);
         rl_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        service_list = findViewById(R.id.service_list);
     }
 
     public void initData(){
-        OkGo.<String>get(Urls.WORKSER)
-                .params("pangeNum",page)
+        OkGo.<String>get(Urls.FINDSERBYUSERID)
+                .params("pageNum",page)
                 .params("pageSize",10)
-                .params("productId",getIntent().getStringExtra("id"))
+                .params("userId",getIntent().getStringExtra("id"))
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -72,44 +68,40 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("可派工人员",json.toString());
+                            Log.d("未分配项目",json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
                                 JSONArray jsonArray = json.getJSONArray("list");
                                 Gson gson = new Gson();
-                                list = gson.fromJson(jsonArray.toString(),new TypeToken<List<DelegateBean>>(){}.getType());
-                                staffListAdapter = new StaffListAdapter(list,context, DelegateActivity.this);
-                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
-                                staff_list.setLayoutManager(layoutManager);
-                                staff_list.setAdapter(staffListAdapter);
+                                list = gson.fromJson(jsonArray.toString(),new TypeToken<List<ServiceBean>>(){}.getType());
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AllServiceActivity.this,LinearLayoutManager.VERTICAL,false);
+                                service_list.addItemDecoration(new RecycleViewDivider(
+                                        AllServiceActivity.this, LinearLayoutManager.VERTICAL, 20, getResources().getColor(R.color.background)));
+                                staffServiceAdapter = new StaffServiceAdapter(list,AllServiceActivity.this,AllServiceActivity.this);
+                                service_list.setLayoutManager(layoutManager);
+                                service_list.setAdapter(staffServiceAdapter);
                             } else {
-                                Toast.makeText(context, json.getString("message"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(AllServiceActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 });
-
     }
 
     @Override
     public void onItemClick(View view) {
-        int position = staff_list.getChildLayoutPosition(view);
-
-        Intent intent = new Intent( this,StaffOrderActivity.class);
-        intent.putExtra("userId",list.get(position).getUserId());
-
-        startActivity(intent);
-    }
-
-    @Override
-    public void onButtonClick(View view, int position) {
-        OkGo.<String>post(Urls.HS_ORDERSTATE)
-                .params("orderId",getIntent().getStringExtra("orderId"))
-                .params("state",3)
-                .params("userId",list.get(position).getUserId())
+        int position = service_list.getChildLayoutPosition(view);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("shUserId",getIntent().getStringExtra("id"));
+            jsonObject.put("providerProductId",list.get(position).getId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OkGo.<String>post(Urls.SERPRODUCT)
+                .upJson(jsonObject)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -117,18 +109,23 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("确认订单",json.toString());
+                            Log.d("添加服务",json.toString());
                             if (json.getInt("status") == 200) {
-                                Toast.makeText(DelegateActivity.this, "派单成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AllServiceActivity.this, "添加成功", Toast.LENGTH_LONG).show();
                                 finish();
                             } else {
-                                Toast.makeText(DelegateActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(AllServiceActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 });
+
+    }
+
+    @Override
+    public void onButtonClick(View view, int position) {
+
     }
 }

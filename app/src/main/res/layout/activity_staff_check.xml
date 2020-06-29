@@ -500,6 +500,17 @@
                     android:textColor="@color/white"
                     />
             </LinearLayout>
+            <Button
+                android:layout_width="@dimen/x1014"
+                android:layout_height="@dimen/y129"
+                android:background="@drawable/btn_hs_big"
+                android:layout_marginTop="@dimen/y50"
+                android:text="删除"
+                android:id="@+id/btn_delete"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/y100"
+                android:visibility="gone"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

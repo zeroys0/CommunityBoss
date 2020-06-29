@@ -10,31 +10,29 @@ import android.widget.TextView;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.OnOrderListener;
-import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.bean.HsOrderBean;
-import net.leelink.communityboss.bean.OrderBean;
+import net.leelink.communityboss.bean.WorkBean;
 
 import java.util.List;
 
-public class HsOrderAdapter extends RecyclerView.Adapter<HsOrderAdapter.ViewHolder> {
-
+public class WorkOrderAdapter extends RecyclerView.Adapter<WorkOrderAdapter.ViewHolder> {
     private Context context;
-    private List<HsOrderBean> list;
+    private List<WorkBean> list;
     private OnOrderListener onOrderListener;
-    public HsOrderAdapter(List<HsOrderBean> list, Context context, OnOrderListener onOrderListener) {
+    public WorkOrderAdapter(List<WorkBean> list, Context context, OnOrderListener onOrderListener) {
         this.list = list;
         this.context = context;
         this.onOrderListener = onOrderListener;
     }
 
-    public void update(List<HsOrderBean> list){
+    public void update(List<WorkBean> list){
         this.list = list;
         notifyDataSetChanged();
     }
     @Override
-    public HsOrderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WorkOrderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.hs_orderlist_item, parent, false); // 实例化viewholder
-        HsOrderAdapter.ViewHolder viewHolder = new HsOrderAdapter.ViewHolder(v);
+        WorkOrderAdapter.ViewHolder viewHolder = new WorkOrderAdapter.ViewHolder(v);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,35 +43,36 @@ public class HsOrderAdapter extends RecyclerView.Adapter<HsOrderAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(HsOrderAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(WorkOrderAdapter.ViewHolder holder, final int position) {
         holder.order_no.setText(list.get(position).getOrderNo());
         holder.tv_apoint_time.setText(list.get(position).getApointTime());
-        holder.tv_service.setText(list.get(position).getName());
+        holder.tv_service.setText(list.get(position).getProductName());
         holder.tv_price.setText(list.get(position).getUnitPrice()+"/"+list.get(position).getUnit());
-        switch (list.get(position).getState()){
-            case 1:
-                holder.tv_state.setText("待确认");
-                holder.btn_confirm.setText("确认订单");
-                break;
-            case 2:
-                holder.tv_state.setText("待派工");
-                holder.btn_confirm.setText("派工");
-                break;
-            case 3:
-                holder.tv_state.setText("已派工");
-                holder.btn_confirm.setVisibility(View.GONE);
-                break;
-            case 4:
-                holder.tv_state.setText("服务中");
-                holder.btn_confirm.setVisibility(View.GONE);
-                break;
-            case 5:
-                holder.tv_state.setText("服务完成");
-                holder.btn_confirm.setVisibility(View.GONE);
-                break;
-                default:
-                    break;
-        }
+        holder.btn_confirm.setVisibility(View.GONE);
+//        switch (list.get(position).getState()){
+//            case 1:
+//                holder.tv_state.setText("待确认");
+//                holder.btn_confirm.setText("确认订单");
+//                break;
+//            case 2:
+//                holder.tv_state.setText("待派工");
+//                holder.btn_confirm.setText("派工");
+//                break;
+//            case 3:
+//                holder.tv_state.setText("已派工");
+//                holder.btn_confirm.setVisibility(View.GONE);
+//                break;
+//            case 4:
+//                holder.tv_state.setText("服务中");
+//                holder.btn_confirm.setVisibility(View.GONE);
+//                break;
+//            case 5:
+//                holder.tv_state.setText("服务完成");
+//                holder.btn_confirm.setVisibility(View.GONE);
+//                break;
+//            default:
+//                break;
+//        }
         holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,5 +1,7 @@
 package net.leelink.communityboss.utils;
 
+import net.leelink.communityboss.housekeep.HousekeepMainActivity;
+
 public class Urls {
     //   public static final String WEBSITE = "http://122.225.60.118:6280/xdapp/api/Store/";
     public static final String WEBSITE = "http://192.168.16.91:8888/sh/storeApp/";
@@ -49,4 +51,15 @@ public class Urls {
     //家政接口
     public static final String VERTIFYSER = HS_WEBSITE +"vertifySer";  //员工审核
     public static final String PRODUCT = HS_WEBSITE+"product";  //服务项目
+    public static final String PRODUCTIMG = HS_WEBSITE +"productImg";   //修改服务项目
+    public static final String SERPRODUCT = HS_WEBSITE +"serProduct";   //服务人员列表
+    public static final String FINDSERALLBYUSERID = HS_WEBSITE+"findSerAllByUserId";    //查询已分配项目
+    public static final String FINDSERBYUSERID = HS_WEBSITE+"findSerByUserId";  //查询所有项目
+    public static final String HS_ORDERLIST = HS_WEBSITE +"orderList";  //订单列表
+    public static final String HS_ORDERSTATE = HS_WEBSITE +"orderState";   //修改订单状态
+    public static final String WORKSER = HS_WEBSITE +"workSer"; //可分配人员列表
+    public static final String WORKLIST = HS_WEBSITE +"workList"; //工单列表
+    public static final String ANALYSIS = HS_WEBSITE +"analysis";   //查询收入统计
+    public static final String FINDSERWORKBYUSERID = HS_WEBSITE+"findSerWorkByUserId";  //查询员工已分配(未完成)订单
+
 }

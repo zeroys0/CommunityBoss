@@ -229,17 +229,7 @@
                     android:layout_marginTop="@dimen/y40"
                     android:id="@+id/tv_good_name"
                     />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="x2"
-                    android:textColor="@color/text_grey"
-                    android:textSize="@dimen/x35"
-                    android:layout_toRightOf="@id/goods_head"
-                    android:layout_marginLeft="@dimen/x20"
-                    android:layout_marginTop="@dimen/y160"
 
-                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -249,27 +239,68 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/x36"
+                    android:id="@+id/tv_price"
                     />
 
             </RelativeLayout>
-            <RelativeLayout
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="@dimen/y150"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:background="@color/white">-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/x42"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginRight="@dimen/x30"-->
+<!--                    android:text="支付金额:150.00"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:layout_marginLeft="@dimen/x33"-->
+<!--                    android:id="@+id/tv_total_price"-->
+<!--                    />-->
+
+<!--            </RelativeLayout>-->
+
+            <Button
+                android:layout_width="@dimen/x1014"
+                android:layout_height="@dimen/y129"
+                android:background="@drawable/btn_hs_big"
+                android:layout_marginTop="@dimen/y50"
+                android:text="确认订单"
+                android:id="@+id/btn_confirm"
+                android:layout_gravity="center_horizontal"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/grey"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_marginRight="@dimen/x30"
+                />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:layout_marginTop="@dimen/y28"
+                android:id="@+id/ll_title"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="@dimen/x42"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/x30"
-                    android:text="支付金额:150.00"
-                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_vertical"
+                    android:text="服务人信息"
                     android:layout_marginLeft="@dimen/x33"
                     />
 
-            </RelativeLayout>
+            </LinearLayout>
+
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y1"
@@ -282,30 +313,8 @@
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
                 android:background="@color/white"
-                android:layout_marginTop="@dimen/y28">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/x42"
-                    android:layout_gravity="center_vertical"
-                    android:text="服务人信息"
-                    android:layout_marginLeft="@dimen/x33"
-                    />
-
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/y1"
-                android:background="@color/grey"
-                android:layout_marginLeft="@dimen/x30"
-                android:layout_marginRight="@dimen/x30"
-                />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/y150"
-                android:orientation="horizontal"
-                android:background="@color/white">
+                android:id="@+id/ll_servicer"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -324,7 +333,7 @@
                     android:textColor="@color/text_grey"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/x30"
-                    android:id="@+id/tv_remark"/>
+                    android:id="@+id/tv_servicer"/>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -337,7 +346,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:id="@+id/ll_sex"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -369,7 +380,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:id="@+id/ll_phone"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -401,7 +414,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:id="@+id/ll_number"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -433,7 +448,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:id="@+id/ll_start_time"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -465,7 +482,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:id="@+id/ll_end_time"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -499,6 +518,7 @@
                 android:orientation="horizontal"
                 android:background="@color/white"
                 android:id="@+id/ll_img"
+                android:visibility="gone"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -569,22 +589,24 @@
                     android:textColor="@color/white"
                     />
             </LinearLayout>
-            <Button
-                android:layout_width="@dimen/x1014"
-                android:layout_height="@dimen/y129"
-                android:background="@drawable/btn_hs_big"
-                android:text="null"
-                android:id="@+id/btn_confirm"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/y57"
-                android:layout_marginTop="@dimen/y40"
-                android:visibility="gone"
-                />
+<!--            <Button-->
+<!--                android:layout_width="@dimen/x1014"-->
+<!--                android:layout_height="@dimen/y129"-->
+<!--                android:background="@drawable/btn_hs_big"-->
+<!--                android:text="null"-->
+<!--                android:id="@+id/btn_confirm"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginBottom="@dimen/y57"-->
+<!--                android:layout_marginTop="@dimen/y40"-->
+<!--                android:visibility="visible"-->
+<!--                />-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:id="@+id/ll_reason"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -617,7 +639,9 @@
                 android:layout_height="@dimen/y150"
                 android:orientation="horizontal"
                 android:background="@color/white"
-                android:layout_marginBottom="@dimen/y80">
+                android:layout_marginBottom="@dimen/y80"
+                android:id="@+id/ll_state"
+                android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

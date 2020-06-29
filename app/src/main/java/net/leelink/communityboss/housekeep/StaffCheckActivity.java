@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,9 +35,10 @@ import java.util.List;
 public class StaffCheckActivity extends BaseActivity implements View.OnClickListener {
 private TextView tv_name,tv_sex,tv_birth,tv_nation,tv_phone,tv_id_card,tv_organ,tv_store,tv_skill,tv_experience,tv_educate,tv_remark;
 private ImageView img0,img1,img2;
-private Button order_cancel,order_confirm;
+private Button order_cancel,order_confirm,btn_delete;
 private RelativeLayout rl_back;
 private  StaffBean staffBean;
+private LinearLayout ll_button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,7 @@ private  StaffBean staffBean;
         tv_educate.setText(staffBean.getJzTrainExp());
         tv_remark = findViewById(R.id.tv_remark);
         tv_remark.setText(staffBean.getRemark());
+        ll_button = findViewById(R.id.ll_button);
         img0 = findViewById(R.id.img0);
         if(staffBean.getJzCertificatePathA()!=null){
             Glide.with(this).load(staffBean.getJzCertificatePathA()).into(img0);
@@ -93,6 +96,14 @@ private  StaffBean staffBean;
         order_confirm.setOnClickListener(this);
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
+        btn_delete = findViewById(R.id.btn_delete);
+        if(getIntent().getStringExtra("action").equals("check")){
+            ll_button.setVisibility(View.VISIBLE);
+        } else {
+            ll_button.setVisibility(View.GONE);
+            btn_delete.setVisibility(View.VISIBLE);
+            btn_delete.setOnClickListener(this);
+        }
     }
 
     @Override
@@ -106,6 +117,9 @@ private  StaffBean staffBean;
                 break;
             case R.id.order_confirm:
                 vertify(1);
+                break;
+            case R.id.btn_delete:
+                vertify(0);
                 break;
                 default:
                     break;

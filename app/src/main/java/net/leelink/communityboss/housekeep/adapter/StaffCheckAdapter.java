@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import net.leelink.communityboss.R;
@@ -20,10 +21,12 @@ public class StaffCheckAdapter extends RecyclerView.Adapter<StaffCheckAdapter.Vi
     private Context context;
     private List<StaffBean> list;
     private OnOrderListener onOrderListener;
-    public StaffCheckAdapter(List<StaffBean> list, Context context, OnOrderListener onOrderListener) {
+    private int type;
+    public StaffCheckAdapter(List<StaffBean> list, Context context, OnOrderListener onOrderListener,int type) {
         this.list = list;
         this.context = context;
         this.onOrderListener = onOrderListener;
+        this.type = type;
     }
 
     public void update(List<StaffBean> list){
@@ -56,6 +59,12 @@ public class StaffCheckAdapter extends RecyclerView.Adapter<StaffCheckAdapter.Vi
         }
         holder.tv_phone.setText(list.get(position).getTelephone());
         holder.tv_remark.setText(list.get(position).getRemark());
+        if(type ==1){
+            holder.btn_confirm.setText("员工管理");
+        }
+        if(type ==2){
+            holder.btn_confirm.setText("添加服务");
+        }
     }
 
     @Override
@@ -65,12 +74,14 @@ public class StaffCheckAdapter extends RecyclerView.Adapter<StaffCheckAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv_staff_name,tv_sex,tv_phone,tv_remark;
+        Button btn_confirm;
         public ViewHolder(View itemView) {
             super(itemView);
             tv_staff_name = itemView.findViewById(R.id.tv_staff_name);
             tv_sex = itemView.findViewById(R.id.tv_sex);
             tv_phone = itemView.findViewById(R.id.tv_phone);
             tv_remark = itemView.findViewById(R.id.tv_remark);
+            btn_confirm = itemView.findViewById(R.id.btn_confirm);
         }
     }
 }

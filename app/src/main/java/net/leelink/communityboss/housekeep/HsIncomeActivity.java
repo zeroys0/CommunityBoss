@@ -1,4 +1,4 @@
-package net.leelink.communityboss.activity;
+package net.leelink.communityboss.housekeep;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +17,9 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.BaseActivity;
+import net.leelink.communityboss.activity.IncomeActivity;
+import net.leelink.communityboss.activity.WithdrawActivity;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.utils.Urls;
 
@@ -26,9 +29,9 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class IncomeActivity extends BaseActivity implements View.OnClickListener {
-private RelativeLayout rl_back,rl_get_money,rl_open_time,rl_close_time;
-private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty,tv_order_number,tv_state,tv_profit;
+public class HsIncomeActivity extends BaseActivity implements View.OnClickListener {
+    private RelativeLayout rl_back,rl_get_money,rl_open_time,rl_close_time;
+    private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty,tv_order_number,tv_state,tv_profit;
     private TimePickerView pvTime,pvTime1;
     private SimpleDateFormat sdf,sdf1;
     @Override
@@ -71,7 +74,7 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                 finish();
                 break;
             case R.id.rl_get_money:     //去提现
-                Intent intent = new Intent(this,WithdrawActivity.class);
+                Intent intent = new Intent(this, WithdrawActivity.class);
                 intent.putExtra("balance",tv_income.getText().toString().trim());
                 startActivity(intent);
                 break;
@@ -81,13 +84,13 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
             case R.id.rl_close_time:    //查询结束时间
                 pvTime1.show();
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
     }
 
     public void initdata(){
-        OkGo.<String>get(Urls.STOREINCOME)
+        OkGo.<String>get(Urls.ANALYSIS)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -107,7 +110,7 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
 //                                tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
 //                                tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
                             } else {
-                                Toast.makeText(IncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(HsIncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -141,7 +144,7 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
     }
 
     public void storeIncome(){
-        OkGo.<String>get(Urls.STOREINCOME)
+        OkGo.<String>get(Urls.ANALYSIS)
                 .params("startTime",tv_open_time.getText().toString().trim())
                 .params("endTime",tv_close_time.getText().toString().trim())
                 .tag(this)
@@ -150,7 +153,8 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            JSONObject json = new JSONObject(body);
+                            body = body.substring(1,body.length()-1);
+                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                             Log.d("查询收入",json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
@@ -161,7 +165,7 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                             } else {
 
                             }
-                            Toast.makeText(IncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(HsIncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

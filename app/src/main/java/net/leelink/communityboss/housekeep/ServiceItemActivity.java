@@ -74,9 +74,12 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
     private ImageView img;
     private EditText ed_around,ed_explain,ed_against_ptice,ed_name,ed_price,ed_unit;
     private int state= 1;
+    private String id ;
     List<String> imagePaths = new ArrayList<>();
     List<ServiceBean> list = new ArrayList<>();
     private static final int REQUEST_SELECT_IMAGES_CODE = 0x01;
+    private boolean add;
+    private RelativeLayout rl_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +95,8 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         service_list = findViewById(R.id.service_list);
         btn_add = findViewById(R.id.btn_add);
         btn_add.setOnClickListener(this);
-
+        rl_back = findViewById(R.id.rl_back);
+        rl_back.setOnClickListener(this);
     }
 
     public void initData() {
@@ -138,7 +142,23 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
 
     @Override
     public void onButtonClick(View view, int position) {
-
+        add = false;
+        ed_name.setText(list.get(position).getName());
+        ed_against_ptice.setText(list.get(position).getDamagePrice()+"");
+        ed_around.setText(list.get(position).getAround());
+        ed_explain.setText(list.get(position).getRemark());
+        ed_price.setText(list.get(position).getUnitPrice()+"");
+        ed_unit.setText(list.get(position).getUnit());
+        if(list.get(position).getState()==0) {
+            spinner.setSelection(1);
+        } else {
+            spinner.setSelection(0);
+        }
+        id = list.get(position).getId();
+        btn_confirm.setText("提交");
+        Glide.with(this).load(Urls.IMG_URL+list.get(position).getImgPath()).into(img);
+        popupWindow.showAtLocation(service_list, Gravity.CENTER, 0, 0);
+        backgroundAlpha(0.5f);
     }
 
     @Override
@@ -147,6 +167,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
             case R.id.btn_add:
                 popupWindow.showAtLocation(service_list, Gravity.CENTER, 0, 0);
                 backgroundAlpha(0.5f);
+                add= true;
                 break;
             case R.id.img:
                 ImagePicker.getInstance()
@@ -161,10 +182,17 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                         .start(ServiceItemActivity.this, REQUEST_SELECT_IMAGES_CODE);
                 break;
             case R.id.btn_confirm:
+                if(add) {
                 submit();
+                }else {
+                    edit();
+                }
                 break;
             case R.id.btn_cancel:
                 popupWindow.dismiss();
+                break;
+            case R.id.rl_back:
+                finish();
                 break;
 
         }
@@ -205,6 +233,43 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                     }
                 });
     }
+    public void edit(){
+
+        if(imagePaths.size()==0) {
+            Toast.makeText(this, "请上传商品图片", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        OkGo.<String>post(Urls.PRODUCTIMG)
+                .params("around",ed_around.getText().toString().trim())
+                .params("damagePrice",ed_against_ptice.getText().toString().trim())
+                .params("remark",ed_explain.getText().toString().trim())
+                .params("name",ed_name.getText().toString().trim())
+                .params("img",new File(imagePaths.get(0)))
+                .params("state",state)
+                .params("unitPrice",ed_price.getText().toString().trim())
+                .params("unit",ed_unit.getText().toString().trim())
+                .params("id",id)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("编辑商品",json.toString());
+                            if (json.getInt("status") == 200) {
+                                popupWindow.dismiss();
+                                initData();
+                            } else {
+
+                            }
+                            Toast.makeText(ServiceItemActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
 
 
     @Override
@@ -213,7 +278,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         if (data != null) {
             if (requestCode == REQUEST_SELECT_IMAGES_CODE && resultCode == RESULT_OK) {
                 imagePaths = data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
-//            list.addAll(imagePaths);
+
                 refresh(imagePaths);
             }
         }
@@ -238,7 +303,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         InputFilter[] filters = {new CashierInputFilter()};
         ed_against_ptice.setFilters(filters);
         ed_price.setFilters(filters);
-        spinner.setSelection(0, true);
+        spinner.setSelection(0);
         img = popview.findViewById(R.id.img);
         img.setOnClickListener(ServiceItemActivity.this);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

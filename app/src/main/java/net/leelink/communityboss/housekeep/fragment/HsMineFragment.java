@@ -85,7 +85,7 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
 
     public void initdata(){
         if(CommunityBossApplication.storeInfo.getStoreImg() != null) {
-            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
+            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getRegistPath()).into(img_head);
         }
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
         tv_phone.setText(CommunityBossApplication.storeInfo.getOrderPhone());

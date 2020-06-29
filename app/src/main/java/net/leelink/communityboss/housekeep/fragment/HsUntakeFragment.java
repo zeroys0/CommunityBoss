@@ -26,6 +26,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
+import net.leelink.communityboss.bean.HsOrderBean;
 import net.leelink.communityboss.bean.OrderBean;
 import net.leelink.communityboss.fragment.BaseFragment;
 import net.leelink.communityboss.fragment.UntakeOrderFragment;
@@ -43,8 +44,8 @@ import java.util.List;
 public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
 
     private RecyclerView list_order;
-    private OrderListAdapter orderListAdapter;
-    private List<OrderBean> list = new ArrayList<>();
+
+    private List<HsOrderBean> list = new ArrayList<>();
     private TwinklingRefreshLayout refreshLayout;
     private int page = 1;
     private  boolean hasNextPage = false;
@@ -72,8 +73,8 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
 
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST)
-                .params("state",2)
+        OkGo.<String>get(Urls.HS_ORDERLIST)
+                .params("state",1)
                 .params("pageNum",page)
                 .params("pageSize",10)
                 .tag(this)
@@ -89,7 +90,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
                                 json = json.getJSONObject("data");
                                 hasNextPage = json.getBoolean("hasNextPage");
                                 JSONArray jsonArray = json.getJSONArray("list");
-                                List<OrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                List<HsOrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<HsOrderBean>>(){}.getType());
                                 list.addAll(orderBeanslist);
                                 hsOrderAdapter = new HsOrderAdapter(list,getContext(), HsUntakeFragment.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
@@ -111,17 +112,17 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
     public void onItemClick(View view) {
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), HsOrderDetailActivity.class);
-        intent.putExtra("orderId",list.get(position).getOrderId());
-        intent.putExtra("type",0);
+        intent.putExtra("orderDetail",list.get(position));
+        intent.putExtra("type",1);
         startActivity(intent);
     }
 
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
-        OkGo.<String>post(Urls.ORDERSTATE)
+        OkGo.<String>post(Urls.HS_ORDERSTATE)
                 .params("orderId",list.get(position).getOrderId())
-                .params("state",3)
+                .params("state",2)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -132,7 +133,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
                             Log.d("确认订单",json.toString());
                             if (json.getInt("status") == 200) {
                                 list.remove(position);
-                                orderListAdapter.notifyDataSetChanged();
+                                hsOrderAdapter.notifyDataSetChanged();
                                 Toast.makeText(getContext(), "订单已确认,请尽快完成吧~", Toast.LENGTH_SHORT).show();
                             } else {
 
@@ -177,8 +178,8 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
                             page++;
                             initData();
                         }
-                        orderListAdapter.update(list);
-                        list_order.scrollToPosition(orderListAdapter.getItemCount()-1);
+                        hsOrderAdapter.update(list);
+                        list_order.scrollToPosition(hsOrderAdapter.getItemCount()-1);
                     }
                 }, 1000);
             }

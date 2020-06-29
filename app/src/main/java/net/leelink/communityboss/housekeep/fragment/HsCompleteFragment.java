@@ -26,6 +26,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
+import net.leelink.communityboss.bean.HsOrderBean;
 import net.leelink.communityboss.bean.OrderBean;
 import net.leelink.communityboss.fragment.BaseFragment;
 import net.leelink.communityboss.fragment.CompleteOrderFragment;
@@ -41,8 +42,7 @@ import java.util.List;
 
 public class HsCompleteFragment extends BaseFragment implements OnOrderListener {
     private RecyclerView list_order;
-    private OrderListAdapter orderListAdapter;
-    private List<OrderBean> list = new ArrayList<>();
+    private List<HsOrderBean> list = new ArrayList<>();
     private TwinklingRefreshLayout refreshLayout;
     private String orderId = "0";
     private HsOrderAdapter hsOrderAdapter;
@@ -79,7 +79,7 @@ public class HsCompleteFragment extends BaseFragment implements OnOrderListener 
                                 Gson gson = new Gson();
                                 json = json.getJSONObject("data");
                                 JSONArray jsonArray = json.getJSONArray("list");
-                                List<OrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<OrderBean>>(){}.getType());
+                                List<HsOrderBean> orderBeanslist = gson.fromJson(jsonArray.toString(),new TypeToken<List<HsOrderBean>>(){}.getType());
                                 list.addAll(orderBeanslist);
                                 hsOrderAdapter = new HsOrderAdapter(list,getContext(), HsCompleteFragment.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
@@ -139,8 +139,8 @@ public class HsCompleteFragment extends BaseFragment implements OnOrderListener 
                         refreshLayout.finishLoadmore();
                         orderId = list.get(list.size()-1).getOrderId();
                         initData(orderId);
-                        orderListAdapter.update(list);
-                        list_order.scrollToPosition(orderListAdapter.getItemCount()-1);
+                        hsOrderAdapter.update(list);
+                        list_order.scrollToPosition(hsOrderAdapter.getItemCount()-1);
                     }
                 }, 1000);
             }
