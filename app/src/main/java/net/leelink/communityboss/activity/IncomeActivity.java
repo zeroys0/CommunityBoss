@@ -123,6 +123,12 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
             @Override
             public void onTimeSelect(Date date, View v) {
                 tv_open_time.setText(sdf.format(date));
+                if(tv_close_time.getText().equals("选择结束时间")) {
+
+                } else {
+                    storeIncome();
+                }
+
             }
         }).setType(type).build();
     }

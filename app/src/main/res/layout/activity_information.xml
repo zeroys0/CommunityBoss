@@ -490,7 +490,8 @@
                 android:text="商家门店头像"
                 android:layout_marginLeft="@dimen/x54"
                 android:textSize="@dimen/x42"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:id="@+id/tv_file_name0"/>
 
             <ImageView
                 android:layout_width="@dimen/x180"
@@ -523,7 +524,8 @@
                 android:text="商家宣传图片"
                 android:layout_marginLeft="@dimen/x54"
                 android:textSize="@dimen/x42"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:id="@+id/tv_file_name1"/>
 
             <ImageView
                 android:layout_width="@dimen/x180"
@@ -556,7 +558,8 @@
                 android:text="营业执照正面完整图片"
                 android:layout_marginLeft="@dimen/x54"
                 android:textSize="@dimen/x42"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:id="@+id/tv_file_name2"/>
 
             <ImageView
                 android:layout_width="@dimen/x180"
@@ -589,7 +592,8 @@
                 android:text="食品卫生许可证正面完整图片"
                 android:layout_marginLeft="@dimen/x54"
                 android:textSize="@dimen/x42"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:id="@+id/tv_file_name3"/>
 
             <ImageView
                 android:layout_width="@dimen/x180"

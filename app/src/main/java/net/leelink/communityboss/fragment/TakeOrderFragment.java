@@ -1,6 +1,7 @@
 package net.leelink.communityboss.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,14 +25,22 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.DsTakeOrderRefresh;
 import net.leelink.communityboss.bean.OrderBean;
+import net.leelink.communityboss.bean.StoreInfo;
+import net.leelink.communityboss.bean.TakeOrderRefresh;
+import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +48,8 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
 
 import static net.leelink.communityboss.activity.LoginActivity.setIndicator;
 
@@ -60,12 +71,13 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_take_order,container,false);
         init(view);
-        initData(type,orderId);
+        initData(type);
         initRefreshLayout(view);
         return view;
     }
 
     public void init(View view){
+        EventBus.getDefault().register(this);
         tablayout = view.findViewById(R.id.tablayout);
         tablayout.addTab(tablayout.newTab().setText("未派送"));
         tablayout.addTab(tablayout.newTab().setText("已派送"));
@@ -83,10 +95,10 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                 orderId = "0";
                 if(tab.getPosition() == 0){
                     type = "3,4";
-                    initData(type,orderId);
+                    initData(type);
                 } else {
                     type = "5";
-                    initData(type,orderId);
+                    initData(type);
                 }
             }
 
@@ -103,7 +115,13 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
         list_order = view.findViewById(R.id.list_order);
     }
 
-    public void initData(String type,String orderId){
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DsTakeOrderRefresh event) {
+        list.clear();
+        initData(type);
+    }
+
+    public void initData(final String type){
         //获取订单列表
 
         OkGo.<String>get(Urls.ORDERLIST)
@@ -128,7 +146,48 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
                                 list_order.setLayoutManager(layoutManager);
                                 list_order.setAdapter(orderListAdapter);
-                            } else {
+                            } else if(json.getInt("status") == 505) {
+                                final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
+                                if (!sp.getString("secretKey", "").equals("")) {
+                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                            .params("telephone", sp.getString("telephone", ""))
+                                            .params("secretKey", sp.getString("secretKey", ""))
+                                            .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
+                                            .tag(this)
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onSuccess(Response<String> response) {
+                                                    try {
+                                                        String body = response.body();
+                                                        JSONObject json = new JSONObject(body);
+                                                        Log.d("快速登录", json.toString());
+                                                        if (json.getInt("status") == 200) {
+                                                            JSONObject jsonObject = json.getJSONObject("data");
+                                                            Gson gson = new Gson();
+                                                            Acache.get(getContext()).put("storeInfo",jsonObject);
+                                                            StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                                            CommunityBossApplication.storeInfo = storeInfo;
+                                                            initData(type);
+                                                        } else {
+                                                            Toast.makeText(getContext(), "登录失效,请重新登录", Toast.LENGTH_SHORT).show();
+                                                            Intent intent4 = new Intent(getContext(), LoginActivity.class);
+                                                            SharedPreferences sp = getActivity().getSharedPreferences("sp",0);
+                                                            SharedPreferences.Editor editor = sp.edit();
+                                                            editor.remove("secretKey");
+                                                            editor.remove("telephone");
+                                                            editor.apply();
+                                                            intent4.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                            startActivity(intent4);
+                                                            getActivity().finish();
+
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                }
+                            }else {
                                 Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                             }
 
@@ -199,9 +258,8 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                     @Override
                     public void run() {
                         refreshLayout.finishRefreshing();
-                        orderId = "0";
                         list.clear();
-                        initData(type,orderId);
+                        initData(type);
                     }
                 }, 1000);
             }
@@ -212,8 +270,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                     @Override
                     public void run() {
                         refreshLayout.finishLoadmore();
-                        orderId = list.get(list.size()-1).getOrderId();
-                        initData(type,orderId);
+                        initData(type);
                         orderListAdapter.update(list);
                     }
                 }, 1000);

@@ -126,6 +126,11 @@ public class HsIncomeActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onTimeSelect(Date date, View v) {
                 tv_open_time.setText(sdf.format(date));
+                if(tv_close_time.getText().equals("选择结束时间")) {
+
+                } else {
+                    storeIncome();
+                }
             }
         }).setType(type).build();
     }

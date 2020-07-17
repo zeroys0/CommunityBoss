@@ -22,9 +22,14 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.BaseActivity;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.bean.DelegateBean;
+import net.leelink.communityboss.bean.Event;
+import net.leelink.communityboss.bean.HsOrderRefresh;
 import net.leelink.communityboss.housekeep.adapter.StaffListAdapter;
 import net.leelink.communityboss.utils.Urls;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +54,7 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
     }
 
     public void init(){
+
         staff_list = findViewById(R.id.staff_list);
         context = this;
         rl_back = findViewById(R.id.rl_back);
@@ -59,6 +65,8 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
             }
         });
     }
+
+
 
     public void initData(){
         OkGo.<String>get(Urls.WORKSER)
@@ -120,6 +128,7 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
                             Log.d("确认订单",json.toString());
                             if (json.getInt("status") == 200) {
                                 Toast.makeText(DelegateActivity.this, "派单成功", Toast.LENGTH_SHORT).show();
+                                EventBus.getDefault().post(new HsOrderRefresh());
                                 finish();
                             } else {
                                 Toast.makeText(DelegateActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
@@ -130,5 +139,11 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

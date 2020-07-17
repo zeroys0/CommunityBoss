@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import net.leelink.communityboss.activity.LoginActivity;
@@ -69,6 +70,7 @@ public class JPushReceiver extends BroadcastReceiver {
                 JSONObject jo = new JSONObject(json);
                 String mobile = jo.getString("mobile");
                 int status = jo.getInt("status");
+                Log.e( "点开通知: ", jo.toString());
 //                if (status == 1) {
 //                    Intent it_msg = new Intent(context, SystemNewsActivity.class);
 //                    it_msg.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

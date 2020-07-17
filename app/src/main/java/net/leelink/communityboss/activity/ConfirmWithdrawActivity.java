@@ -109,24 +109,23 @@ private TextView tv_allin;
     public void withdraw(){
         float f = Float.valueOf(ed_amount.getText().toString().trim());
         final int amount = (int)(f*100);
-        OkGo.<String>post(Urls.CASHOUT+"?appToken="+ CommunityBossApplication.token)
-                .params("cardId",getIntent().getIntExtra("card_number",0))
-                .params("amount",amount)
+        OkGo.<String>post(Urls.TXAOUNT)
+                .params("card",getIntent().getIntExtra("card_number",0))
+                .params("bigDecimal",ed_amount.getText().toString().trim())
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("提现",json.toString()+"     "+ amount);
-                            if (json.getInt("ResultCode") == 200) {
+                            if (json.getInt("status") == 200) {
                                 finish();
                             } else {
 
                             }
-                            Toast.makeText(ConfirmWithdrawActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ConfirmWithdrawActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

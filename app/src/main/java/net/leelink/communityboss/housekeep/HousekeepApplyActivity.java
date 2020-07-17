@@ -68,8 +68,8 @@ import cn.jpush.android.api.JPushInterface;
 
 public class HousekeepApplyActivity extends BaseActivity implements View.OnClickListener {
     private Button btn_submit;
-    private EditText ed_name, ed_address, ed_number, ed_name_c, ed_phone_c,ed_server_address,ed_name_l;
-    private RelativeLayout  rl_open_time,rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s;
+    private EditText ed_name, ed_address, ed_number, ed_name_c, ed_phone_c, ed_server_address, ed_name_l;
+    private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s;
     private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s;
     private ImageView img_store_head, img_publicity, img_license, img_permit;
     private PopupWindow popuPhoneW;
@@ -257,9 +257,9 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                 }
                 break;
             case R.id.rl_local_s:
-                if(city_id_s != null) {
+                if (city_id_s != null) {
                     local(STORE);
-                }else {
+                } else {
                     Toast.makeText(this, "请先选择城市", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -273,32 +273,35 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
     public void submit() {
         if (ed_address.getText().toString().trim() != null || !ed_address.getText().toString().trim().equals("")) {
             if (ed_name.getText().toString().trim() != null || !ed_name.getText().toString().trim().equals("")) {
-                    if (tv_open_time.getText().toString() != null || !tv_open_time.getText().toString().equals("")) {
-                        if (tv_close_time.getText().toString() != null || !tv_close_time.getText().toString().equals("")) {
-                            if (file0 != null) {
-                                if (file1 != null) {
-                                    if (file2 != null) {
-                                        if (file3 != null) {
+                if (tv_open_time.getText().toString() != null || !tv_open_time.getText().toString().equals("")) {
+                    if (tv_close_time.getText().toString() != null || !tv_close_time.getText().toString().equals("")) {
+                        if (file0 != null) {
+                            if (file1 != null) {
+                                if (file2 != null) {
+                                    if (file3 != null) {
+                                        if (local_id_s != null) {
                                             storeInfo();
-
                                         } else {
-                                            Toast.makeText(this, "请上传食品流通许可", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this, "请选择正确的地址", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
-                                        Toast.makeText(this, "请上传营业执照", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "请上传食品流通许可", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    Toast.makeText(this, "请上传宣传图片", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this, "请上传营业执照", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(this, "请上传商家头像", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "请上传宣传图片", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(this, "请选择闭店时间", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "请上传商家头像", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(this, "请选择开店时间", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "请选择闭店时间", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(this, "请选择开店时间", Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Toast.makeText(this, "名称不能为空", Toast.LENGTH_SHORT).show();
@@ -311,21 +314,21 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
 
     //修改商户信息
     public void storeInfo() {
-        Log.e( "address: ",ed_address.getText().toString().trim() );
-        Log.e( "areaId: ",local_id_s );
-        Log.e( "businessNo: ", ed_number.getText().toString().trim() );
-        Log.e( "cityId: ",city_id_s );
-        Log.e( "contact: ",ed_name_c.getText().toString().trim() );
-        Log.e( "orderPhone: ",ed_phone_c.getText().toString().trim() );
-        Log.e( "deviceToken: ", JPushInterface.getRegistrationID(this) );
-        Log.e( "endTime: ","2000-01-01 "+tv_close_time.getText().toString()+":00");
-        Log.e( "startTime: ","2000-01-01 "+tv_open_time.getText().toString()+":00" );
-        Log.e( "organId: ",organ_id+"" );
-        Log.e( "provinceId: ",province_id_s );
-        Log.e( "storeName: ", ed_name.getText().toString().trim() );
-        Log.e( "serverTypeId: ","2" );
-        Log.e( "id: ",getIntent().getStringExtra("id") );
-        Log.e( "legalPerson: ",ed_name_l.getText().toString().trim() );
+        Log.e("address: ", tv_province_s.getText().toString().trim() + tv_city_s.getText().toString().trim() + tv_local_s.getText().toString().trim() + ed_address.getText().toString().trim());
+        Log.e("areaId: ", local_id_s);
+        Log.e("businessNo: ", ed_number.getText().toString().trim());
+        Log.e("cityId: ", city_id_s);
+        Log.e("contact: ", ed_name_c.getText().toString().trim());
+        Log.e("orderPhone: ", ed_phone_c.getText().toString().trim());
+        Log.e("deviceToken: ", JPushInterface.getRegistrationID(this));
+        Log.e("endTime: ", "2000-01-01 " + tv_close_time.getText().toString() + ":00");
+        Log.e("startTime: ", "2000-01-01 " + tv_open_time.getText().toString() + ":00");
+        Log.e("organId: ", organ_id + "");
+        Log.e("provinceId: ", province_id_s);
+        Log.e("storeName: ", ed_name.getText().toString().trim());
+        Log.e("serverTypeId: ", "2");
+        Log.e("id: ", getIntent().getStringExtra("id"));
+        Log.e("legalPerson: ", ed_name_l.getText().toString().trim());
 
         mProgressBar.setVisibility(View.VISIBLE);
         OkGo.<String>post(Urls.REGISTER)
@@ -337,8 +340,8 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                 .params("contact", ed_name_c.getText().toString().trim())
                 .params("orderPhone", ed_phone_c.getText().toString().trim())
                 .params("deviceToken", JPushInterface.getRegistrationID(this))
-                .params("endTime", "2000-01-01 "+tv_close_time.getText().toString()+":00")
-                .params("startTime", "2000-01-01 "+tv_open_time.getText().toString()+":00")
+                .params("endTime", "2000-01-01 " + tv_close_time.getText().toString() + ":00")
+                .params("startTime", "2000-01-01 " + tv_open_time.getText().toString() + ":00")
                 .params("healthfile", file1)
                 .params("licensefile", file0)
                 .params("organId", organ_id)
@@ -346,10 +349,10 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                 .params("registfile", file3)
                 .params("storeFontfile", file2)
                 .params("storeName", ed_name.getText().toString().trim())
-                .params("serverTypeId",2)
-                .params("serverAddress",ed_server_address.getText().toString().trim())
-                .params("legalPerson",ed_name_l.getText().toString().trim())
-                .params("id",getIntent().getStringExtra("id"))
+                .params("serverTypeId", 2)
+                .params("serverAddress", ed_server_address.getText().toString().trim())
+                .params("legalPerson", ed_name_l.getText().toString().trim())
+                .params("id", getIntent().getStringExtra("id"))
 
                 .execute(new StringCallback() {
                     @Override
@@ -669,14 +672,14 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
 
     }
 
-    private void createProgressBar(){
-        mContext=this;
+    private void createProgressBar() {
+        mContext = this;
         //整个Activity布局的最终父布局,参见参考资料
-        FrameLayout rootFrameLayout=(FrameLayout) findViewById(android.R.id.content);
-        FrameLayout.LayoutParams layoutParams=
+        FrameLayout rootFrameLayout = (FrameLayout) findViewById(android.R.id.content);
+        FrameLayout.LayoutParams layoutParams =
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity= Gravity.CENTER;
-        mProgressBar=new ProgressBar(mContext);
+        layoutParams.gravity = Gravity.CENTER;
+        mProgressBar = new ProgressBar(mContext);
         mProgressBar.setLayoutParams(layoutParams);
         mProgressBar.setVisibility(View.GONE);
         rootFrameLayout.addView(mProgressBar);

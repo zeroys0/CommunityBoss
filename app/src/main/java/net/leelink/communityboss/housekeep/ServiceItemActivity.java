@@ -102,7 +102,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
     public void initData() {
         OkGo.<String>get(Urls.PRODUCT)
                 .params("pageNum",1)
-                .params("pageSize",10)
+                .params("pageSize",100)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -223,6 +223,8 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                             Log.d("上架商品",json.toString());
                             if (json.getInt("status") == 200) {
                                 popupWindow.dismiss();
+                                Toast.makeText(ServiceItemActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                                initData();
                             } else {
 
                             }

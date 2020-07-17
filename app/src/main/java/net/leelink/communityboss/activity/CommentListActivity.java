@@ -26,6 +26,7 @@ import net.leelink.communityboss.adapter.CommentListAdapter;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.CommentListBean;
+import net.leelink.communityboss.bean.MyInfoBean;
 import net.leelink.communityboss.utils.RatingBar;
 import net.leelink.communityboss.utils.Urls;
 
@@ -45,8 +46,8 @@ private CommentListAdapter commentListAdapter;
 private CommentListBean commentListBean;
 private RelativeLayout rl_back;
 private String orderId = "0";
-private TextView tv_total_score;
-private RatingBar rl_total,rt_taste,rt_pack,rt_quality;
+private TextView tv_total_score,tv_total,tv_pack,tv_taste;
+private RatingBar rt_total,rt_taste,rt_pack,rt_quality;
 private TwinklingRefreshLayout refreshLayout;
 private List<CommentListBean> list = new ArrayList<>();
     @Override
@@ -60,22 +61,34 @@ private List<CommentListBean> list = new ArrayList<>();
 
     public void init(){
         comment_list = findViewById(R.id.comment_list);
-
+        comment_list.setNestedScrollingEnabled(false);
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
         tv_total_score = findViewById(R.id.tv_total_score);
-        rl_total = findViewById(R.id.rt_total);
-        rl_total.setUntouchable();
+        rt_total = findViewById(R.id.rt_total);
+        rt_total.setUntouchable();
         rt_taste = findViewById(R.id.rt_taste);
         rt_taste.setUntouchable();
         rt_pack = findViewById(R.id.rt_pack);
         rt_pack.setUntouchable();
+        MyInfoBean  myInfoBean = (MyInfoBean) getIntent().getSerializableExtra("myInfo");
+        rt_total.setSelectedNumber(myInfoBean.getTotal_star());
+        rt_pack.setSelectedNumber(myInfoBean.getProduct_star());
+        rt_taste.setSelectedNumber(myInfoBean.getTaste_star());
+        tv_total = findViewById(R.id.tv_total);
+        tv_total.setText(myInfoBean.getTotal_star()+"");
+        tv_total_score = findViewById(R.id.tv_total_score);
+        tv_total_score.setText("综合评分"+myInfoBean.getTotal_star());
+        tv_pack = findViewById(R.id.tv_pack);
+        tv_pack.setText(myInfoBean.getProduct_star()+"");
+        tv_taste = findViewById(R.id.tv_taste);
+        tv_taste.setText(myInfoBean.getTaste_star()+"");
     }
 
     public  void initData(String orderId){
         OkGo.<String>get(Urls.APPRAISELIST)
                 .params("pageNum",1)
-                .params("pageSize",5)
+                .params("pageSize",10)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

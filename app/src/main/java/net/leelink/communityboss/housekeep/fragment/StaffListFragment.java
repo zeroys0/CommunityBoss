@@ -97,7 +97,10 @@ public class StaffListFragment  extends BaseFragment implements OnOrderListener 
 
     @Override
     public void onButtonClick(View view, int position) {
-
+        Intent intent = new Intent(getContext(), StaffCheckActivity.class);
+        intent.putExtra("staff",list.get(position) );
+        intent.putExtra("action","delete");
+        startActivity(intent);
     }
 
     @Override

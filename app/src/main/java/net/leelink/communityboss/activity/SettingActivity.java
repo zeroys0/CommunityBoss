@@ -201,7 +201,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void logout() {
         SharedPreferences sp = getSharedPreferences("sp", 0);
         SharedPreferences.Editor editor = sp.edit();
-        editor.remove("AppToken");
+        editor.remove("secretKey");
         editor.apply();
         Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

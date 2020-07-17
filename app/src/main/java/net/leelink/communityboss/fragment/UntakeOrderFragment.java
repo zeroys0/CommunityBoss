@@ -1,7 +1,9 @@
 package net.leelink.communityboss.fragment;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,15 +30,22 @@ import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.ChangePasswordActivity;
+import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.DsTakeOrderRefresh;
 import net.leelink.communityboss.bean.OrderBean;
+import net.leelink.communityboss.bean.StoreInfo;
+import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +53,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+
+import cn.jpush.android.api.JPushInterface;
 
 public class UntakeOrderFragment extends BaseFragment implements OnOrderListener {
 private RecyclerView list_order;
@@ -68,6 +79,7 @@ private List<OrderBean> list = new ArrayList<>();
     }
 
     public void init(View view){
+        EventBus.getDefault().register(this);
         list_order = view.findViewById(R.id.list_order);
     }
 
@@ -98,7 +110,48 @@ private List<OrderBean> list = new ArrayList<>();
                                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
                                     list_order.setLayoutManager(layoutManager);
                                     list_order.setAdapter(orderListAdapter);
-                                } else {
+                                } else if(json.getInt("status") == 505) {
+                                    final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
+                                    if (!sp.getString("secretKey", "").equals("")) {
+                                        OkGo.<String>post(Urls.QUICKLOGIN)
+                                                .params("telephone", sp.getString("telephone", ""))
+                                                .params("secretKey", sp.getString("secretKey", ""))
+                                                .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
+                                                .tag(this)
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onSuccess(Response<String> response) {
+                                                        try {
+                                                            String body = response.body();
+                                                            JSONObject json = new JSONObject(body);
+                                                            Log.d("快速登录", json.toString());
+                                                            if (json.getInt("status") == 200) {
+                                                                JSONObject jsonObject = json.getJSONObject("data");
+                                                                Gson gson = new Gson();
+                                                                Acache.get(getContext()).put("storeInfo",jsonObject);
+                                                                StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                                                CommunityBossApplication.storeInfo = storeInfo;
+                                                                initData();
+                                                            } else {
+                                                                Toast.makeText(getContext(), "登录失效,请重新登录", Toast.LENGTH_SHORT).show();
+                                                                Intent intent4 = new Intent(getContext(), LoginActivity.class);
+                                                                SharedPreferences sp = getActivity().getSharedPreferences("sp",0);
+                                                                SharedPreferences.Editor editor = sp.edit();
+                                                                editor.remove("secretKey");
+                                                                editor.remove("telephone");
+                                                                editor.apply();
+                                                                intent4.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                startActivity(intent4);
+                                                                getActivity().finish();
+
+                                                            }
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                }else {
                                     Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                                 }
 
@@ -110,12 +163,19 @@ private List<OrderBean> list = new ArrayList<>();
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DsTakeOrderRefresh event) {
+        list.remove(event.getPosition());
+        orderListAdapter.update(list);
+    }
+
     @Override
     public void onItemClick(View view) {
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         intent.putExtra("orderId",list.get(position).getOrderId());
         intent.putExtra("type",0);
+        intent.putExtra("position",position);
         startActivity(intent);
     }
 
@@ -135,6 +195,7 @@ private List<OrderBean> list = new ArrayList<>();
                             Log.d("确认订单",json.toString());
                             if (json.getInt("status") == 200) {
                                 list.remove(position);
+                                EventBus.getDefault().post(new DsTakeOrderRefresh());
                                 orderListAdapter.notifyDataSetChanged();
                                 Toast.makeText(getContext(), "订单已确认,请尽快完成吧~", Toast.LENGTH_SHORT).show();
                             } else {

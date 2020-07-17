@@ -112,9 +112,9 @@ public class RatingBar extends View {
     /**
      * 设置选中星星的数量
      */
-    public void setSelectedNumber(int selectedNumber) {
+    public void setSelectedNumber(double selectedNumber) {
         if (selectedNumber >= 0 && selectedNumber <= mStartTotalNumber) {
-            this.mSelectedNumber = selectedNumber;
+            this.mSelectedNumber = (float) selectedNumber;
             invalidate();
         }
     }

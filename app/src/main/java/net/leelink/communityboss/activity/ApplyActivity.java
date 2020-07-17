@@ -328,7 +328,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
         mProgressBar.setVisibility(View.VISIBLE);
         OkGo.<String>post(Urls.REGISTER)
                 .tag(this)
-                .params("address", ed_address.getText().toString().trim())
+                .params("address", tv_province_s.getText().toString().trim()+tv_city_s.getText().toString().trim()+tv_local_s.getText().toString().trim()+ed_address.getText().toString().trim())
                 .params("areaId", local_id_s)
                 .params("businessNo", ed_number.getText().toString().trim())
                 .params("cityId", city_id_s)

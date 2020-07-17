@@ -70,6 +70,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         createProgressBar();
         init();
         initLogin();
+        quickLogin();
     }
 
 
@@ -129,21 +130,24 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     public void initLogin(){
         SharedPreferences sp = getSharedPreferences("sp",0);
-        if(sp.getString("AppToken","")==null ||sp.getString("AppToken","").equals("") ) {
+//        if(sp.getString("AppToken","")==null ||sp.getString("AppToken","").equals("") ) {
+//
+//        } else {
+//
+//                CommunityBossApplication.token = sp.getString("AppToken", "");
+//                JSONObject jsonObject = Acache.get(this).getAsJSONObject("storeInfo");
+//                if(jsonObject!=null) {
+//                    Gson gson = new Gson();
+//                    CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+//                    Intent intent = new Intent(this, MainActivity.class);
+//                    startActivity(intent);
+//                    finish();
+//                }
+//
+//        }
+        if(!sp.getString("secretKey","").equals("")) {
 
-        } else {
-
-                CommunityBossApplication.token = sp.getString("AppToken", "");
-                JSONObject jsonObject = Acache.get(this).getAsJSONObject("storeInfo");
-                if(jsonObject!=null) {
-                    Gson gson = new Gson();
-                    CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-        }
+        };
 
 
     }
@@ -212,6 +216,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                         SharedPreferences sp = getSharedPreferences("sp",0);
                                         SharedPreferences.Editor editor = sp.edit();
                                         editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.putString("telephone",ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
                                         Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
@@ -228,6 +233,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                         SharedPreferences sp = getSharedPreferences("sp",0);
                                         SharedPreferences.Editor editor = sp.edit();
                                         editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.putString("telephone",ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
                                         Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
@@ -280,6 +286,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                         SharedPreferences sp = getSharedPreferences("sp",0);
                                         SharedPreferences.Editor editor = sp.edit();
                                         editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.putString("telephone",ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
                                         Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
@@ -296,6 +303,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                         SharedPreferences sp = getSharedPreferences("sp",0);
                                         SharedPreferences.Editor editor = sp.edit();
                                         editor.putString("secretKey",jsonObject.getString("secretKey"));
+                                        editor.putString("telephone",ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
                                         Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
@@ -315,6 +323,67 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                         }
                     }
                 });
+    }
+
+    public void quickLogin() {
+        final SharedPreferences sp = getSharedPreferences("sp", 0);
+        if (!sp.getString("secretKey", "").equals("")) {
+            OkGo.<String>post(Urls.QUICKLOGIN)
+                    .params("telephone", sp.getString("telephone", ""))
+                    .params("secretKey", sp.getString("secretKey", ""))
+                    .params("deviceToken", JPushInterface.getRegistrationID(this))
+                    .tag(this)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            try {
+                                String body = response.body();
+                                JSONObject json = new JSONObject(body);
+                                Log.d("快速登录", json.toString());
+                                if (json.getInt("status") == 200) {
+                                    JSONObject jsonObject = json.getJSONObject("data");
+
+                                    if(jsonObject.getInt("serverTypeId")==100) {
+                                        Intent intent = new Intent(LoginActivity.this, ChooseIdentityActivity.class);
+                                        intent.putExtra("id",jsonObject.getString("id"));
+                                        startActivity(intent);
+                                    }else if(jsonObject.getInt("serverTypeId")==1) {
+                                        if(jsonObject.getInt("vertifyState") == 1) {
+                                            Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                            startActivity(intent);
+                                        }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                            Gson gson = new Gson();
+                                            Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                            StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                            CommunityBossApplication.storeInfo = storeInfo;
+                                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    } else if(jsonObject.getInt("serverTypeId")==2) {
+                                        if(jsonObject.getInt("vertifyState") == 1) {
+                                            Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
+                                            startActivity(intent);
+                                        }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                            Gson gson = new Gson();
+                                            Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                            StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                            CommunityBossApplication.storeInfo = storeInfo;
+                                            Intent intent = new Intent(LoginActivity.this,HousekeepMainActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                    finish();
+                                } else {
+
+                                    Toast.makeText(LoginActivity.this, "登录过期,请重新登录", Toast.LENGTH_LONG).show();
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        }
     }
 
     //发送短信验证码

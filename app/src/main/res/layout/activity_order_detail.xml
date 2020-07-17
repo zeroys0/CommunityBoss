@@ -256,7 +256,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="不要辣"
+                    android:text=""
                     android:textSize="@dimen/x42"
                     android:textColor="@color/text_grey"
                     android:layout_gravity="center_vertical"
@@ -347,7 +347,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/y57"
                 android:layout_marginTop="@dimen/y40"
-
+                android:visibility="gone"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -450,8 +450,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/y10">
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/x62"
+                        android:layout_height="@dimen/y62"
                         android:id="@+id/img_head"
                         android:src="@mipmap/comment_head"
                         android:layout_marginLeft="@dimen/x36"/>

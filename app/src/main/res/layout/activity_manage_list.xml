@@ -48,20 +48,26 @@
             android:layout_marginBottom="@dimen/y35"
             android:text="编辑" />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_above="@+id/btn_del"
-        android:layout_below="@+id/rl_top"
-        android:orientation="vertical">
+        android:layout_below="@+id/rl_top">
+        <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y1600"
 
+            >
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_goods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             </android.support.v7.widget.RecyclerView>
-
+        </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
 
     <RelativeLayout
@@ -86,6 +92,7 @@
             android:textSize="@dimen/x45" />
     </RelativeLayout>
 </LinearLayout>
+
     <Button
         android:id="@+id/btn_del"
         android:layout_width="@dimen/x1014"

@@ -275,6 +275,7 @@
                         android:layout_weight="1"
                         android:layout_height="@dimen/y135"
                         android:id="@+id/rl_boundary"
+                        android:visibility="gone"
                         >
                         <ImageView
                             android:layout_width="wrap_content"
@@ -293,6 +294,12 @@
                             android:includeFontPadding="false"
                             android:gravity="bottom"
                             />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="0px"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/y135">
+
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="0px"

@@ -1,6 +1,7 @@
 package net.leelink.communityboss.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +33,7 @@ import net.leelink.communityboss.activity.ChangePhoneActivity;
 import net.leelink.communityboss.activity.CommentListActivity;
 import net.leelink.communityboss.activity.IncomeActivity;
 import net.leelink.communityboss.activity.InformationActivity;
+import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.activity.ManageListActivity;
 import net.leelink.communityboss.activity.MyServiceActivity;
 import net.leelink.communityboss.activity.RefundListActivity;
@@ -39,6 +41,9 @@ import net.leelink.communityboss.activity.SettingActivity;
 import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.GoodListBean;
+import net.leelink.communityboss.bean.MyInfoBean;
+import net.leelink.communityboss.bean.StoreInfo;
+import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
 
 import org.json.JSONArray;
@@ -47,11 +52,14 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class MineFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary;
     private ImageView img_head,img_change,img_setting;
     private TextView tv_income,tv_order_number,tv_phone,tv_name;
     private TwinklingRefreshLayout refreshLayout;
+    private MyInfoBean myInfoBean;
     @Override
     public void handleCallBack(Message msg) {
 
@@ -113,10 +121,54 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             JSONObject json = new JSONObject(body);
                             Log.d("获取个人信息",json.toString());
                             if (json.getInt("status") == 200) {
+
                                 json = json.getJSONObject("data");
+                                Gson gson = new Gson();
+                                myInfoBean = gson.fromJson(json.toString(),MyInfoBean.class);
                                 tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
                                 tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
-                            } else {
+                            } else if(json.getInt("status") == 505) {
+                                final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
+                                if (!sp.getString("secretKey", "").equals("")) {
+                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                            .params("telephone", sp.getString("telephone", ""))
+                                            .params("secretKey", sp.getString("secretKey", ""))
+                                            .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
+                                            .tag(this)
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onSuccess(Response<String> response) {
+                                                    try {
+                                                        String body = response.body();
+                                                        JSONObject json = new JSONObject(body);
+                                                        Log.d("快速登录", json.toString());
+                                                        if (json.getInt("status") == 200) {
+                                                            JSONObject jsonObject = json.getJSONObject("data");
+                                                            Gson gson = new Gson();
+                                                            Acache.get(getContext()).put("storeInfo",jsonObject);
+                                                            StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
+                                                            CommunityBossApplication.storeInfo = storeInfo;
+                                                            initdata();
+                                                        } else {
+                                                            Toast.makeText(getContext(), "登录失效,请重新登录", Toast.LENGTH_SHORT).show();
+                                                            Intent intent4 = new Intent(getContext(), LoginActivity.class);
+                                                            SharedPreferences sp = getActivity().getSharedPreferences("sp",0);
+                                                            SharedPreferences.Editor editor = sp.edit();
+                                                            editor.remove("secretKey");
+                                                            editor.remove("telephone");
+                                                            editor.apply();
+                                                            intent4.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                            startActivity(intent4);
+                                                            getActivity().finish();
+
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                }
+                            }else {
                                 Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
@@ -131,10 +183,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         switch (v.getId()){
             case R.id.rl_comment:   //用户反馈
                 Intent intent = new Intent(getContext(),CommentListActivity.class);
+                intent.putExtra("myInfo",myInfoBean);
+
                 startActivity(intent);
                 break;
             case R.id.rl_info:  //商家信息
                 Intent intent1 = new Intent(getContext(), InformationActivity.class);
+                intent1.putExtra("type","distribution");
                 startActivity(intent1);
                 break;
             case R.id.rl_goods: //商家物品

@@ -4,14 +4,16 @@ import net.leelink.communityboss.housekeep.HousekeepMainActivity;
 
 public class Urls {
     //   public static final String WEBSITE = "http://122.225.60.118:6280/xdapp/api/Store/";
-    public static final String WEBSITE = "http://192.168.16.91:8888/sh/storeApp/";
-    public static final String HS_WEBSITE = "http://192.168.16.91:8888/sh/homeStore/";
-    public static final String IMAGEHEAD = "http://122.225.60.118:6280/xdapp/Image/Customer/HeadImage/";    //用户端头像
-    public static final String IMAGEURL = "http://122.225.60.118:6280/xdapp/Image/";     //图片地址
-    public static final String IMG_URL = "http://192.168.16.91:8888/files";
-    //   public static final String SENDSMSCODE = "http://122.225.60.118:6280/xdapp/api/Smscode/SendSmscode";    //发送验证码
-    //   public static final String AUTHSMSCODE = "http://122.225.60.118:6280/xdapp/api/Smscode/AuthSmscode";    //验证短信验证码是否有效
-    public static final String SENDSMSCODE = "http://192.168.16.91:8888/sh/user/send";      //发送验证码
+//    public static final String WEBSITE = "http://192.168.16.91:8888/sh/storeApp/";
+    public static final String WEBSITE = "http://api.llky.net:8888/sh/storeApp/";
+//    public static final String HS_WEBSITE = "http://192.168.16.91:8888/sh/homeStore/";
+    public static final String HS_WEBSITE = "http://api.llky.net:8888/sh/homeStore/";
+
+
+//    public static final String IMG_URL = "http://192.168.16.91:8888/files";
+    public static final String IMG_URL = "http://api.llky.net:8888/files";
+    public static final String SENDSMSCODE = "http://api.llky.net:8888/sh/user/send";      //发送验证码
+//    public static final String SENDSMSCODE = "http://192.168.16.91:8888/sh/user/send";      //发送验证码
     public static final String REGIST = WEBSITE + "regist";   //注册
     public static final String LOGIN = WEBSITE + "login";     //用户名密码登录
     public static final String LOGINBYCODE = WEBSITE + "loginByCode";   //短信验证码登录
@@ -36,7 +38,7 @@ public class Urls {
     public static final String COMMODITYIMG = WEBSITE + "commodityImg";    //修改上架物品
     public static final String STOREHOME = WEBSITE +"storeHome";    //商家个人信息
     public static final String BINDCARD = WEBSITE+"bindCard";   //绑定银行卡 /查看
-    public static final String BANK = "http://192.168.16.91:8888/sh/user/bank";    //查询支持的银行
+    public static final String BANK = "http://api.llky.net:8888/sh/user/bank";    //查询支持的银行
     public static final String FAQ = WEBSITE+"faq"; //我的客服
     public static final String STOREINCOME = WEBSITE +"storeIncome";    //收入统计
     public static final String PHONENUMBER = WEBSITE+"phoneNumber"; //修改绑定手机号
@@ -46,7 +48,8 @@ public class Urls {
     public static final String ORDERSTATE = WEBSITE +"orderState";  //修改订单状态
     public static final String REPLYAPPRAISE = WEBSITE +"replyAppraise";    //商家回复评价
     public static final String REFUND = WEBSITE +"refund";  //订单退款
-
+    public static final String QUICKLOGIN = WEBSITE +"quickLogin";  //快速登录
+    public static final String TXAOUNT = WEBSITE +"txAount";    //提现
 
     //家政接口
     public static final String VERTIFYSER = HS_WEBSITE +"vertifySer";  //员工审核
@@ -61,5 +64,7 @@ public class Urls {
     public static final String WORKLIST = HS_WEBSITE +"workList"; //工单列表
     public static final String ANALYSIS = HS_WEBSITE +"analysis";   //查询收入统计
     public static final String FINDSERWORKBYUSERID = HS_WEBSITE+"findSerWorkByUserId";  //查询员工已分配(未完成)订单
+
+
 
 }

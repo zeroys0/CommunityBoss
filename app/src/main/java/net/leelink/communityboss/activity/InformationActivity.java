@@ -52,7 +52,7 @@ import java.util.Date;
 
 public class InformationActivity extends BaseActivity implements View.OnClickListener {
 private RelativeLayout rl_back;
-private TextView tv_done,tv_close_time,tv_address,tv_province,tv_city,tv_local,tv_organ,tv_type,tv_name_c,ed_phone_c,tv_open_time,ed_businessNo;
+private TextView tv_done,tv_close_time,tv_address,tv_province,tv_city,tv_local,tv_organ,tv_name_c,ed_phone_c,tv_open_time,ed_businessNo,tv_file_name0,tv_file_name1,tv_file_name2,tv_file_name3;
 private EditText ed_name,ed_phone,ed_address;
 private ImageView img_store_head,img_publicity,img_license,img_permit;
 private RelativeLayout rl_open_time,rl_close_time;
@@ -85,7 +85,7 @@ private RelativeLayout rl_open_time,rl_close_time;
         ed_phone = findViewById(R.id.ed_phone);
         tv_address = findViewById(R.id.tv_address);
         tv_close_time = findViewById(R.id.tv_close_time);
-        tv_close_time.setOnClickListener(this);
+        tv_province = findViewById(R.id.tv_province);
         img_store_head = findViewById(R.id.img_store_head);
         img_store_head.setOnClickListener(this);
         img_publicity = findViewById(R.id.img_publicity);
@@ -98,7 +98,6 @@ private RelativeLayout rl_open_time,rl_close_time;
         tv_city = findViewById(R.id.tv_city);
         tv_local = findViewById(R.id.tv_local);
         tv_organ = findViewById(R.id.tv_organ);
-        tv_type = findViewById(R.id.tv_type);
         tv_name_c = findViewById(R.id.tv_name_c);
         ed_phone_c = findViewById(R.id.ed_phone_c);
         ed_businessNo = findViewById(R.id.ed_businessNo);
@@ -107,6 +106,11 @@ private RelativeLayout rl_open_time,rl_close_time;
         rl_open_time.setOnClickListener(this);
         rl_close_time = findViewById(R.id.rl_close_time);
         rl_close_time.setOnClickListener(this);
+        tv_file_name0 = findViewById(R.id.tv_file_name0);
+        tv_file_name1 = findViewById(R.id.tv_file_name1);
+        tv_file_name2 = findViewById(R.id.tv_file_name2);
+        tv_file_name3 = findViewById(R.id.tv_file_name3);
+
     }
 
     public void initData(){
@@ -117,6 +121,12 @@ private RelativeLayout rl_open_time,rl_close_time;
         tv_name_c.setText(CommunityBossApplication.storeInfo.getContact());
         ed_phone_c.setText(CommunityBossApplication.storeInfo.getContactPhone());
         ed_businessNo.setText(CommunityBossApplication.storeInfo.getBusinessNo());
+        if(getIntent().getStringExtra("type").equals("housekeep")) {
+            tv_file_name0.setText("营业执照");
+            tv_file_name1.setText("组织机构代码");
+            tv_file_name2.setText("税务登记证");
+            tv_file_name3.setText("门店头像");
+        }
         if(!CommunityBossApplication.storeInfo.getLicensePath().equals("")) {
             Glide.with(this).load(Urls.IMG_URL  + CommunityBossApplication.storeInfo.getLicensePath()).into(img_license);
         }
@@ -135,12 +145,20 @@ private RelativeLayout rl_open_time,rl_close_time;
                             Log.d("获取个人信息",json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
-                                ed_name.setText(json.getString("storeName"));
-                                ed_phone.setText(json.getString("orderPhone"));
-                                tv_open_time.setText(json.getString("startTime"));
-                                tv_close_time.setText(json.getString("endTime"));
-                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("registPath")).into(img_store_head);
-                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("storeFontPath")).into(img_publicity);
+                                ed_name.setText(json.getString("store_name"));
+                                ed_phone.setText(json.getString("order_phone"));
+                                tv_province.setText(json.getString("province_name"));
+                                String start_time = json.getString("start_time");
+                                start_time = start_time.substring(11,16);
+                                tv_open_time.setText(start_time);
+                                String close_time = json.getString("end_time");
+                                close_time = close_time.substring(11,16);
+                                tv_close_time.setText(close_time);
+                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("regist_path")).into(img_store_head);
+                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("store_font_path")).into(img_publicity);
+                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("license_path")).into(img_license);
+                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("food_health_path")).into(img_permit);
+
 
                             } else {
                                 Toast.makeText(InformationActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();

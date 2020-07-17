@@ -47,7 +47,7 @@ public class StaffCheckAdapter extends RecyclerView.Adapter<StaffCheckAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(StaffCheckAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(StaffCheckAdapter.ViewHolder holder, final int position) {
         holder.tv_staff_name.setText(list.get(position).getName());
         switch (list.get(position).getSex()){
             case 0:
@@ -64,7 +64,14 @@ public class StaffCheckAdapter extends RecyclerView.Adapter<StaffCheckAdapter.Vi
         }
         if(type ==2){
             holder.btn_confirm.setText("添加服务");
+            holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOrderListener.onButtonClick(v,position);
+                }
+            });
         }
+
     }
 
     @Override

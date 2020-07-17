@@ -21,6 +21,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.bean.StaffBean;
 import net.leelink.communityboss.fragment.BaseFragment;
+import net.leelink.communityboss.housekeep.AllServiceActivity;
 import net.leelink.communityboss.housekeep.StaffServiceActivity;
 import net.leelink.communityboss.housekeep.adapter.StaffCheckAdapter;
 import net.leelink.communityboss.utils.Urls;
@@ -94,7 +95,7 @@ public class StaffServiceFragment extends BaseFragment implements OnOrderListene
 
     @Override
     public void onButtonClick(View view, int position) {
-        Intent intent = new Intent(getContext(), StaffServiceActivity.class);
+        Intent intent = new Intent(getContext(), AllServiceActivity.class);
         intent.putExtra("id",list.get(position).getId());
         startActivity(intent);
     }

@@ -13,20 +13,24 @@ import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.bean.HsOrderBean;
 import net.leelink.communityboss.bean.WorkBean;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class WorkOrderAdapter extends RecyclerView.Adapter<WorkOrderAdapter.ViewHolder> {
     private Context context;
-    private List<WorkBean> list;
+    private JSONArray jsonArray;
     private OnOrderListener onOrderListener;
-    public WorkOrderAdapter(List<WorkBean> list, Context context, OnOrderListener onOrderListener) {
-        this.list = list;
+    public WorkOrderAdapter(JSONArray jsonArray, Context context, OnOrderListener onOrderListener) {
+        this.jsonArray = jsonArray;
         this.context = context;
         this.onOrderListener = onOrderListener;
     }
 
-    public void update(List<WorkBean> list){
-        this.list = list;
+    public void update(JSONArray jsonArray){
+        this.jsonArray = jsonArray;
         notifyDataSetChanged();
     }
     @Override
@@ -44,10 +48,17 @@ public class WorkOrderAdapter extends RecyclerView.Adapter<WorkOrderAdapter.View
 
     @Override
     public void onBindViewHolder(WorkOrderAdapter.ViewHolder holder, final int position) {
-        holder.order_no.setText(list.get(position).getOrderNo());
-        holder.tv_apoint_time.setText(list.get(position).getApointTime());
-        holder.tv_service.setText(list.get(position).getProductName());
-        holder.tv_price.setText(list.get(position).getUnitPrice()+"/"+list.get(position).getUnit());
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = jsonArray.getJSONObject(position);
+            holder.order_no.setText(jsonObject.getString("orderNo"));
+            holder.tv_apoint_time.setText(jsonObject.getString("apointTime"));
+            holder.tv_service.setText(jsonObject.getString("productName"));
+            holder.tv_price.setText(jsonObject.getString("unitPrice")+"元/"+jsonObject.getString("unit"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         holder.btn_confirm.setVisibility(View.GONE);
 //        switch (list.get(position).getState()){
 //            case 1:
@@ -84,7 +95,7 @@ public class WorkOrderAdapter extends RecyclerView.Adapter<WorkOrderAdapter.View
 
     @Override
     public int getItemCount() {
-        return list==null?0:list.size();
+        return jsonArray==null?0:jsonArray.length();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

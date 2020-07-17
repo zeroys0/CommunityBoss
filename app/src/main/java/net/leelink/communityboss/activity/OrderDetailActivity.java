@@ -26,9 +26,11 @@ import com.lzy.okgo.model.Response;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.adapter.PreOrderAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
+import net.leelink.communityboss.bean.DsTakeOrderRefresh;
 import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.bean.GoodsBean;
 import net.leelink.communityboss.bean.OrderDetail;
+import net.leelink.communityboss.bean.TakeOrderRefresh;
 import net.leelink.communityboss.utils.RatingBar;
 import net.leelink.communityboss.utils.Urls;
 
@@ -86,23 +88,23 @@ private Context context;
         if(type == 0) {
             ll_comment.setVisibility(View.GONE);
             tv_state.setText("未接单");
+            btn_confirm.setVisibility(View.VISIBLE);
             btn_confirm.setText("确认接单");
         } else if(type ==1) {
             ll_comment.setVisibility(View.GONE);
             tv_state.setText("已接单");
-            btn_confirm.setText("确认送出");
+
         } else if(type ==2) {
             ll_comment.setVisibility(View.GONE);
             tv_state.setText("已出发");
-            btn_confirm.setText("确认送达");
+
         } else if(type ==3) {
             ll_comment.setVisibility(View.GONE);
             tv_state.setText("订单已完成");
-            btn_confirm.setVisibility(View.GONE);
+
         } else if(type ==4){
             ll_comment.setVisibility(View.GONE);
             tv_state.setText("退款订单");
-            btn_confirm.setVisibility(View.GONE);
         }
         tv_store_name = findViewById(R.id.tv_store_name);
     }
@@ -131,11 +133,17 @@ private Context context;
                                 JSONArray jsonArray = new JSONArray(json.getString("goodList"));
                                 Log.e( "onSuccess: ",jsonArray.toString() );
                                 tv_time.setText(json.getString("appointTime"));
-                                tv_name.setText(json.getString("name"));
+                                if(json.has("name")) {
+                                    tv_name.setText(json.getString("name"));
+                                }
                                 tv_store_name.setText(CommunityBossApplication.storeInfo.getStoreName());
-                                tv_phone.setText(json.getString("telephone"));
+                                if(json.has("telephone")) {
+                                    tv_phone.setText(json.getString("telephone"));
+                                }
                                 tv_address.setText(json.getString("address"));
-                                tv_remark.setText(json.getString("remark"));
+                                if(json.has("remark")) {
+                                    tv_remark.setText(json.getString("remark"));
+                                }
                                 List<GoodsBean> list = gson.fromJson(jsonArray.toString(),new TypeToken<List<GoodsBean>>(){}.getType());
                                 preOrderAdapter = new PreOrderAdapter(OrderDetailActivity.this,list);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(OrderDetailActivity.this,LinearLayoutManager.VERTICAL,false);
@@ -192,14 +200,7 @@ private Context context;
         switch (v.getId()){
             case R.id.btn_confirm:
                 if(type == 0) { //未接单
-
                     takeOrder(1);       //确认接单
-                } else if(type ==1) {   //已接单
-
-                    takeOrder(2);       //确认送出
-                } else if(type ==2) {   //已送出
-
-                    takeOrder(3);       //确认送达
                 }
                 break;
             case R.id.rl_back:
@@ -238,25 +239,49 @@ private Context context;
     }
 
     public void takeOrder(int operation){
-        OkGo.<String>post(Urls.ORDEROPERATION)
+//        OkGo.<String>post(Urls.ORDEROPERATION)
+//                .params("orderId",tv_orderid.getText().toString().trim())
+//                .params("operation",operation)
+//                .tag(this)
+//                .execute(new StringCallback() {
+//                    @Override
+//                    public void onSuccess(Response<String> response) {
+//                        try {
+//                            String body = response.body();
+//                            body = body.substring(1,body.length()-1);
+//                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+//                            Log.d("确认订单",json.toString());
+//                            if (json.getInt("ResultCode") == 200) {
+//                                Toast.makeText(OrderDetailActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+//                                    btn_confirm.setVisibility(View.GONE);
+//                            } else {
+//                                Toast.makeText(OrderDetailActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+        OkGo.<String>post(Urls.ORDERSTATE)
                 .params("orderId",tv_orderid.getText().toString().trim())
-                .params("operation",operation)
+                .params("state",3)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("确认订单",json.toString());
-                            if (json.getInt("ResultCode") == 200) {
-                                Toast.makeText(OrderDetailActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
-                                    btn_confirm.setVisibility(View.GONE);
+                            if (json.getInt("status") == 200) {
+                                int position = getIntent().getIntExtra("position",0);
+                                EventBus.getDefault().post(new DsTakeOrderRefresh(position));
+                                btn_confirm.setVisibility(View.GONE);
+                                Toast.makeText(OrderDetailActivity.this, "订单已确认,请尽快完成吧~", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(OrderDetailActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(OrderDetailActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

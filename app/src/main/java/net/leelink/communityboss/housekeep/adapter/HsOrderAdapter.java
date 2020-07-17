@@ -14,21 +14,27 @@ import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.bean.HsOrderBean;
 import net.leelink.communityboss.bean.OrderBean;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class HsOrderAdapter extends RecyclerView.Adapter<HsOrderAdapter.ViewHolder> {
 
     private Context context;
-    private List<HsOrderBean> list;
+//    private List<HsOrderBean> list;
+    private JSONArray jsonArray;
     private OnOrderListener onOrderListener;
-    public HsOrderAdapter(List<HsOrderBean> list, Context context, OnOrderListener onOrderListener) {
-        this.list = list;
+
+    public HsOrderAdapter(JSONArray jsonArray, Context context, OnOrderListener onOrderListener) {
+        this.jsonArray = jsonArray;
         this.context = context;
         this.onOrderListener = onOrderListener;
     }
 
-    public void update(List<HsOrderBean> list){
-        this.list = list;
+    public void update(JSONArray jsonArray){
+        this.jsonArray = jsonArray;
         notifyDataSetChanged();
     }
     @Override
@@ -46,46 +52,56 @@ public class HsOrderAdapter extends RecyclerView.Adapter<HsOrderAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(HsOrderAdapter.ViewHolder holder, final int position) {
-        holder.order_no.setText(list.get(position).getOrderNo());
-        holder.tv_apoint_time.setText(list.get(position).getApointTime());
-        holder.tv_service.setText(list.get(position).getName());
-        holder.tv_price.setText(list.get(position).getUnitPrice()+"/"+list.get(position).getUnit());
-        switch (list.get(position).getState()){
-            case 1:
-                holder.tv_state.setText("待确认");
-                holder.btn_confirm.setText("确认订单");
-                break;
-            case 2:
-                holder.tv_state.setText("待派工");
-                holder.btn_confirm.setText("派工");
-                break;
-            case 3:
-                holder.tv_state.setText("已派工");
-                holder.btn_confirm.setVisibility(View.GONE);
-                break;
-            case 4:
-                holder.tv_state.setText("服务中");
-                holder.btn_confirm.setVisibility(View.GONE);
-                break;
-            case 5:
-                holder.tv_state.setText("服务完成");
-                holder.btn_confirm.setVisibility(View.GONE);
-                break;
+        try {
+            JSONObject jsonObject = jsonArray.getJSONObject(position);
+            holder.order_no.setText(jsonObject.getString("orderNo"));
+            holder.tv_apoint_time.setText(jsonObject.getString("apointTime"));
+            holder.tv_service.setText(jsonObject.getString("name"));
+            holder.tv_price.setText(jsonObject.getString("unitPrice")+"元/"+jsonObject.getString("unit"));
+            switch (jsonObject.getInt("state")){
+                case 1:
+                    holder.tv_state.setText("待确认");
+                    holder.btn_confirm.setText("确认订单");
+                    break;
+                case 2:
+                    holder.tv_state.setText("待派工");
+                    holder.btn_confirm.setText("派工");
+                    break;
+                case 3:
+                    holder.tv_state.setText("已派工");
+                    holder.btn_confirm.setVisibility(View.GONE);
+                    break;
+                case 4:
+                    holder.tv_state.setText("待确认价格");
+                    holder.btn_confirm.setVisibility(View.GONE);
+                    break;
+                case 5:
+                    holder.tv_state.setText("服务中");
+                    holder.btn_confirm.setVisibility(View.GONE);
+                    break;
+                case 8:
+                    holder.tv_state.setText("服务完成");
+                    holder.btn_confirm.setVisibility(View.GONE);
+                    break;
                 default:
                     break;
-        }
-        holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOrderListener.onButtonClick(v,position);
             }
-        });
+            holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOrderListener.onButtonClick(v,position);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
     @Override
     public int getItemCount() {
-        return list==null?0:list.size();
+        return jsonArray==null?0:jsonArray.length();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

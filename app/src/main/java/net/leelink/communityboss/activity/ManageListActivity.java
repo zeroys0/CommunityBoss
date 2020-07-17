@@ -1,6 +1,7 @@
 package net.leelink.communityboss.activity;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
+import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -47,12 +52,16 @@ private TextView tv_done;
 private Button btn_del;
 private int type = 0;
 List<String> idList = new ArrayList<>();
+private int page = 1;
+private boolean hasNextPage = false;
+    private TwinklingRefreshLayout refreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_list);
         init();
         initlist();
+        initRefreshLayout();
     }
 
     @Override
@@ -67,6 +76,7 @@ List<String> idList = new ArrayList<>();
         rl_add = findViewById(R.id.rl_add);
         rl_add.setOnClickListener(this);
         list_goods = findViewById(R.id.list_goods);
+        list_goods.setNestedScrollingEnabled(false);
         tv_done = findViewById(R.id.tv_done);
         tv_done.setOnClickListener(this);
         btn_del = findViewById(R.id.btn_del);
@@ -85,7 +95,7 @@ List<String> idList = new ArrayList<>();
     public void initlist(){
         OkGo.<String>get(Urls.COMMODITY)
                 .tag(this)
-                .params("pageNum",1)
+                .params("pageNum",page)
                 .params("pageSize",5)
                 .execute(new StringCallback() {
                     @Override
@@ -96,9 +106,12 @@ List<String> idList = new ArrayList<>();
                             Log.d("商品列表",json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
+                                hasNextPage = json.getBoolean("hasNextPage");
                                 JSONArray jsonArray = json.getJSONArray("list");
                                 Gson gson = new Gson();
-                                list = gson.fromJson(jsonArray.toString(), new TypeToken<List<GoodListBean>>(){}.getType());
+                                List<GoodListBean> goodListBeans = new ArrayList<>();
+                                goodListBeans = gson.fromJson(jsonArray.toString(), new TypeToken<List<GoodListBean>>(){}.getType());
+                                list.addAll(goodListBeans);
                                 goodListAdapter = new GoodListAdapter(list,ManageListActivity.this,ManageListActivity.this,0);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ManageListActivity.this,LinearLayoutManager.VERTICAL,false);
                                 list_goods.setLayoutManager(layoutManager);
@@ -206,6 +219,54 @@ List<String> idList = new ArrayList<>();
                 });
 
     }
+
+    public void initRefreshLayout() {
+        refreshLayout = (TwinklingRefreshLayout) findViewById(R.id.refreshLayout);
+        SinaRefreshView headerView = new SinaRefreshView(this);
+        headerView.setTextColor(0xff745D5C);
+//        refreshLayout.setHeaderView((new ProgressLayout(getActivity())));
+        refreshLayout.setHeaderView(headerView);
+        refreshLayout.setBottomView(new LoadingView(this));
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.finishRefreshing();
+                        page = 1;
+                        list.clear();
+                        initlist();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.finishLoadmore();
+                        if(hasNextPage){
+                            page++;
+                            initlist();
+                        }
+
+                    }
+                }, 1000);
+            }
+
+        });
+        // 是否允许开启越界回弹模式
+        refreshLayout.setEnableOverScroll(false);
+        //禁用掉加载更多效果，即上拉加载更多
+        refreshLayout.setEnableLoadmore(true);
+        // 是否允许越界时显示刷新控件
+        refreshLayout.setOverScrollRefreshShow(true);
+
+
+    }
+
 
     @Override
     protected void onDestroy() {
