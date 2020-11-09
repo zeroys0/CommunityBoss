@@ -43,9 +43,15 @@ private StaffCheckAdapter staffCheckAdapter;
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_staff_check,container,false);
         init(view);
-        initData();
+
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 
     public void init(View view){
@@ -91,7 +97,10 @@ private StaffCheckAdapter staffCheckAdapter;
 
     @Override
     public void onButtonClick(View view, int position) {
-
+        Intent intent = new Intent(getContext(), StaffCheckActivity.class);
+        intent.putExtra("staff",list.get(position) );
+        intent.putExtra("action","check");
+        startActivity(intent);
     }
 
     @Override

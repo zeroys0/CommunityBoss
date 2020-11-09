@@ -27,7 +27,7 @@ public class ConfirmWithdrawActivity extends BaseActivity implements View.OnClic
 private RelativeLayout rl_back;
 private EditText ed_amount;
 private Button btn_confirm;
-private TextView tv_allin;
+private TextView tv_allin,tv_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +38,8 @@ private TextView tv_allin;
     public void init(){
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
+        tv_name = findViewById(R.id.tv_name);
+        tv_name.setText(getIntent().getStringExtra("bank_name"));
         ed_amount = findViewById(R.id.ed_amount);
         ed_amount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -110,7 +112,7 @@ private TextView tv_allin;
         float f = Float.valueOf(ed_amount.getText().toString().trim());
         final int amount = (int)(f*100);
         OkGo.<String>post(Urls.TXAOUNT)
-                .params("card",getIntent().getIntExtra("card_number",0))
+                .params("card",getIntent().getStringExtra("card_number"))
                 .params("bigDecimal",ed_amount.getText().toString().trim())
                 .tag(this)
                 .execute(new StringCallback() {

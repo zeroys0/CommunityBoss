@@ -11,7 +11,15 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.InputType;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -38,6 +46,7 @@ import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.StoreInfo;
+import net.leelink.communityboss.housekeep.HousekeepApplyActivity;
 import net.leelink.communityboss.housekeep.HousekeepMainActivity;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Logger;
@@ -56,7 +65,7 @@ import io.reactivex.functions.Consumer;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 private TabLayout tablayout;
-private TextView getmsmpass_TX,tv_forgot,tv_register;
+private TextView getmsmpass_TX,tv_forgot,tv_register,tv_text;
 private EditText ed_phone,ed_password,ed_code;
 private Button btn_login;
 private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
@@ -126,6 +135,39 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
             }
         });
+        tv_text = findViewById(R.id.tv_text);
+        SpannableString spannableString = new SpannableString("已阅读并同意<<用户协议>>以及<<隐私政策>>");
+        spannableString.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent intent = new Intent(LoginActivity.this,WebActivity.class);
+                intent.putExtra("type","distribution");
+                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambProtocol.html");
+                startActivity(intent);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue)); //设置颜色
+            }
+        }, 6, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+
+                Intent intent = new Intent(LoginActivity.this,WebActivity.class);
+                intent.putExtra("type","distribution");
+                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambPrivacyPolicy.html");
+                startActivity(intent);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue)); //设置颜色
+            }
+        }, 16, 24, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_text.append(spannableString);
+        tv_text.setMovementMethod(LinkMovementMethod.getInstance());  //很重要，点击无效就是由于没有设置这个引起
     }
 
     public void initLogin(){
@@ -294,6 +336,10 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                         CommunityBossApplication.storeInfo = storeInfo;
                                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                                         startActivity(intent);
+                                    } else if(jsonObject.getInt("vertifyState") == 3) {
+                                        Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
+                                        intent.putExtra("id",jsonObject.getString("id"));
+                                        startActivity(intent);
                                     }
                                 } else if(jsonObject.getInt("serverTypeId")==2) {
                                     if(jsonObject.getInt("vertifyState") == 1) {
@@ -310,6 +356,10 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                         StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                         CommunityBossApplication.storeInfo = storeInfo;
                                         Intent intent = new Intent(LoginActivity.this,HousekeepMainActivity.class);
+                                        startActivity(intent);
+                                    } else if(jsonObject.getInt("vertifyState") == 3) {
+                                        Intent intent = new Intent(LoginActivity.this, HousekeepApplyActivity.class);
+                                        intent.putExtra("id",jsonObject.getString("id"));
                                         startActivity(intent);
                                     }
                                 }

@@ -178,7 +178,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
                 startActivityForResult(intent1, 1);
                 break;
             case R.id.img_del:  //删除
-
+                
                 break;
             default:
                 break;

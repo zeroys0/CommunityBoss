@@ -75,6 +75,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
     private List<WorkBean> list_w = new ArrayList<>();
     private JSONArray jsonArray= new JSONArray();
     ProgressBar mProgressBar;
+    private Boolean hasNextPage;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -193,6 +194,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
                             if (json.getInt("status") == 200) {
                                 Gson gson = new Gson();
                                 json = json.getJSONObject("data");
+                                hasNextPage = json.getBoolean("hasNextPage");
                                 JSONArray ja = json.getJSONArray("list");
                                 for(int i = 0;i<ja.length();i++) {
                                     jsonArray.put(ja.getJSONObject(i));
@@ -258,7 +260,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
     public void initWorkList(){
         mProgressBar.setVisibility(View.VISIBLE);
         OkGo.<String>get(Urls.WORKLIST)
-                .params("state","1,2,3")
+                .params("state","1,2")
                 .params("pageNum",1)
                 .params("pageSize",10)
                 .tag(this)
@@ -273,6 +275,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
                             if (json.getInt("status") == 200) {
                                 Gson gson = new Gson();
                                 json = json.getJSONObject("data");
+                                hasNextPage = json.getBoolean("hasNextPage");
                                 JSONArray ja = json.getJSONArray("list");
                                 for(int i =0;i<ja.length();i++){
                                     jsonArray.put(ja.getJSONObject(i));
@@ -403,8 +406,16 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
                     @Override
                     public void run() {
                         refreshLayout.finishLoadmore();
-                        orderId = list.get(list.size()-1).getOrderId();
-                        initData(type);
+
+                        if(hasNextPage) {
+                            if(type.equals("2")) {
+                                initData(type);
+                            }else {
+                                initWorkList();
+                            }
+                        } else {
+
+                        }
                         hsOrderAdapter.update(jsonArray);
                     }
                 }, 1000);

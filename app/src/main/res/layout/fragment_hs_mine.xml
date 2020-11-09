@@ -41,6 +41,7 @@
             android:layout_marginTop="@dimen/y65"
             android:id="@+id/img_head"
             android:layout_marginLeft="@dimen/x35"
+            android:scaleType="fitXY"
             />
         <TextView
             android:layout_width="wrap_content"

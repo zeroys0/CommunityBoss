@@ -2,6 +2,8 @@ package net.leelink.communityboss.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -248,5 +250,22 @@ public class Utils {
             }
             activity.getWindow().getDecorView().findViewById(android.R.id.content).setPadding(0, 0, 0, Utils.navigationHeight);
         }
+    }
+
+    public static int getVersionCode(Context context) {
+
+        //获取包管理器
+        PackageManager pm = context.getPackageManager();
+        //获取包信息
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
+            //返回版本号
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+
     }
 }

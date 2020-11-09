@@ -45,9 +45,15 @@ public class StaffListFragment  extends BaseFragment implements OnOrderListener 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_staff_check,container,false);
         init(view);
-        initData(page);
+
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData(page);
     }
 
     public void init(View view){

@@ -64,13 +64,14 @@ public class StaffCheckAdapter extends RecyclerView.Adapter<StaffCheckAdapter.Vi
         }
         if(type ==2){
             holder.btn_confirm.setText("添加服务");
-            holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onOrderListener.onButtonClick(v,position);
-                }
-            });
+
         }
+        holder.btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOrderListener.onButtonClick(v,position);
+            }
+        });
 
     }
 

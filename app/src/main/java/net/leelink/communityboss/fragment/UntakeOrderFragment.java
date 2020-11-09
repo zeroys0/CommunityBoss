@@ -182,9 +182,7 @@ private List<OrderBean> list = new ArrayList<>();
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
-        OkGo.<String>post(Urls.ORDERSTATE)
-                .params("orderId",list.get(position).getOrderId())
-                .params("state",3)
+        OkGo.<String>post(Urls.ORDERSTATE+"?orderId="+list.get(position).getOrderId()+"&state=3")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -199,9 +197,8 @@ private List<OrderBean> list = new ArrayList<>();
                                 orderListAdapter.notifyDataSetChanged();
                                 Toast.makeText(getContext(), "订单已确认,请尽快完成吧~", Toast.LENGTH_SHORT).show();
                             } else {
-
+                                Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

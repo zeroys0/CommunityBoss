@@ -64,6 +64,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
     private  boolean hasNextPage = false;
     private HsOrderAdapter hsOrderAdapter;
     private JSONArray jsonArray= new JSONArray();
+
     @Override
     public void handleCallBack(Message msg) {
 
@@ -197,9 +198,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
-        OkGo.<String>post(Urls.HS_ORDERSTATE)
-                .params("orderId",list.get(position).getOrderId())
-                .params("state",2)
+        OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+list.get(position).getOrderId()+"&state="+2)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

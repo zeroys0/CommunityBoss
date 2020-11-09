@@ -22,6 +22,7 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.BaseActivity;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.bean.DelegateBean;
+import net.leelink.communityboss.bean.DelegateCallBack;
 import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.bean.HsOrderRefresh;
 import net.leelink.communityboss.housekeep.adapter.StaffListAdapter;
@@ -114,10 +115,7 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
 
     @Override
     public void onButtonClick(View view, int position) {
-        OkGo.<String>post(Urls.HS_ORDERSTATE)
-                .params("orderId",getIntent().getStringExtra("orderId"))
-                .params("state",3)
-                .params("userId",list.get(position).getUserId())
+        OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+getIntent().getStringExtra("orderId")+"&userId="+list.get(position).getUserId()+"&state=3")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -129,6 +127,7 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
                             if (json.getInt("status") == 200) {
                                 Toast.makeText(DelegateActivity.this, "派单成功", Toast.LENGTH_SHORT).show();
                                 EventBus.getDefault().post(new HsOrderRefresh());
+                                EventBus.getDefault().post(new DelegateCallBack());
                                 finish();
                             } else {
                                 Toast.makeText(DelegateActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();

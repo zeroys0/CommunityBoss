@@ -26,6 +26,7 @@ import net.leelink.communityboss.utils.Urls;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -101,11 +102,11 @@ public class HsIncomeActivity extends BaseActivity implements View.OnClickListen
                             Log.d("获取收入统计",json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
-                                tv_total_income.setText("￥"+json.get("totalPrice"));
-                                tv_order_number.setText(json.get("orderNum")+"单");
-                                double a = json.getDouble("totalPrice")*CommunityBossApplication.storeInfo.getProfit();
+                                tv_total_income.setText("￥"+json.get("totalAmount"));
+                                tv_order_number.setText(json.get("count")+"单");
+                              //  double a = json.getDouble("totalPrice")*CommunityBossApplication.storeInfo.getProfit();
 
-                                tv_royalty.setText("￥"+a);
+                                tv_royalty.setText("￥"+json.get("profitAmount"));
 
 //                                tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
 //                                tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
@@ -149,24 +150,26 @@ public class HsIncomeActivity extends BaseActivity implements View.OnClickListen
     }
 
     public void storeIncome(){
+        Log.e( "startTime: ",tv_open_time.getText().toString().trim() +" 00:00" );
+        Log.e( "endTime: ",tv_close_time.getText().toString().trim()+" 23:59" );
         OkGo.<String>get(Urls.ANALYSIS)
-                .params("startTime",tv_open_time.getText().toString().trim())
-                .params("endTime",tv_close_time.getText().toString().trim())
+                .params("startTime",tv_open_time.getText().toString().trim() +" 00:00")
+                .params("endTime",tv_close_time.getText().toString().trim()+" 23:59")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            body = body.substring(1,body.length()-1);
-                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
+                            JSONObject json = new JSONObject(body);
                             Log.d("查询收入",json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
-                                tv_total_income.setText("￥"+json.get("totalPrice"));
-                                tv_order_number.setText(json.get("orderNum")+"单");
+                                tv_total_income.setText("￥"+json.get("totalAmount"));
+                                tv_order_number.setText(json.get("count")+"单");
                                 double a = json.getDouble("totalPrice")*CommunityBossApplication.storeInfo.getProfit();
-                                tv_royalty.setText("￥"+a);
+                                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                                tv_royalty.setText("￥"+json.get("profitAmount"));
                             } else {
 
                             }

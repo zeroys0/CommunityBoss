@@ -21,6 +21,7 @@ import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.BaseActivity;
+import net.leelink.communityboss.bean.DelegateCallBack;
 import net.leelink.communityboss.bean.HsOrderBean;
 import net.leelink.communityboss.bean.TakeOrderRefresh;
 import net.leelink.communityboss.bean.WorkBean;
@@ -28,6 +29,9 @@ import net.leelink.communityboss.utils.RatingBar;
 import net.leelink.communityboss.utils.Urls;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,6 +57,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
     }
 
     public void init(){
+        EventBus.getDefault().register(this);
         tv_orderid = findViewById(R.id.tv_orderid);
         tv_time = findViewById(R.id.tv_time);
         tv_name = findViewById(R.id.tv_name);
@@ -112,6 +117,11 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DelegateCallBack callBack) {
+        finish();
+    }
+
     public void initData(){
 
         try {
@@ -147,6 +157,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
                                 e.printStackTrace();
                             }
                             startActivity(intent);
+
                         }
                     });
                     break;
@@ -323,9 +334,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
 
     public void takeOrder(){
         try {
-            OkGo.<String>post(Urls.HS_ORDERSTATE)
-                    .params("orderId",jsonObject.getString("orderId"))
-                    .params("state",2)
+            OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+jsonObject.getString("orderId")+"&state="+2)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
@@ -353,9 +362,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
 
     public void cancel(){
         try {
-            OkGo.<String>post(Urls.HS_ORDERSTATE)
-                    .params("orderId",jsonObject.getString("orderId"))
-                    .params("state",9)
+            OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+jsonObject.getString("orderId")+"&state="+9)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override

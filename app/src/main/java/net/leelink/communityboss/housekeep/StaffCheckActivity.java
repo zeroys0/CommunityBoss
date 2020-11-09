@@ -59,8 +59,10 @@ private LinearLayout ll_button;
         tv_birth = findViewById(R.id.tv_birth);
         tv_birth.setText(staffBean.getBirthday());
         tv_nation = findViewById(R.id.tv_nation);
-        String[] strings = getResources().getStringArray(R.array.nation_list);
-        tv_nation.setText(strings[staffBean.getNature()]);
+        if(staffBean.getNature()>0) {
+            String[] strings = getResources().getStringArray(R.array.nation_list);
+            tv_nation.setText(strings[staffBean.getNature() - 1]);
+        }
         tv_phone = findViewById(R.id.tv_phone);
         tv_phone.setText(staffBean.getTelephone());
         tv_id_card = findViewById(R.id.tv_id_card);

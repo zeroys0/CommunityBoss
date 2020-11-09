@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -12,10 +13,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
@@ -30,7 +37,11 @@ import net.leelink.communityboss.housekeep.fragment.HsMineFragment;
 import net.leelink.communityboss.housekeep.fragment.HsTakeFragment;
 import net.leelink.communityboss.housekeep.fragment.HsUntakeFragment;
 import net.leelink.communityboss.utils.ToastUtil;
+import net.leelink.communityboss.utils.Urls;
 import net.leelink.communityboss.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -48,6 +59,7 @@ public class HousekeepMainActivity extends BaseActivity implements BottomNavigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_housekeep_main);
         init();
+        checkVersion();
     }
     public void init(){
         nv_bottom = findViewById(R.id.nv_bottom);
@@ -190,6 +202,42 @@ public class HousekeepMainActivity extends BaseActivity implements BottomNavigat
         if(mineFragment != null)
             ft.hide(mineFragment);
         return ft;
+    }
+
+
+    public void checkVersion() {
+        OkGo.<String>get(Urls.VERSION)
+                .tag(this)
+                .params("appName", "乐聆商家版")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("获取版本信息", json.toString());
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
+                                if(Utils.getVersionCode(HousekeepMainActivity.this)<json.getInt("version")) {
+                                    AllenVersionChecker
+                                            .getInstance()
+                                            .downloadOnly(
+                                                    UIData.create().setDownloadUrl(json.getString("apkUrl"))
+                                                            .setTitle("检测到新的版本")
+                                                            .setContent("检测到您当前不是最新版本,是否要更新?")
+                                            )
+                                            .executeMission(HousekeepMainActivity.this);
+                                }
+                            } else {
+                                Toast.makeText(HousekeepMainActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
     }
 
     @Override

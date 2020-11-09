@@ -475,7 +475,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
 
     //选择地区机构
     public void organ() {
-        OkGo.<String>get("http://221.238.204.114:8888/sh/user/organ")
+        OkGo.<String>get("http://api.llky.net:8888/sh/user/organ")
                 .tag(this)
                 .params("areaId", local_id)
                 //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))

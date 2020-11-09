@@ -38,7 +38,7 @@ private QuestionAdapter questionAdapter;
 private List<QuestionBean> list = new ArrayList<>();
 private RelativeLayout rl_back;
 private ImageView img_call;
-private String phone = "0553-55525553";
+private String phone = "59068580";
 private TextView tv_servphone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

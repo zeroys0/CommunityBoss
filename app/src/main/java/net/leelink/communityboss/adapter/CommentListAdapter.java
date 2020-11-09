@@ -50,7 +50,9 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public void onBindViewHolder(CommentListAdapter.ViewHolder holder, int position) {
         try {
             JSONObject json = jsonArray.getJSONObject(position);
-            Glide.with(context).load(Urls.IMG_URL+json.getString("elderlyImgPath")).into(holder.img_head);
+            if(json.has("elderlyImgPath")) {
+                Glide.with(context).load(Urls.IMG_URL + json.getString("elderlyImgPath")).into(holder.img_head);
+            }
             holder.tv_orderId.setText("订单编号:"+json.getString("id"));
             holder.tv_phone.setText(json.getString("telephone"));
             holder.tv_detail.setText(json.getString("content"));

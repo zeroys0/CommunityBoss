@@ -176,6 +176,7 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
                 Intent intent = new Intent(WithdrawActivity.this, ConfirmWithdrawActivity.class);
                 intent.putExtra("card_number", list.get(position).getBankCard());
                 intent.putExtra("balance",getIntent().getStringExtra("balance"));
+                intent.putExtra("bank_name",list.get(position).getBankName());
                 startActivity(intent);
             }
         });

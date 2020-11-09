@@ -23,6 +23,7 @@ import net.leelink.communityboss.utils.Urls;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -100,9 +101,11 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                                 json = json.getJSONObject("data");
                                 tv_total_income.setText("￥"+json.get("totalPrice"));
                                 tv_order_number.setText(json.get("orderNum")+"单");
-                                double a = json.getDouble("totalPrice")*CommunityBossApplication.storeInfo.getProfit();
+                                double a = json.getDouble("totalPrice")*(1-CommunityBossApplication.storeInfo.getProfit());
+                                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                                String t_price = decimalFormat.format(a);
 
-                                tv_royalty.setText("￥"+a);
+                                tv_royalty.setText("￥"+t_price);
 
 //                                tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
 //                                tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
@@ -148,8 +151,8 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
 
     public void storeIncome(){
         OkGo.<String>get(Urls.STOREINCOME)
-                .params("startTime",tv_open_time.getText().toString().trim())
-                .params("endTime",tv_close_time.getText().toString().trim())
+                .params("startTime",tv_open_time.getText().toString().trim() +" 00:00")
+                .params("endTime",tv_close_time.getText().toString().trim()+" 23:59")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -162,12 +165,15 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
                                 json = json.getJSONObject("data");
                                 tv_total_income.setText("￥"+json.get("totalPrice"));
                                 tv_order_number.setText(json.get("orderNum")+"单");
-                                double a = json.getDouble("totalPrice")*CommunityBossApplication.storeInfo.getProfit();
-                                tv_royalty.setText("￥"+a);
-                            } else {
+                                double a = json.getDouble("totalPrice")*(1-CommunityBossApplication.storeInfo.getProfit());
+                                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                                String t_price = decimalFormat.format(a);
 
+                                tv_royalty.setText("￥"+t_price);
+                            } else {
+                                Toast.makeText(IncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(IncomeActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

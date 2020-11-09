@@ -2,17 +2,23 @@ package net.leelink.communityboss.utils;
 
 import net.leelink.communityboss.housekeep.HousekeepMainActivity;
 
+import java.util.StringTokenizer;
+
 public class Urls {
     //   public static final String WEBSITE = "http://122.225.60.118:6280/xdapp/api/Store/";
 //    public static final String WEBSITE = "http://192.168.16.91:8888/sh/storeApp/";
-    public static final String WEBSITE = "http://api.llky.net:8888/sh/storeApp/";
+    public static final String TEST_URL = "http://192.168.16.91";
+    public static final String URL = "http://221.238.204.114";
+//    public static final String URL = "http://api.llky.net";
+    public static final String WEBSITE = URL+":8888/sh/storeApp/";
 //    public static final String HS_WEBSITE = "http://192.168.16.91:8888/sh/homeStore/";
-    public static final String HS_WEBSITE = "http://api.llky.net:8888/sh/homeStore/";
+    public static final String HS_WEBSITE = URL+":8888/sh/homeStore/";
 
 
 //    public static final String IMG_URL = "http://192.168.16.91:8888/files";
-    public static final String IMG_URL = "http://api.llky.net:8888/files";
-    public static final String SENDSMSCODE = "http://api.llky.net:8888/sh/user/send";      //发送验证码
+    public static final String IMG_URL = URL+":8888/files";
+    public static final String SENDSMSCODE = URL+":8888/sh/user/send";      //发送验证码
+    public static final String VERSION = URL+":8888/app/version";   //获取版本更新
 //    public static final String SENDSMSCODE = "http://192.168.16.91:8888/sh/user/send";      //发送验证码
     public static final String REGIST = WEBSITE + "regist";   //注册
     public static final String LOGIN = WEBSITE + "login";     //用户名密码登录
@@ -38,7 +44,7 @@ public class Urls {
     public static final String COMMODITYIMG = WEBSITE + "commodityImg";    //修改上架物品
     public static final String STOREHOME = WEBSITE +"storeHome";    //商家个人信息
     public static final String BINDCARD = WEBSITE+"bindCard";   //绑定银行卡 /查看
-    public static final String BANK = "http://api.llky.net:8888/sh/user/bank";    //查询支持的银行
+    public static final String BANK = URL+":8888/sh/user/bank";    //查询支持的银行
     public static final String FAQ = WEBSITE+"faq"; //我的客服
     public static final String STOREINCOME = WEBSITE +"storeIncome";    //收入统计
     public static final String PHONENUMBER = WEBSITE+"phoneNumber"; //修改绑定手机号
@@ -60,11 +66,11 @@ public class Urls {
     public static final String FINDSERBYUSERID = HS_WEBSITE+"findSerByUserId";  //查询所有项目
     public static final String HS_ORDERLIST = HS_WEBSITE +"orderList";  //订单列表
     public static final String HS_ORDERSTATE = HS_WEBSITE +"orderState";   //修改订单状态
-    public static final String WORKSER = HS_WEBSITE +"workSer"; //可分配人员列表
     public static final String WORKLIST = HS_WEBSITE +"workList"; //工单列表
     public static final String ANALYSIS = HS_WEBSITE +"analysis";   //查询收入统计
     public static final String FINDSERWORKBYUSERID = HS_WEBSITE+"findSerWorkByUserId";  //查询员工已分配(未完成)订单
-
+    public static final String PROVIDERINFO = HS_WEBSITE+"providerInfo";    //服务商个人信息
+    public static final String WORKSER = HS_WEBSITE +"workSer"; //可分配人员列表
 
 
 }

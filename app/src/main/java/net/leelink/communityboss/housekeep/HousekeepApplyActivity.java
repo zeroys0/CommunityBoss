@@ -68,7 +68,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class HousekeepApplyActivity extends BaseActivity implements View.OnClickListener {
     private Button btn_submit;
-    private EditText ed_name, ed_address, ed_number, ed_name_c, ed_phone_c, ed_server_address, ed_name_l;
+    private EditText ed_order_phone,ed_name, ed_address, ed_number, ed_name_c, ed_phone_c, ed_server_address, ed_name_l;
     private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s;
     private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s;
     private ImageView img_store_head, img_publicity, img_license, img_permit;
@@ -153,7 +153,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
         ed_phone_c = findViewById(R.id.ed_phone_c);
         ed_server_address = findViewById(R.id.ed_server_address);
         ed_name_l = findViewById(R.id.ed_name_l);
-
+        ed_order_phone = findViewById(R.id.ed_order_phone);
     }
 
     @Override
@@ -338,7 +338,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                 .params("businessNo", ed_number.getText().toString().trim())
                 .params("cityId", city_id_s)
                 .params("contact", ed_name_c.getText().toString().trim())
-                .params("orderPhone", ed_phone_c.getText().toString().trim())
+                .params("contactPhone", ed_phone_c.getText().toString().trim())
                 .params("deviceToken", JPushInterface.getRegistrationID(this))
                 .params("endTime", "2000-01-01 " + tv_close_time.getText().toString() + ":00")
                 .params("startTime", "2000-01-01 " + tv_open_time.getText().toString() + ":00")
@@ -353,6 +353,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                 .params("serverAddress", ed_server_address.getText().toString().trim())
                 .params("legalPerson", ed_name_l.getText().toString().trim())
                 .params("id", getIntent().getStringExtra("id"))
+                .params("orderPhone",ed_order_phone.getText().toString().trim())
 
                 .execute(new StringCallback() {
                     @Override
@@ -482,7 +483,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
 
     //选择地区机构
     public void organ() {
-        OkGo.<String>get("http://221.238.204.114:8888/sh/user/organ")
+        OkGo.<String>get(Urls.URL+":8888/sh/user/organ")
                 .tag(this)
                 .params("areaId", local_id)
                 //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))

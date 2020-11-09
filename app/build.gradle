@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
     defaultConfig {
         applicationId "net.leelink.communityboss"
         minSdkVersion 23
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 29
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
@@ -53,10 +53,13 @@ dependencies {
     implementation 'cn.jiguang.sdk:jcore:2.1.6'// 此处以JCore 1.2.5 版本为例。
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar'//权限
     implementation 'com.lcodecorex:tkrefreshlayout:1.0.4'
+    implementation 'com.just.agentweb:agentweb:4.0.2'
 
     implementation 'com.yanzhenjie.recyclerview:support:1.3.0'  //滑动删除
     implementation 'com.lcw.library:imagepicker:2.2.7'
     implementation 'com.android.support:design:27.1.1'
+
+    implementation 'com.github.AlexLiuSheng:CheckVersionLib:2.4_appcompat'
 
 
     //高德地图

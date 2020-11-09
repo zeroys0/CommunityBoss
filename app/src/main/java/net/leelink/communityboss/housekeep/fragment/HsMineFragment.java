@@ -39,6 +39,7 @@ import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.MyInfoBean;
 import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.fragment.BaseFragment;
+import net.leelink.communityboss.housekeep.HsIncomeActivity;
 import net.leelink.communityboss.housekeep.ServiceItemActivity;
 import net.leelink.communityboss.housekeep.StaffManageActivity;
 import net.leelink.communityboss.utils.Acache;
@@ -94,12 +95,12 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
 
     public void initdata(){
         if(CommunityBossApplication.storeInfo.getStoreImg() != null) {
-            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getRegistPath()).into(img_head);
+            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
         }
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
         tv_phone.setText(CommunityBossApplication.storeInfo.getOrderPhone());
 
-        OkGo.<String>get(Urls.STOREHOME)
+        OkGo.<String>get(Urls.PROVIDERINFO+"/"+Integer.valueOf(CommunityBossApplication.storeInfo.getId()))
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -112,8 +113,15 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
                                 json = json.getJSONObject("data");
                                 Gson gson = new Gson();
                                 myInfoBean = gson.fromJson(json.toString(), MyInfoBean.class);
-                                tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
+                                if(json.getString("todayAmount").equals("null")){
+                                    tv_income.setText("今日收入: ￥"+0);
+                                } else {
+                                    tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
+                                }
                                 tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
+                                if(json.has("store_img") ){
+                                    Glide.with(getContext()).load(Urls.IMG_URL+json.get("store_img")).into(img_head);
+                                }
                             }else if(json.getInt("status") == 505) {
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
@@ -183,7 +191,7 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
                 startActivity(intent2);
                 break;
             case R.id.rl_income:    //收入统计
-                Intent intent3 = new Intent(getContext(), IncomeActivity.class);
+                Intent intent3 = new Intent(getContext(), HsIncomeActivity.class);
                 startActivity(intent3);
                 break;
             case R.id.rl_refund:    //退款订单

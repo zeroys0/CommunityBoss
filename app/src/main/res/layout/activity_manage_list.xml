@@ -49,32 +49,38 @@
             android:text="编辑" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_above="@+id/btn_del"
-        android:layout_below="@+id/rl_top">
-        <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/y1600"
 
-            >
+
+<!--            <android.support.v4.widget.NestedScrollView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_above="@+id/btn_del"-->
+<!--                android:layout_below="@+id/rl_top"-->
+<!--                >-->
+                <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+                    android:id="@+id/refreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/rl_add"
+                    android:layout_below="@+id/rl_top"
+                    >
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_goods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
             </android.support.v7.widget.RecyclerView>
-        </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
+                </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+<!--            </android.support.v4.widget.NestedScrollView>-->
 
     <RelativeLayout
         android:id="@+id/rl_add"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/y63"
-        android:layout_above="@id/btn_del"
+        android:layout_above="@+id/btn_del"
+
         android:layout_marginLeft="@dimen/x30"
         android:layout_marginTop="@dimen/y50">
 
@@ -91,7 +97,6 @@
             android:textColor="@color/black"
             android:textSize="@dimen/x45" />
     </RelativeLayout>
-</LinearLayout>
 
     <Button
         android:id="@+id/btn_del"
@@ -102,7 +107,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/y57"
         android:background="@drawable/cancel"
-        android:text="上传"
+        android:text="完成"
         android:visibility="invisible"
         android:textSize="@dimen/x54" />
 

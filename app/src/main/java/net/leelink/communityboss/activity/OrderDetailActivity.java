@@ -263,9 +263,7 @@ private Context context;
 //                        }
 //                    }
 //                });
-        OkGo.<String>post(Urls.ORDERSTATE)
-                .params("orderId",tv_orderid.getText().toString().trim())
-                .params("state",3)
+        OkGo.<String>post(Urls.ORDERSTATE+"?orderId="+tv_orderid.getText().toString().trim()+"&state=3")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

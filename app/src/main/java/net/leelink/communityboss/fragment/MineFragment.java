@@ -7,6 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +43,7 @@ import net.leelink.communityboss.activity.ManageListActivity;
 import net.leelink.communityboss.activity.MyServiceActivity;
 import net.leelink.communityboss.activity.RefundListActivity;
 import net.leelink.communityboss.activity.SettingActivity;
+import net.leelink.communityboss.activity.WebActivity;
 import net.leelink.communityboss.adapter.GoodListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.GoodListBean;
@@ -57,7 +63,7 @@ import cn.jpush.android.api.JPushInterface;
 public class MineFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary;
     private ImageView img_head,img_change,img_setting;
-    private TextView tv_income,tv_order_number,tv_phone,tv_name;
+    private TextView tv_income,tv_order_number,tv_phone,tv_name,tv_text;
     private TwinklingRefreshLayout refreshLayout;
     private MyInfoBean myInfoBean;
     @Override
@@ -102,6 +108,39 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         img_setting.setOnClickListener(this);
         rl_boundary = view.findViewById(R.id.rl_boundary);
         rl_boundary.setOnClickListener(this);
+        tv_text =view.findViewById(R.id.tv_text);
+        SpannableString spannableString = new SpannableString("阅读<<用户协议>>以及<<隐私政策>>");
+        spannableString.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("type","distribution");
+                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambProtocol.html");
+                startActivity(intent);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue)); //设置颜色
+            }
+        }, 2, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+
+                Intent intent = new Intent(getContext(),WebActivity.class);
+                intent.putExtra("type","distribution");
+                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambPrivacyPolicy.html");
+                startActivity(intent);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue)); //设置颜色
+            }
+        }, 12, 20, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_text.append(spannableString);
+        tv_text.setMovementMethod(LinkMovementMethod.getInstance());  //很重要，点击无效就是由于没有设置这个引起
     }
 
     public void initdata(){

@@ -4,9 +4,11 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -31,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,11 +43,11 @@ import com.google.gson.reflect.TypeToken;
 import com.lcw.library.imagepicker.ImagePicker;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.BaseActivity;
-import net.leelink.communityboss.activity.SettingActivity;
 import net.leelink.communityboss.adapter.OnCategoryClickListener;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.bean.ServiceBean;
@@ -68,18 +71,19 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
     private RecyclerView service_list;
     private ServiceItemAdapter serviceItemAdapter;
     private Button btn_add, btn_confirm, btn_cancel;
-    private PopupWindow popupWindow;
-    private View popview;
+    private PopupWindow popupWindow, popupWindow2;
+    private View popview, popview2;
     private AppCompatSpinner spinner;
     private ImageView img;
-    private EditText ed_around,ed_explain,ed_against_ptice,ed_name,ed_price,ed_unit;
-    private int state= 1;
-    private String id ;
+    private EditText ed_around, ed_explain, ed_against_ptice, ed_name, ed_price, ed_unit;
+    private int state = 1;
+    private String id;
     List<String> imagePaths = new ArrayList<>();
     List<ServiceBean> list = new ArrayList<>();
     private static final int REQUEST_SELECT_IMAGES_CODE = 0x01;
     private boolean add;
     private RelativeLayout rl_back;
+    private TextView tv_state, tv_up, tv_down;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +92,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         init();
         initData();
         popu_service();
-
+        popu_service2();
     }
 
     public void init() {
@@ -101,8 +105,8 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
 
     public void initData() {
         OkGo.<String>get(Urls.PRODUCT)
-                .params("pageNum",1)
-                .params("pageSize",100)
+                .params("pageNum", 1)
+                .params("pageSize", 100)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -110,12 +114,13 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("获取商品列表",json.toString());
+                            Log.d("获取商品列表", json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
                                 JSONArray jsonArray = json.getJSONArray("list");
                                 Gson gson = new Gson();
-                                list = gson.fromJson(jsonArray.toString(),new TypeToken<List<ServiceBean>>(){}.getType());
+                                list = gson.fromJson(jsonArray.toString(), new TypeToken<List<ServiceBean>>() {
+                                }.getType());
                                 serviceItemAdapter = new ServiceItemAdapter(list, ServiceItemActivity.this, ServiceItemActivity.this);
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ServiceItemActivity.this, LinearLayoutManager.VERTICAL, false);
                                 service_list.addItemDecoration(new RecycleViewDivider(
@@ -144,19 +149,19 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
     public void onButtonClick(View view, int position) {
         add = false;
         ed_name.setText(list.get(position).getName());
-        ed_against_ptice.setText(list.get(position).getDamagePrice()+"");
+        ed_against_ptice.setText(list.get(position).getDamagePrice() + "");
         ed_around.setText(list.get(position).getAround());
         ed_explain.setText(list.get(position).getRemark());
-        ed_price.setText(list.get(position).getUnitPrice()+"");
+        ed_price.setText(list.get(position).getUnitPrice() + "");
         ed_unit.setText(list.get(position).getUnit());
-        if(list.get(position).getState()==0) {
-            spinner.setSelection(1);
+        if (list.get(position).getState() == 0) {
+            tv_state.setText("下架");
         } else {
-            spinner.setSelection(0);
+            tv_state.setText("上架");
         }
         id = list.get(position).getId();
         btn_confirm.setText("提交");
-        Glide.with(this).load(Urls.IMG_URL+list.get(position).getImgPath()).into(img);
+        Glide.with(this).load(Urls.IMG_URL + list.get(position).getImgPath()).into(img);
         popupWindow.showAtLocation(service_list, Gravity.CENTER, 0, 0);
         backgroundAlpha(0.5f);
     }
@@ -167,7 +172,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
             case R.id.btn_add:
                 popupWindow.showAtLocation(service_list, Gravity.CENTER, 0, 0);
                 backgroundAlpha(0.5f);
-                add= true;
+                add = true;
                 break;
             case R.id.img:
                 ImagePicker.getInstance()
@@ -182,9 +187,9 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                         .start(ServiceItemActivity.this, REQUEST_SELECT_IMAGES_CODE);
                 break;
             case R.id.btn_confirm:
-                if(add) {
-                submit();
-                }else {
+                if (add) {
+                    submit();
+                } else {
                     edit();
                 }
                 break;
@@ -194,25 +199,38 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
             case R.id.rl_back:
                 finish();
                 break;
+            case R.id.tv_state:
+                popupWindow2.showAsDropDown(tv_state);
+                break;
+            case R.id.tv_up:
+                state = 1;
+                tv_state.setText("上架");
+                popupWindow2.dismiss();
+                break;
+            case R.id.tv_down:
+                state = 0;
+                tv_state.setText("下架");
+                popupWindow2.dismiss();
 
+                break;
         }
     }
 
-    public void submit(){
+    public void submit() {
 
-        if(imagePaths.size()==0) {
+        if (imagePaths.size() == 0) {
             Toast.makeText(this, "请上传商品图片", Toast.LENGTH_SHORT).show();
             return;
         }
         OkGo.<String>post(Urls.PRODUCT)
-                .params("around",ed_around.getText().toString().trim())
-                .params("damagePrice",ed_against_ptice.getText().toString().trim())
-                .params("remark",ed_explain.getText().toString().trim())
-                .params("name",ed_name.getText().toString().trim())
-                .params("img",new File(imagePaths.get(0)))
-                .params("state",state)
-                .params("unitPrice",ed_price.getText().toString().trim())
-                .params("unit",ed_unit.getText().toString().trim())
+                .params("around", ed_around.getText().toString().trim())
+                .params("damagePrice", ed_against_ptice.getText().toString().trim())
+                .params("remark", ed_explain.getText().toString().trim())
+                .params("name", ed_name.getText().toString().trim())
+                .params("img", new File(imagePaths.get(0)))
+                .params("state", state)
+                .params("unitPrice", ed_price.getText().toString().trim())
+                .params("unit", ed_unit.getText().toString().trim())
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -220,7 +238,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("上架商品",json.toString());
+                            Log.d("上架商品", json.toString());
                             if (json.getInt("status") == 200) {
                                 popupWindow.dismiss();
                                 Toast.makeText(ServiceItemActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
@@ -235,22 +253,24 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                     }
                 });
     }
-    public void edit(){
 
-        if(imagePaths.size()==0) {
-            Toast.makeText(this, "请上传商品图片", Toast.LENGTH_SHORT).show();
+    public void edit() {
+
+        HttpParams params = new HttpParams();
+        if (imagePaths.size() != 0) {
+            params.put("img", new File(imagePaths.get(0)));
             return;
         }
+        params.put("around", ed_around.getText().toString().trim());
+        params.put("damagePrice", ed_against_ptice.getText().toString().trim());
+        params.put("remark", ed_explain.getText().toString().trim());
+        params.put("name", ed_name.getText().toString().trim());
+        params.put("state", state);
+        params.put("unitPrice", ed_price.getText().toString().trim());
+        params.put("unit", ed_unit.getText().toString().trim());
+        params.put("id", id);
         OkGo.<String>post(Urls.PRODUCTIMG)
-                .params("around",ed_around.getText().toString().trim())
-                .params("damagePrice",ed_against_ptice.getText().toString().trim())
-                .params("remark",ed_explain.getText().toString().trim())
-                .params("name",ed_name.getText().toString().trim())
-                .params("img",new File(imagePaths.get(0)))
-                .params("state",state)
-                .params("unitPrice",ed_price.getText().toString().trim())
-                .params("unit",ed_unit.getText().toString().trim())
-                .params("id",id)
+                .params(params)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -258,7 +278,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("编辑商品",json.toString());
+                            Log.d("编辑商品", json.toString());
                             if (json.getInt("status") == 200) {
                                 popupWindow.dismiss();
                                 initData();
@@ -297,7 +317,9 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         btn_confirm.setOnClickListener(ServiceItemActivity.this);
         ed_around = popview.findViewById(R.id.ed_around);
         ed_explain = popview.findViewById(R.id.ed_explain);
-        spinner = popview.findViewById(R.id.spinner);
+//        spinner = popview.findViewById(R.id.spinner);
+        tv_state = popview.findViewById(R.id.tv_state);
+        tv_state.setOnClickListener(this);
         ed_against_ptice = popview.findViewById(R.id.ed_against_ptice);
         ed_unit = popview.findViewById(R.id.ed_unit);
         ed_name = popview.findViewById(R.id.ed_name);
@@ -305,27 +327,33 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         InputFilter[] filters = {new CashierInputFilter()};
         ed_against_ptice.setFilters(filters);
         ed_price.setFilters(filters);
-        spinner.setSelection(0);
+//        List<String> list = new ArrayList<>();
+//        list.add("上架");
+//        list.add("下架");
         img = popview.findViewById(R.id.img);
         img.setOnClickListener(ServiceItemActivity.this);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                TextView tv = (TextView) view;
-                tv.setTextColor(getResources().getColor(R.color.blue));
-                tv.setGravity(Gravity.CENTER);
-                if(position==0){
-                    state =1;
-                } else {
-                    state= 0;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        MySpinnerAdapter spinnerAdapter = new MySpinnerAdapter(list,ServiceItemActivity.this);
+//        spinner.setAdapter(spinnerAdapter);
+//        spinner.setPopupBackgroundResource(R.color.white);
+//        spinner.setBackgroundResource(R.color.white);
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                TextView tv = (TextView) view;
+//                tv.setTextColor(getResources().getColor(R.color.blue));
+//                tv.setGravity(Gravity.CENTER);
+//                if(position==0){
+//                    state =1;
+//                } else {
+//                    state= 0;
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
         popupWindow = new PopupWindow(popview,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -337,6 +365,29 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         popupWindow.setOnDismissListener(new poponDismissListener());
     }
 
+    @SuppressLint("WrongConstant")
+    private void popu_service2() {
+        // TODO Auto-generated method stub
+
+        LayoutInflater mLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        popview2 = mLayoutInflater.from(this).inflate(
+                R.layout.popu_service2, null);
+        tv_up = popview2.findViewById(R.id.tv_up);
+        tv_down = popview2.findViewById(R.id.tv_down);
+        tv_up.setOnClickListener(this);
+        tv_down.setOnClickListener(this);
+
+
+        popupWindow2 = new PopupWindow(popview2,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow2.setFocusable(true);
+        popupWindow2.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+        popupWindow2.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        popupWindow2.setOutsideTouchable(false);
+        popupWindow2.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow2.setOnDismissListener(new poponDismissListener());
+    }
 
 
     @SuppressWarnings("ResourceType")
@@ -365,6 +416,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         }
 
     }
+
     public void backgroundAlpha(float bgAlpha) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.alpha = bgAlpha; // 0.0-1.0
@@ -376,15 +428,15 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         getWindow().setAttributes(lp);
     }
 
-    public void refresh(List<String> list){
-        Log.e( "refresh: ",list.size()+"" );
-        if(list.size()==0) {
+    public void refresh(List<String> list) {
+        Log.e("refresh: ", list.size() + "");
+        if (list.size() == 0) {
 //            imag.setVisibility(View.VISIBLE);
 //            upload_img2.setVisibility(View.GONE);
 //            upload_img3.setVisibility(View.GONE);
             return;
-        } else if(list.size() ==1){
-            Glide.with(this).load( list.get(0)).into(img);
+        } else if (list.size() == 1) {
+            Glide.with(this).load(list.get(0)).into(img);
 
         }
     }

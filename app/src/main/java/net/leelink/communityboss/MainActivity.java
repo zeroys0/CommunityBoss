@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -14,9 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.activity.BaseActivity;
 import net.leelink.communityboss.app.CommunityBossApplication;
@@ -25,7 +31,11 @@ import net.leelink.communityboss.fragment.MineFragment;
 import net.leelink.communityboss.fragment.TakeOrderFragment;
 import net.leelink.communityboss.fragment.UntakeOrderFragment;
 import net.leelink.communityboss.utils.ToastUtil;
+import net.leelink.communityboss.utils.Urls;
 import net.leelink.communityboss.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -43,6 +53,7 @@ FragmentManager fm;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        checkVersion();
     }
 
     public void init(){
@@ -74,6 +85,41 @@ FragmentManager fm;
         list.add("友鹏财管");
         list.add("阿里发发");
         list.add("新的商店");
+
+    }
+
+    public void checkVersion() {
+        OkGo.<String>get(Urls.VERSION)
+                .tag(this)
+                .params("appName", "乐聆商家版")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("获取版本信息", json.toString());
+                            if (json.getInt("status") == 200) {
+                                json = json.getJSONObject("data");
+                                if(Utils.getVersionCode(MainActivity.this)<json.getInt("version")) {
+                                    AllenVersionChecker
+                                            .getInstance()
+                                            .downloadOnly(
+                                                    UIData.create().setDownloadUrl(json.getString("apkUrl"))
+                                                            .setTitle("检测到新的版本")
+                                                            .setContent("检测到您当前不是最新版本,是否要更新?")
+                                            )
+                                            .executeMission(MainActivity.this);
+                                }
+                            } else {
+                                Toast.makeText(MainActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
 
     }
 

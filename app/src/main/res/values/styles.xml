@@ -68,14 +68,14 @@
 
     <style name="common_spinner">
         <!--设置弹窗背景为 系统设置的 应用主色调 在application 的colorPrimay 中配置的颜色, actionBar toolbar 默认使用这个为背景颜色-->
-        <item name="android:popupBackground">@color/text_grey</item>
+        <item name="android:popupBackground">@color/white</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
 
         <!--设置选中之后Item 的背景变换 设置背景为 灰色背景色-->
-        <item name="android:dropDownSelector">@color/grey</item>
+        <item name="android:dropDownSelector">@color/white</item>
         <!--设置下拉框的 list 的样式, 主要是设置 分割线, 当然也可以设置下拉的 list 的背景颜色-->
         <item name="android:dropDownListViewStyle">@style/spinnerListStyle</item>
         <!--设置显示在 popup 中 item(TextView) 的样式-->

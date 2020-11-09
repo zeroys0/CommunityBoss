@@ -67,7 +67,6 @@ private boolean hasNextPage = false;
     @Override
     protected void onRestart() {
         super.onRestart();
-        initlist();
     }
 
     public void init(){
@@ -76,7 +75,7 @@ private boolean hasNextPage = false;
         rl_add = findViewById(R.id.rl_add);
         rl_add.setOnClickListener(this);
         list_goods = findViewById(R.id.list_goods);
-        list_goods.setNestedScrollingEnabled(false);
+        list_goods.setNestedScrollingEnabled(true);
         tv_done = findViewById(R.id.tv_done);
         tv_done.setOnClickListener(this);
         btn_del = findViewById(R.id.btn_del);
@@ -87,6 +86,7 @@ private boolean hasNextPage = false;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
+        list.clear();
         initlist();
     }
 
@@ -96,7 +96,7 @@ private boolean hasNextPage = false;
         OkGo.<String>get(Urls.COMMODITY)
                 .tag(this)
                 .params("pageNum",page)
-                .params("pageSize",5)
+                .params("pageSize",10)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -207,6 +207,7 @@ private boolean hasNextPage = false;
                             if (json.getInt("status") == 200) {
                                 type = 0;
                                 btn_del.setVisibility(View.INVISIBLE);
+                                list.clear();
                                 initlist();
                             } else {
 
