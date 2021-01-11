@@ -72,7 +72,7 @@ private TextView tv_servphone;
         });
     }
     public void initData() {
-        OkGo.<String>get(Urls.FAQ)
+        OkGo.<String>get(Urls.getInstance().FAQ)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

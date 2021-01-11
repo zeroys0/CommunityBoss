@@ -128,7 +128,7 @@ private LinearLayout ll_button;
         }
     }
     public void vertify(int state){
-        OkGo.<String>post(Urls.VERTIFYSER+"/"+staffBean.getId()+"/"+state)
+        OkGo.<String>post(Urls.getInstance().VERTIFYSER+"/"+staffBean.getId()+"/"+state)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

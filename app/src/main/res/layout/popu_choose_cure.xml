@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_radius"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y40"
+        android:text="选择查询类型"
+        android:textColor="@color/text_grey"
+        android:textSize="@dimen/x45"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/tv_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y60"
+        android:gravity="center"
+        android:text="全部"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/x40" />
+
+
+    <TextView
+        android:id="@+id/tv_income"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y60"
+        android:layout_toRightOf="@+id/img_2"
+        android:gravity="center"
+        android:text="收入"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/x40" />
+
+    <TextView
+        android:id="@+id/tv_withdraw"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y60"
+        android:layout_toRightOf="@+id/img_2"
+        android:text="提现"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/x40" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80" />
+</LinearLayout>

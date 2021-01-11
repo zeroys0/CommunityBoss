@@ -55,7 +55,7 @@ import java.util.TimeZone;
 
 public class InformationActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout rl_back;
-    private TextView tv_done, tv_close_time, tv_address, tv_province, tv_city, tv_local, tv_organ, tv_name_c, ed_phone_c, tv_open_time, ed_businessNo, tv_file_name0, tv_file_name1, tv_file_name2, tv_file_name3;
+    private TextView tv_done, tv_close_time, tv_address, tv_province, tv_city, tv_local, tv_organ,tv_town,tv_name_c, ed_phone_c, tv_open_time, ed_businessNo, tv_file_name0, tv_file_name1, tv_file_name2, tv_file_name3;
     private EditText ed_name, ed_phone, ed_address;
     private ImageView img_store_head, img_publicity, img_license, img_permit;
     private RelativeLayout rl_open_time, rl_close_time;
@@ -114,6 +114,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         tv_file_name1 = findViewById(R.id.tv_file_name1);
         tv_file_name2 = findViewById(R.id.tv_file_name2);
         tv_file_name3 = findViewById(R.id.tv_file_name3);
+        tv_town = findViewById(R.id.tv_town);
 
     }
 
@@ -132,13 +133,13 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
             tv_file_name3.setText("门店头像");
         }
         if (CommunityBossApplication.storeInfo.getLicensePath()!= null) {
-            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getLicensePath()).into(img_license);
+            Glide.with(this).load(Urls.getInstance().IMG_URL + CommunityBossApplication.storeInfo.getLicensePath()).into(img_license);
         }
         if (CommunityBossApplication.storeInfo.getFoodHealthPath()!= null) {
-            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getFoodHealthPath()).into(img_permit);
+            Glide.with(this).load(Urls.getInstance().IMG_URL + CommunityBossApplication.storeInfo.getFoodHealthPath()).into(img_permit);
         }
 
-        OkGo.<String>get(Urls.STOREHOME)
+        OkGo.<String>get(Urls.getInstance().STOREHOME)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -178,10 +179,10 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                                 }
                                 dateTime_close= dateTime_close.substring(11,16);
                                 tv_close_time.setText(dateTime_close);
-                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("regist_path")).into(img_store_head);
-                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("store_font_path")).into(img_publicity);
-                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("license_path")).into(img_license);
-                                Glide.with(InformationActivity.this).load(Urls.IMG_URL + json.getString("food_health_path")).into(img_permit);
+                                Glide.with(InformationActivity.this).load(Urls.getInstance().IMG_URL + json.getString("regist_path")).into(img_store_head);
+                                Glide.with(InformationActivity.this).load(Urls.getInstance().IMG_URL + json.getString("store_font_path")).into(img_publicity);
+                                Glide.with(InformationActivity.this).load(Urls.getInstance().IMG_URL + json.getString("license_path")).into(img_license);
+                                Glide.with(InformationActivity.this).load(Urls.getInstance().IMG_URL + json.getString("food_health_path")).into(img_permit);
 
 
                             } else {
@@ -283,7 +284,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         Log.e("endTime: ", "2000-01-01 " + tv_close_time.getText().toString() + ":00");
         params.put("endTime", "2000-01-01 " + tv_close_time.getText().toString() + ":00");
         params.put("id", CommunityBossApplication.storeInfo.getId());
-        OkGo.<String>post(Urls.UPDATESTOREINGO)
+        OkGo.<String>post(Urls.getInstance().UPDATESTOREINGO)
                 .tag(this)
                 .params(params)
                 .execute(new StringCallback() {
@@ -310,7 +311,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
     public void updateImage() {
 
         if (file0 != null) {
-            OkGo.<String>post(Urls.UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=1")
+            OkGo.<String>post(Urls.getInstance().UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=1")
                     .tag(this)
                     .params("file", file0)
                     .execute(new StringCallback() {
@@ -341,7 +342,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                     });
         }
         if (file1 != null) {
-            OkGo.<String>post(Urls.UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=2")
+            OkGo.<String>post(Urls.getInstance().UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=2")
                     .tag(this)
                     .params("file", file1)
                     .execute(new StringCallback() {
@@ -363,7 +364,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                     });
         }
         if (file2 != null) {
-            OkGo.<String>post(Urls.UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=3")
+            OkGo.<String>post(Urls.getInstance().UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=3")
                     .tag(this)
                     .params("file", file2)
                     .execute(new StringCallback() {
@@ -385,7 +386,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                     });
         }
         if (file3 != null) {
-            OkGo.<String>post(Urls.UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=4")
+            OkGo.<String>post(Urls.getInstance().UPLOADIMAGE + "?appToken=" + CommunityBossApplication.token + "&type=4")
                     .tag(this)
                     .params("file", file3)
                     .execute(new StringCallback() {

@@ -86,7 +86,7 @@ private List<CommentListBean> list = new ArrayList<>();
     }
 
     public  void initData(String orderId){
-        OkGo.<String>get(Urls.APPRAISELIST)
+        OkGo.<String>get(Urls.getInstance().APPRAISELIST)
                 .params("pageNum",1)
                 .params("pageSize",10)
                 .tag(this)

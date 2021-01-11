@@ -74,7 +74,7 @@ private Button btn_complete;
 
     //修改绑定电话
     public void changePhone(){
-        OkGo.<String>post(Urls.PHONENUMBER)
+        OkGo.<String>post(Urls.getInstance().PHONENUMBER)
                 .params("newPhone", ed_phone.getText().toString().trim())
                 .params("smsCode",ed_code.getText().toString().trim())
                 .tag(this)
@@ -108,7 +108,7 @@ private Button btn_complete;
 
     //发送验证码
     public void send(){
-        OkGo.<String>get(Urls.SENDSMSCODE)
+        OkGo.<String>get(Urls.getInstance().SENDSMSCODE)
                 .tag(this)
                 .params("phone", ed_phone.getText().toString().trim())
                 .execute(new StringCallback() {

@@ -98,7 +98,7 @@ public class BindCardActivity extends BaseActivity implements OnItemClickListene
     }
 
     public void bind() {
-        OkGo.<String>post(Urls.BINDCARD)
+        OkGo.<String>post(Urls.getInstance().BINDCARD)
                 .params("bankCard", ed_cardId.getText().toString().trim())
                 .params("code", ed_code.getText().toString().trim())
                 .params("name", ed_name.getText().toString().trim())
@@ -127,7 +127,7 @@ public class BindCardActivity extends BaseActivity implements OnItemClickListene
     }
 
     public void getBank() {
-        OkGo.<String>get(Urls.BANK)
+        OkGo.<String>get(Urls.getInstance().BANK)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -159,7 +159,7 @@ public class BindCardActivity extends BaseActivity implements OnItemClickListene
     //发送短信验证码
     public void sendSmsCode() {
         if (!ed_phone.getText().toString().trim().equals("")) {
-            OkGo.<String>post(Urls.SENDSMSCODE + "?telephone=" + ed_phone.getText().toString().trim())
+            OkGo.<String>post(Urls.getInstance().SENDSMSCODE + "?telephone=" + ed_phone.getText().toString().trim())
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override

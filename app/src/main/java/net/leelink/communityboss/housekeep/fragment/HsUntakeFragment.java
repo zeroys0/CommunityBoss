@@ -98,7 +98,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
 
         //获取订单列表
 
-        OkGo.<String>get(Urls.HS_ORDERLIST)
+        OkGo.<String>get(Urls.getInstance().HS_ORDERLIST)
                 .params("state",1)
                 .params("pageNum",page)
                 .params("pageSize",10)
@@ -155,7 +155,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
     public void quickLogin() {
         final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
         if (!sp.getString("secretKey", "").equals("")) {
-            OkGo.<String>post(Urls.QUICKLOGIN)
+            OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                     .params("telephone", sp.getString("telephone", ""))
                     .params("secretKey", sp.getString("secretKey", ""))
                     .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
@@ -198,7 +198,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
-        OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+list.get(position).getOrderId()+"&state="+2)
+        OkGo.<String>post(Urls.getInstance().HS_ORDERSTATE+"?"+"orderId="+list.get(position).getOrderId()+"&state="+2)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

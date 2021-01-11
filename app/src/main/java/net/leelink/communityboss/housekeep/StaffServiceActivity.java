@@ -86,7 +86,7 @@ private ImageView img_add;
     }
 
     public void initData(){
-        OkGo.<String>get(Urls.FINDSERALLBYUSERID)
+        OkGo.<String>get(Urls.getInstance().FINDSERALLBYUSERID)
                 .params("pageNum",page)
                 .params("pageSize",10)
                 .params("userId",getIntent().getStringExtra("id"))
@@ -184,7 +184,7 @@ private ImageView img_add;
     }
 
     public void delete(final int position){
-        OkGo.<String>delete(Urls.SERPRODUCT+"/"+getIntent().getStringExtra("id")+"/"+list.get(position).getId())
+        OkGo.<String>delete(Urls.getInstance().SERPRODUCT+"/"+getIntent().getStringExtra("id")+"/"+list.get(position).getId())
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

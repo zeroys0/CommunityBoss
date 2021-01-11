@@ -178,7 +178,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
     public void initData(final String type){
         //获取订单列表
         mProgressBar.setVisibility(View.VISIBLE);
-        OkGo.<String>get(Urls.HS_ORDERLIST)
+        OkGo.<String>get(Urls.getInstance().HS_ORDERLIST)
                 .params("state",type)
                 .params("pageNum",1)
                 .params("pageSize",10)
@@ -208,7 +208,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
                             } else if(json.getInt("status") == 505){
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
-                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                    OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                                             .params("telephone", sp.getString("telephone", ""))
                                             .params("secretKey", sp.getString("secretKey", ""))
                                             .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
@@ -259,7 +259,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
 
     public void initWorkList(){
         mProgressBar.setVisibility(View.VISIBLE);
-        OkGo.<String>get(Urls.WORKLIST)
+        OkGo.<String>get(Urls.getInstance().WORKLIST)
                 .params("state","1,2")
                 .params("pageNum",1)
                 .params("pageSize",10)
@@ -290,7 +290,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
                             }else if(json.getInt("status") == 505) {
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
-                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                    OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                                             .params("telephone", sp.getString("telephone", ""))
                                             .params("secretKey", sp.getString("secretKey", ""))
                                             .params("deviceToken", JPushInterface.getRegistrationID(getContext()))

@@ -28,7 +28,12 @@
         android:roundIcon="@mipmap/android_template_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".housekeep.StaffOrderActivity"></activity>
+        <activity android:name=".activity.DrawHistoryActivity"></activity>
+        <activity android:name=".activity.IncomeListActicity" />
+        <activity android:name=".activity.BalanceActivity" />
+        <activity android:name=".activity.DrawDetailActivity" />
+        <activity android:name=".activity.OnlyListActivity" />
+        <activity android:name=".housekeep.StaffOrderActivity" />
         <activity android:name=".housekeep.HsIncomeActivity" />
         <activity android:name=".housekeep.AllServiceActivity" />
         <activity android:name=".housekeep.StaffServiceActivity" />
@@ -71,7 +76,7 @@
         <activity android:name=".activity.ConfirmWithdrawActivity" />
         <activity android:name=".activity.ExamineActivity" />
         <activity android:name=".activity.AnswerActivity" />
-        <activity android:name=".activity.WebActivity"/>
+        <activity android:name=".activity.WebActivity" />
         <activity android:name=".activity.MyServiceActivity" /> <!-- 这个Service要继承JCommonService -->
         <service
             android:name=".receiver.PushService"

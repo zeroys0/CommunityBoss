@@ -77,7 +77,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         tv_name = findViewById(R.id.tv_name);
         tv_phone = findViewById(R.id.tv_phone);
         if (CommunityBossApplication.storeInfo.getStoreImg() != null) {
-            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
+            Glide.with(this).load(Urls.getInstance().IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
         }
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
         tv_phone.setText(CommunityBossApplication.storeInfo.getTelephone());
@@ -175,7 +175,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     public void upLoadImg(){
         mProgressBar.setVisibility(View.VISIBLE);
-        OkGo.<String>post(Urls.UPLOADIMAGE)
+        OkGo.<String>post(Urls.getInstance().UPLOADIMAGE)
                 .params("file",file)
                 .tag(this)
                 .execute(new StringCallback() {
@@ -206,7 +206,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        OkGo.<String>get(Urls.LOGOUT + "?appToken=" + CommunityBossApplication.token)
+        OkGo.<String>get(Urls.getInstance().LOGOUT + "?appToken=" + CommunityBossApplication.token)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

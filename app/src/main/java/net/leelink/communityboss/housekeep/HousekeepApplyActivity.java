@@ -331,7 +331,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
         Log.e("legalPerson: ", ed_name_l.getText().toString().trim());
 
         mProgressBar.setVisibility(View.VISIBLE);
-        OkGo.<String>post(Urls.REGISTER)
+        OkGo.<String>post(Urls.getInstance().REGISTER)
                 .tag(this)
                 .params("address", ed_address.getText().toString().trim())
                 .params("areaId", local_id_s)
@@ -483,7 +483,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
 
     //选择地区机构
     public void organ() {
-        OkGo.<String>get(Urls.URL+":8888/sh/user/organ")
+        OkGo.<String>get(Urls.IP+"/sh/user/organ")
                 .tag(this)
                 .params("areaId", local_id)
                 //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))

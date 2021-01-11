@@ -46,6 +46,7 @@ import com.lzy.okgo.model.Response;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.OrganBean;
+import net.leelink.communityboss.bean.StreetBean;
 import net.leelink.communityboss.city.CityPicker;
 import net.leelink.communityboss.city.Cityinfo;
 import net.leelink.communityboss.utils.BitmapCompress;
@@ -69,8 +70,8 @@ import cn.jpush.android.api.JPushInterface;
 public class ApplyActivity extends BaseActivity implements View.OnClickListener {
     private Button btn_submit;
     private EditText ed_name, ed_phone, ed_address, ed_number, ed_name_c, ed_phone_c;
-    private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s;
-    private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s;
+    private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s, rl_street;
+    private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s,tv_street;
     private ImageView img_store_head, img_publicity, img_license, img_permit;
     private PopupWindow popuPhoneW;
     private TimePickerView pvTime, pvTime1;
@@ -85,7 +86,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
     private List<Cityinfo> province_list = new ArrayList<Cityinfo>();
     private HashMap<String, List<Cityinfo>> city_map = new HashMap<String, List<Cityinfo>>();
     private HashMap<String, List<Cityinfo>> couny_map = new HashMap<String, List<Cityinfo>>();
-    String province_id, city_id, local_id, province_id_s, city_id_s, local_id_s;
+    String province_id, city_id, local_id, province_id_s, city_id_s, local_id_s,town_id; //街道ID;
     int organ_id, nature;
     int type;
     private boolean ORGAN = true;
@@ -150,6 +151,9 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
         ed_number = findViewById(R.id.ed_number);
         ed_name_c = findViewById(R.id.ed_name_c);
         ed_phone_c = findViewById(R.id.ed_phone_c);
+        rl_street = findViewById(R.id.rl_street);
+        rl_street.setOnClickListener(this);
+        tv_street = findViewById(R.id.tv_street);
 
     }
 
@@ -254,10 +258,15 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.rl_local_s:
-                if(city_id_s != null) {
+                if (city_id_s != null) {
                     local(STORE);
-                }else {
+                } else {
                     Toast.makeText(this, "请先选择城市", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.rl_street:
+                if(local_id_s !=null) {
+
                 }
                 break;
 
@@ -311,32 +320,32 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
 
     //修改商户信息
     public void storeInfo() {
-        Log.e( "address: ",ed_address.getText().toString().trim() );
-        Log.e( "areaId: ",local_id_s );
-        Log.e( "businessNo: ", ed_number.getText().toString().trim() );
-        Log.e( "cityId: ",city_id_s );
-        Log.e( "contact: ",ed_name_c.getText().toString().trim() );
-        Log.e( "contactPhone: ",ed_phone_c.getText().toString().trim() );
-        Log.e( "deviceToken: ", JPushInterface.getRegistrationID(this) );
-        Log.e( "endTime: ","2000-01-01 "+tv_close_time.getText().toString()+":00");
-        Log.e( "startTime: ","2000-01-01 "+tv_open_time.getText().toString()+":00" );
-        Log.e( "orderPhone: ",ed_phone.getText().toString().trim() );
-        Log.e( "organId: ",organ_id+"" );
-        Log.e( "provinceId: ",province_id_s );
-        Log.e( "storeName: ", ed_name.getText().toString().trim() );
-        Log.e( "serverTypeId: ","1" );
+        Log.e("address: ", ed_address.getText().toString().trim());
+        Log.e("areaId: ", local_id_s);
+        Log.e("businessNo: ", ed_number.getText().toString().trim());
+        Log.e("cityId: ", city_id_s);
+        Log.e("contact: ", ed_name_c.getText().toString().trim());
+        Log.e("contactPhone: ", ed_phone_c.getText().toString().trim());
+        Log.e("deviceToken: ", JPushInterface.getRegistrationID(this));
+        Log.e("endTime: ", "2000-01-01 " + tv_close_time.getText().toString() + ":00");
+        Log.e("startTime: ", "2000-01-01 " + tv_open_time.getText().toString() + ":00");
+        Log.e("orderPhone: ", ed_phone.getText().toString().trim());
+        Log.e("organId: ", organ_id + "");
+        Log.e("provinceId: ", province_id_s);
+        Log.e("storeName: ", ed_name.getText().toString().trim());
+        Log.e("serverTypeId: ", "1");
         mProgressBar.setVisibility(View.VISIBLE);
-        OkGo.<String>post(Urls.REGISTER)
+        OkGo.<String>post(Urls.getInstance().REGISTER)
                 .tag(this)
-                .params("address", tv_province_s.getText().toString().trim()+tv_city_s.getText().toString().trim()+tv_local_s.getText().toString().trim()+ed_address.getText().toString().trim())
+                .params("address", tv_province_s.getText().toString().trim() + tv_city_s.getText().toString().trim() + tv_local_s.getText().toString().trim() + ed_address.getText().toString().trim())
                 .params("areaId", local_id_s)
                 .params("businessNo", ed_number.getText().toString().trim())
                 .params("cityId", city_id_s)
                 .params("contact", ed_name_c.getText().toString().trim())
                 .params("contactPhone", ed_phone_c.getText().toString().trim())
                 .params("deviceToken", JPushInterface.getRegistrationID(this))
-                .params("endTime", "2000-01-01 "+tv_close_time.getText().toString()+":00")
-                .params("startTime", "2000-01-01 "+tv_open_time.getText().toString()+":00")
+                .params("endTime", "2000-01-01 " + tv_close_time.getText().toString() + ":00")
+                .params("startTime", "2000-01-01 " + tv_open_time.getText().toString() + ":00")
                 .params("healthfile", file3)
                 .params("licensefile", file2)
                 .params("orderPhone", ed_phone.getText().toString().trim())
@@ -345,8 +354,8 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 .params("registfile", file0)
                 .params("storeFontfile", file1)
                 .params("storeName", ed_name.getText().toString().trim())
-                .params("serverTypeId",1)
-                .params("id",getIntent().getStringExtra("id"))
+                .params("serverTypeId", 1)
+                .params("id", getIntent().getStringExtra("id"))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -665,14 +674,68 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
 
     }
 
-    private void createProgressBar(){
-        mContext=this;
+    //街道选择
+    public void street(){
+        OkGo.<String>get(Urls.getInstance().GETTOWN)
+                .tag(this)
+                .params("id", local_id_s)
+                //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("查看", json.toString());
+                            if (json.getInt("status") == 200) {
+                                JSONArray jsonArray = json.getJSONArray("data");
+                                Gson gson = new Gson();
+                                List<StreetBean> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<StreetBean>>() {
+                                }.getType());
+                                showStreet(list);
+                            } else {
+                                Toast.makeText(mContext, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    //弹出街道列表
+    public void showStreet(final List<StreetBean> list) {
+        List<String> streetName = new ArrayList<>();
+        for (StreetBean streetBean : list) {
+            streetName.add(streetBean.getTown());
+        }
+        //条件选择器
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                if(list.size()!=0) {
+                    tv_street.setText(list.get(options1).getTown());
+                    town_id = list.get(options1).getId();
+                }
+            }
+        })
+                .setDividerColor(Color.parseColor("#A0A0A0"))
+                .setTextColorCenter(Color.parseColor("#333333")) //设置选中项文字颜色
+                .setContentTextSize(18)//设置滚轮文字大小
+                .setOutSideCancelable(true)//点击外部dismiss default true
+                .build();
+        pvOptions.setPicker(streetName);
+        pvOptions.show();
+    }
+
+    private void createProgressBar() {
+        mContext = this;
         //整个Activity布局的最终父布局,参见参考资料
-        FrameLayout rootFrameLayout=(FrameLayout) findViewById(android.R.id.content);
-        FrameLayout.LayoutParams layoutParams=
+        FrameLayout rootFrameLayout = (FrameLayout) findViewById(android.R.id.content);
+        FrameLayout.LayoutParams layoutParams =
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity= Gravity.CENTER;
-        mProgressBar=new ProgressBar(mContext);
+        layoutParams.gravity = Gravity.CENTER;
+        mProgressBar = new ProgressBar(mContext);
         mProgressBar.setLayoutParams(layoutParams);
         mProgressBar.setVisibility(View.GONE);
         rootFrameLayout.addView(mProgressBar);

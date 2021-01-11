@@ -91,7 +91,7 @@ public class HsIncomeActivity extends BaseActivity implements View.OnClickListen
     }
 
     public void initdata(){
-        OkGo.<String>get(Urls.ANALYSIS)
+        OkGo.<String>get(Urls.getInstance().ANALYSIS)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -152,7 +152,7 @@ public class HsIncomeActivity extends BaseActivity implements View.OnClickListen
     public void storeIncome(){
         Log.e( "startTime: ",tv_open_time.getText().toString().trim() +" 00:00" );
         Log.e( "endTime: ",tv_close_time.getText().toString().trim()+" 23:59" );
-        OkGo.<String>get(Urls.ANALYSIS)
+        OkGo.<String>get(Urls.getInstance().ANALYSIS)
                 .params("startTime",tv_open_time.getText().toString().trim() +" 00:00")
                 .params("endTime",tv_close_time.getText().toString().trim()+" 23:59")
                 .tag(this)

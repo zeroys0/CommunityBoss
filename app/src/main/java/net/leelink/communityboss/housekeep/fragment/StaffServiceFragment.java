@@ -61,7 +61,7 @@ public class StaffServiceFragment extends BaseFragment implements OnOrderListene
     }
 
     public void initData(){
-        OkGo.<String>get(Urls.SERPRODUCT)
+        OkGo.<String>get(Urls.getInstance().SERPRODUCT)
                 .params("pageNum",page)
                 .params("pageSize",10)
                 .tag(this)

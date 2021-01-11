@@ -103,7 +103,7 @@ public abstract class BaseFragment extends Fragment {
 	}
 
 	public void quicklogin(){
-		OkGo.<String>get(Urls.STOREHOME)
+		OkGo.<String>get(Urls.getInstance().STOREHOME)
 				.tag(this)
 				.execute(new StringCallback() {
 					@Override
@@ -119,7 +119,7 @@ public abstract class BaseFragment extends Fragment {
 							} else if(json.getInt("status") == 505) {
 								final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
 								if (!sp.getString("secretKey", "").equals("")) {
-									OkGo.<String>post(Urls.QUICKLOGIN)
+									OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
 											.params("telephone", sp.getString("telephone", ""))
 											.params("secretKey", sp.getString("secretKey", ""))
 											.params("deviceToken", JPushInterface.getRegistrationID(getContext()))

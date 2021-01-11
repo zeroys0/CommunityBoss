@@ -32,7 +32,7 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y342"
+        android:layout_height="@dimen/y462"
         android:background="@color/blue"
         android:id="@+id/rl_p"
         android:layout_below="@+id/rl_top">
@@ -57,7 +57,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/x45"
+            android:textSize="@dimen/x39"
             android:textColor="@color/white"
             android:text="135xxxx3724"
             android:layout_marginLeft="@dimen/x284"
@@ -68,16 +68,156 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/change_phone"
-            android:layout_marginLeft="@dimen/x604"
+            android:layout_marginLeft="@dimen/x550"
             android:layout_marginTop="@dimen/y198"
             android:id="@+id/img_change"
             />
+        <RelativeLayout
+            android:layout_width="@dimen/x380"
+            android:layout_height="@dimen/y135"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_white_big_radius"
+            android:layout_marginRight="-20dp"
+            android:layout_marginTop="@dimen/y108"
+            android:id="@+id/rl_state"
+            >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x45"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x80"
+            android:text="营业中"
+            android:textColor="@color/text_black"
+            android:id="@+id/tv_state"
+            />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/img_pause"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/tv_state"
+                android:id="@+id/img_state"
+                />
+        </RelativeLayout>
     </RelativeLayout>
+    <LinearLayout
+        android:layout_width="@dimen/x1010"
+        android:layout_height="@dimen/y234"
+        android:layout_marginBottom="@dimen/y20"
+        android:id="@+id/ll_count"
+        android:layout_marginLeft="@dimen/x36"
+        android:layout_below="@+id/rl_p"
+        android:layout_marginTop="-45dp"
+        android:background="@drawable/bg_white_radius"
+        android:elevation="@dimen/y20"
+        >
+        <RelativeLayout
+            android:layout_width="@dimen/x505"
+            android:layout_height="wrap_content"
+
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/text_black"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="27dp"
+                android:text="今日收入"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerHorizontal="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="￥"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_black"
+                    android:layout_marginTop="@dimen/y132"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25"
+                    android:textSize="@dimen/x54"
+                    android:textColor="@color/text_black"
+                    android:id="@+id/tv_total_income"
+                    android:layout_marginTop="@dimen/y132"/>
+
+            </LinearLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_centerHorizontal="true">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_num"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="56dp"-->
+<!--                    android:text="260"-->
+<!--                    android:textColor="@color/text_black"-->
+<!--                    android:textSize="21sp" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="单"-->
+<!--                    android:textSize="13sp"-->
+<!--                    android:textColor="@color/text_black"-->
+<!--                    android:layout_marginTop="56dp"/>-->
+<!--            </LinearLayout>-->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="39dp"
+                android:background="#dfdfdf"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="@dimen/x505"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/text_black"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="27dp"
+                android:text="今日订单"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerHorizontal="true">
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="￥"-->
+<!--                    android:textSize="13sp"-->
+<!--                    android:textColor="@color/text_black"-->
+<!--                    android:layout_marginTop="56dp"/>-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25"
+                    android:textSize="21sp"
+                    android:textColor="@color/text_black"
+                    android:id="@+id/tv_order_number"
+                    android:layout_marginTop="@dimen/y132"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
     <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/refreshLayout"
-        android:layout_below="@+id/rl_p">
+        android:layout_below="@+id/ll_count">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -86,37 +226,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/y158"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="今日收入: ￥1355"
-                        android:textSize="@dimen/x45"
-                        android:textColor="#333333"
-                        android:layout_gravity="center"
-                        android:id="@+id/tv_income"
-                        android:gravity="center"/>
-                    <View
-                        android:layout_width="@dimen/x2"
-                        android:layout_height="@dimen/y134"
-                        android:background="#dedfe0"
-                        android:layout_gravity="center_vertical"
-                        />
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="今日订单: 57单"
-                        android:textSize="@dimen/x45"
-                        android:textColor="#333333"
-                        android:id="@+id/tv_order_number"
-                        android:layout_gravity="center"
-                        android:gravity="center"/>
-                </LinearLayout>
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="@dimen/y158"-->
+<!--                    android:orientation="horizontal">-->
+<!--                    <TextView-->
+<!--                        android:layout_width="0px"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="今日收入: ￥1355"-->
+<!--                        android:textSize="@dimen/x45"-->
+<!--                        android:textColor="#333333"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:id="@+id/tv_income"-->
+<!--                        android:gravity="center"/>-->
+<!--                    <View-->
+<!--                        android:layout_width="@dimen/x2"-->
+<!--                        android:layout_height="@dimen/y134"-->
+<!--                        android:background="#dedfe0"-->
+<!--                        android:layout_gravity="center_vertical"-->
+<!--                        />-->
+<!--                    <TextView-->
+<!--                        android:layout_width="0px"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="今日订单: 57单"-->
+<!--                        android:textSize="@dimen/x45"-->
+<!--                        android:textColor="#333333"-->
+<!--                        android:id="@+id/tv_order_number"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:gravity="center"/>-->
+<!--                </LinearLayout>-->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y2"
@@ -126,7 +266,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/y44">
+                    android:layout_marginTop="@dimen/y100">
                     <RelativeLayout
                         android:layout_width="0px"
                         android:layout_weight="1"
@@ -166,7 +306,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/img_housekeep"
-                            android:text="商家物品"
+                            android:text="商品管理"
                             android:textSize="@dimen/x39"
                             android:textColor="@color/text_black"
                             android:layout_centerHorizontal="true"
@@ -199,6 +339,12 @@
                             android:gravity="bottom"
                             />
                     </RelativeLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y150">
                     <RelativeLayout
                         android:layout_width="0px"
                         android:layout_weight="1"
@@ -223,11 +369,6 @@
                             android:gravity="bottom"
                             />
                     </RelativeLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/y44">
                     <RelativeLayout
                         android:layout_width="0px"
                         android:layout_weight="1"
@@ -302,10 +443,42 @@
                             android:gravity="bottom"
                             />
                     </RelativeLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y150">
                     <RelativeLayout
                         android:layout_width="0px"
                         android:layout_weight="1"
-                        android:layout_height="@dimen/y135">
+                        android:layout_height="@dimen/y135"
+                        android:id="@+id/rl_balance">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/balance_b"
+                            android:layout_centerHorizontal="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="账户余额"
+                            android:textColor="@color/text_black"
+                            android:layout_centerHorizontal="true"
+                            android:textSize="@dimen/x39"
+                            android:layout_alignParentBottom="true"
+                            android:includeFontPadding="false"
+                            android:gravity="bottom"
+                            />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0px"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/y135"
+
+                        >
 
                     </RelativeLayout>
                     <RelativeLayout
@@ -314,6 +487,7 @@
                         android:layout_height="@dimen/y135">
 
                     </RelativeLayout>
+
                 </LinearLayout>
 
             </LinearLayout>

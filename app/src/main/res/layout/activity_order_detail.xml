@@ -130,7 +130,8 @@
                 android:orientation="horizontal"
                 android:layout_marginLeft="@dimen/x30"
                 android:layout_marginRight="@dimen/x30"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:id="@+id/ll_connect">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

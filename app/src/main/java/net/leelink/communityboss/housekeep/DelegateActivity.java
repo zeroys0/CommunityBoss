@@ -70,7 +70,7 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
 
 
     public void initData(){
-        OkGo.<String>get(Urls.WORKSER)
+        OkGo.<String>get(Urls.getInstance().WORKSER)
                 .params("pangeNum",page)
                 .params("pageSize",10)
                 .params("productId",getIntent().getStringExtra("id"))
@@ -115,7 +115,7 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
 
     @Override
     public void onButtonClick(View view, int position) {
-        OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+getIntent().getStringExtra("orderId")+"&userId="+list.get(position).getUserId()+"&state=3")
+        OkGo.<String>post(Urls.getInstance().HS_ORDERSTATE+"?"+"orderId="+getIntent().getStringExtra("orderId")+"&userId="+list.get(position).getUserId()+"&state=3")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

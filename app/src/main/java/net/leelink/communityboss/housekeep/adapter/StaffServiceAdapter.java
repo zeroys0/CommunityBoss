@@ -53,7 +53,7 @@ public class StaffServiceAdapter extends RecyclerView.Adapter<StaffServiceAdapte
     public void onBindViewHolder(@NonNull StaffServiceAdapter.ViewHolder holder, int position) {
         holder.tv_name.setText(list.get(position).getName());
         holder.tv_around.setText(list.get(position).getAround());
-        Glide.with(context).load(Urls.IMG_URL+list.get(position).getImgPath()).into(holder.img);
+        Glide.with(context).load(Urls.getInstance().IMG_URL+list.get(position).getImgPath()).into(holder.img);
     }
 
     @Override

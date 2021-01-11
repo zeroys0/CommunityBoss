@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.LoginActivity;
+import net.leelink.communityboss.activity.OnlyListActivity;
 import net.leelink.communityboss.activity.OrderDetailActivity;
 import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OnOrderListener;
@@ -61,6 +63,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
     private String type = "3,4";
     private TwinklingRefreshLayout refreshLayout;
     private String orderId = "0";
+    private TextView tv_only;
     @Override
     public void handleCallBack(Message msg) {
 
@@ -113,6 +116,14 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
             }
         });
         list_order = view.findViewById(R.id.list_order);
+        tv_only= view.findViewById(R.id.tv_only);
+        tv_only.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), OnlyListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -124,7 +135,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
     public void initData(final String type){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST)
+        OkGo.<String>get(Urls.getInstance().ORDERLIST)
                 .params("state",type)
                 .params("pageNum",1)
                 .params("pageSize",10)
@@ -149,7 +160,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
                             } else if(json.getInt("status") == 505) {
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
-                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                    OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                                             .params("telephone", sp.getString("telephone", ""))
                                             .params("secretKey", sp.getString("secretKey", ""))
                                             .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
@@ -219,7 +230,7 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
         } else  {
             operation = 3;  //确认送达
         }
-        OkGo.<String>post(Urls.ORDEROPERATION+"?appToken="+ CommunityBossApplication.token)
+        OkGo.<String>post(Urls.getInstance().ORDEROPERATION+"?appToken="+ CommunityBossApplication.token)
                 .params("orderId",list.get(position).getOrderId())
                 .params("operation",operation)
                 .tag(this)

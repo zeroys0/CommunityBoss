@@ -20,4 +20,6 @@
     <color name="grey_background">#efefef</color>
     <color name="grey_apply">#7f8699</color>
     <color name="hs_grey">#9299a1</color>
+    <color name="text_green">#4cd964</color>
+    <color name="text_red">#ff3b30</color>
 </resources>

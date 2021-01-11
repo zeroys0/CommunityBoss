@@ -71,7 +71,7 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
     }
 
     public void initdata(){
-        OkGo.<String>get(Urls.BINDCARD)
+        OkGo.<String>get(Urls.getInstance().BINDCARD)
 
                 .tag(this)
                 .execute(new StringCallback() {
@@ -90,9 +90,9 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
                                 card_list.setLayoutManager(layoutManager);
                                 card_list.setAdapter(cardListAdapter);
                             } else {
-
+                                Toast.makeText(WithdrawActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
-                            Toast.makeText(WithdrawActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -118,10 +118,13 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
     @Override
     public void onItemClick(View view) {
         int position = card_list.getChildLayoutPosition(view);
-        Intent intent = new Intent(this,ConfirmWithdrawActivity.class);
-
-        startActivity(intent);
-
+//        Intent intent = new Intent(this,ConfirmWithdrawActivity.class);
+//        startActivity(intent);
+        Intent intent = new Intent();
+        intent.putExtra("name",list.get(position).getBankName());
+        intent.putExtra("number",list.get(position).getBankCard());
+        setResult(1,intent);
+        finish();
 
     }
 
@@ -173,18 +176,23 @@ public class WithdrawActivity extends BaseActivity implements OnItemClickListene
         card_list.setOnItemClickListener(new com.yanzhenjie.recyclerview.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                Intent intent = new Intent(WithdrawActivity.this, ConfirmWithdrawActivity.class);
-                intent.putExtra("card_number", list.get(position).getBankCard());
-                intent.putExtra("balance",getIntent().getStringExtra("balance"));
-                intent.putExtra("bank_name",list.get(position).getBankName());
-                startActivity(intent);
+//                Intent intent = new Intent(WithdrawActivity.this, ConfirmWithdrawActivity.class);
+//                intent.putExtra("card_number", list.get(position).getBankCard());
+//                intent.putExtra("balance",getIntent().getStringExtra("balance"));
+//                intent.putExtra("bank_name",list.get(position).getBankName());
+//                startActivity(intent);
+                Intent intent = new Intent();
+                intent.putExtra("name",list.get(position).getBankName());
+                intent.putExtra("number",list.get(position).getBankCard());
+                setResult(1,intent);
+                finish();
             }
         });
 
 
     }
     public void bind(int position){
-        OkGo.<String>delete(Urls.BINDCARD+"?appToken="+ CommunityBossApplication.token+"&id="+list.get(position).getBindId())
+        OkGo.<String>delete(Urls.getInstance().BINDCARD+"?appToken="+ CommunityBossApplication.token+"&id="+list.get(position).getBindId())
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    tools:context=".activity.IncomeListActicity">
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y194"
+        android:background="@color/blue">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/y44"
+            android:layout_marginTop="@dimen/y80"
+            android:text="收入统计"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/x58" />
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/y185">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x45"
+                android:layout_marginTop="@dimen/y95"
+                android:src="@mipmap/back" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginTop="@dimen/y50"
+        android:text="2020-12"
+        android:textSize="@dimen/x54"
+        android:textColor="@color/text_black"
+        android:drawablePadding="@dimen/x20"
+        android:drawableRight="@mipmap/arrow_down"
+        android:id="@+id/tv_time"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/x42"
+        android:textColor="#666666"
+        android:layout_marginLeft="@dimen/x40"
+        android:text="月营业额￥2547.35"
+        android:layout_marginTop="@dimen/y20"
+        android:id="@+id/tv_month_amount"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/income_list"
+        android:layout_marginTop="@dimen/y30"
+        />
+</LinearLayout>

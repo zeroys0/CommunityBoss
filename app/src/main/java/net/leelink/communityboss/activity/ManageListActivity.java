@@ -93,7 +93,7 @@ private boolean hasNextPage = false;
 
     //获取商品列表
     public void initlist(){
-        OkGo.<String>get(Urls.COMMODITY)
+        OkGo.<String>get(Urls.getInstance().COMMODITY)
                 .tag(this)
                 .params("pageNum",page)
                 .params("pageSize",10)
@@ -194,7 +194,7 @@ private boolean hasNextPage = false;
         }
         s = s.substring(0,s.length()-1);
         Log.d( "delete: ",s);
-        OkGo.<String>delete(Urls.COMMODITY)
+        OkGo.<String>delete(Urls.getInstance().COMMODITY)
                 .params("productIdList",s)
                 .tag(this)
                 .execute(new StringCallback() {

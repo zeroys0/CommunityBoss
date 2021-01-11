@@ -131,7 +131,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
             tv_name.setText(jsonObject.getString("deliveryName"));
             tv_phone.setText(jsonObject.getString("deliveryPhone"));
             tv_address.setText(jsonObject.getString("receivingAddress"));
-            Glide.with(this).load(Urls.IMG_URL+jsonObject.getString("imgPath")).into(goods_head);
+            Glide.with(this).load(Urls.getInstance().IMG_URL+jsonObject.getString("imgPath")).into(goods_head);
             if(jsonObject.has("name")) {
                 tv_good_name.setText(jsonObject.getString("name"));
             } else {
@@ -234,12 +234,12 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
                     tv_end_time.setText(jsonObject.getString("end_time"));
                     ll_img .setVisibility(View.VISIBLE);
 
-                    Glide.with(this).load(Urls.IMG_URL+jsonObject.getString("one_file")).into(img0);
+                    Glide.with(this).load(Urls.getInstance().IMG_URL+jsonObject.getString("one_file")).into(img0);
                     if(jsonObject.has("two_file")) {
-                        Glide.with(this).load(Urls.IMG_URL + jsonObject.getString("two_file")).into(img1);
+                        Glide.with(this).load(Urls.getInstance().IMG_URL + jsonObject.getString("two_file")).into(img1);
                     }
                     if(jsonObject.has("three_file")) {
-                        Glide.with(this).load(Urls.IMG_URL + jsonObject.getString("three_file")).into(img2);
+                        Glide.with(this).load(Urls.getInstance().IMG_URL + jsonObject.getString("three_file")).into(img2);
                     }
                     break;
                 case 8:
@@ -267,12 +267,12 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
                     ll_end_time.setVisibility(View.VISIBLE);
                     tv_end_time.setText(jsonObject.getString("endTime"));
                     ll_img .setVisibility(View.VISIBLE);
-                    Glide.with(this).load(Urls.IMG_URL+jsonObject.getString("one_file")).into(img0);
+                    Glide.with(this).load(Urls.getInstance().IMG_URL+jsonObject.getString("one_file")).into(img0);
                     if(jsonObject.has("two_file")) {
-                        Glide.with(this).load(Urls.IMG_URL + jsonObject.getString("two_file")).into(img1);
+                        Glide.with(this).load(Urls.getInstance().IMG_URL + jsonObject.getString("two_file")).into(img1);
                     }
                     if(jsonObject.has("three_file")) {
-                        Glide.with(this).load(Urls.IMG_URL + jsonObject.getString("three_file")).into(img2);
+                        Glide.with(this).load(Urls.getInstance().IMG_URL + jsonObject.getString("three_file")).into(img2);
                     }
                     ll_comment.setVisibility(View.VISIBLE);
                     rt_total.setSelectedNumber(jsonObject.getDouble("total_star"));
@@ -281,7 +281,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
                     rt_pack.setUntouchable();
                     rt_taste.setSelectedNumber(jsonObject.getDouble("product_star"));
                     rt_taste.setUntouchable();
-                    Glide.with(this).load(Urls.IMG_URL + jsonObject.getString("head_img_path")).into(img_head);
+                    Glide.with(this).load(Urls.getInstance().IMG_URL + jsonObject.getString("head_img_path")).into(img_head);
                     tv_userphone.setText(jsonObject.getString("orderNo"));
                     tv_comment.setText(jsonObject.getString("content"));
                     if(jsonObject.has("image1_path")) {
@@ -289,14 +289,14 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
                         if(jsonObject.has("image2_path")){
                             img_main.setVisibility(GONE);
                             ll_images.setVisibility(View.VISIBLE);
-                            Glide.with(this).load(Urls.IMG_URL+jsonObject.getString("image1_path")).into(img_file0);
-                            Glide.with(this).load(Urls.IMG_URL+jsonObject.getString("image2_path")).into(img_file1);
+                            Glide.with(this).load(Urls.getInstance().IMG_URL+jsonObject.getString("image1_path")).into(img_file0);
+                            Glide.with(this).load(Urls.getInstance().IMG_URL+jsonObject.getString("image2_path")).into(img_file1);
                             if(jsonObject.has("image3_path")){
-                                Glide.with(this).load(Urls.IMG_URL+jsonObject.getString("image3_path")).into(img_file2);
+                                Glide.with(this).load(Urls.getInstance().IMG_URL+jsonObject.getString("image3_path")).into(img_file2);
                             }
                         } else {
                             img_main.setVisibility(View.VISIBLE);
-                            Glide.with(this).load(Urls.IMG_URL + jsonObject.getString("image1_path")).into(img_main);
+                            Glide.with(this).load(Urls.getInstance().IMG_URL + jsonObject.getString("image1_path")).into(img_main);
                         }
                     }
                     if(jsonObject.has("reply")){
@@ -334,7 +334,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
 
     public void takeOrder(){
         try {
-            OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+jsonObject.getString("orderId")+"&state="+2)
+            OkGo.<String>post(Urls.getInstance().HS_ORDERSTATE+"?"+"orderId="+jsonObject.getString("orderId")+"&state="+2)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
@@ -362,7 +362,7 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
 
     public void cancel(){
         try {
-            OkGo.<String>post(Urls.HS_ORDERSTATE+"?"+"orderId="+jsonObject.getString("orderId")+"&state="+9)
+            OkGo.<String>post(Urls.getInstance().HS_ORDERSTATE+"?"+"orderId="+jsonObject.getString("orderId")+"&state="+9)
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override

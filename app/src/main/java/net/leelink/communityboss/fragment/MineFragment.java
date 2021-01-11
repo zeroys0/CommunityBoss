@@ -30,13 +30,16 @@ import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.BalanceActivity;
 import net.leelink.communityboss.activity.BoundaryActivity;
 import net.leelink.communityboss.activity.ChangePhoneActivity;
 import net.leelink.communityboss.activity.CommentListActivity;
 import net.leelink.communityboss.activity.IncomeActivity;
+import net.leelink.communityboss.activity.IncomeListActicity;
 import net.leelink.communityboss.activity.InformationActivity;
 import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.activity.ManageListActivity;
@@ -61,9 +64,9 @@ import java.util.List;
 import cn.jpush.android.api.JPushInterface;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
-    private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary;
-    private ImageView img_head,img_change,img_setting;
-    private TextView tv_income,tv_order_number,tv_phone,tv_name,tv_text;
+    private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary,rl_balance,rl_state;
+    private ImageView img_head,img_change,img_setting,img_state;
+    private TextView tv_income,tv_order_number,tv_phone,tv_name,tv_text,tv_state;
     private TwinklingRefreshLayout refreshLayout;
     private MyInfoBean myInfoBean;
     @Override
@@ -99,7 +102,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         rl_refund.setOnClickListener(this);
         rl_service = view.findViewById(R.id.rl_service);
         rl_service.setOnClickListener(this);
-        tv_income = view.findViewById(R.id.tv_income);
+        tv_income = view.findViewById(R.id.tv_total_income);
+        rl_state = view.findViewById(R.id.rl_state);
+        rl_state.setOnClickListener(this);
         tv_order_number = view.findViewById(R.id.tv_order_number);
         tv_phone = view.findViewById(R.id.tv_phone);
         img_change = view.findViewById(R.id.img_change);
@@ -108,6 +113,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         img_setting.setOnClickListener(this);
         rl_boundary = view.findViewById(R.id.rl_boundary);
         rl_boundary.setOnClickListener(this);
+        rl_balance = view.findViewById(R.id.rl_balance);
+        rl_balance.setOnClickListener(this);
+        tv_state = view.findViewById(R.id.tv_state);
+        img_state = view.findViewById(R.id.img_state);
         tv_text =view.findViewById(R.id.tv_text);
         SpannableString spannableString = new SpannableString("阅读<<用户协议>>以及<<隐私政策>>");
         spannableString.setSpan(new ClickableSpan() {
@@ -115,7 +124,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             public void onClick(View widget) {
                 Intent intent = new Intent(getContext(), WebActivity.class);
                 intent.putExtra("type","distribution");
-                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambProtocol.html");
+                intent.putExtra("url","http://www.llky.net.cn/store/protocol.html");
                 startActivity(intent);
             }
             @Override
@@ -130,7 +139,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
                 Intent intent = new Intent(getContext(),WebActivity.class);
                 intent.putExtra("type","distribution");
-                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambPrivacyPolicy.html");
+                intent.putExtra("url","http://www.llky.net.cn/store/privacyPolicy.html");
                 startActivity(intent);
             }
             @Override
@@ -145,12 +154,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     public void initdata(){
         if(CommunityBossApplication.storeInfo.getStoreImg() != null) {
-            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
+            Glide.with(this).load(Urls.getInstance().IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
         }
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
         tv_phone.setText(CommunityBossApplication.storeInfo.getOrderPhone());
 
-        OkGo.<String>get(Urls.STOREHOME)
+        OkGo.<String>get(Urls.getInstance().STOREHOME)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -160,16 +169,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             JSONObject json = new JSONObject(body);
                             Log.d("获取个人信息",json.toString());
                             if (json.getInt("status") == 200) {
-
                                 json = json.getJSONObject("data");
                                 Gson gson = new Gson();
                                 myInfoBean = gson.fromJson(json.toString(),MyInfoBean.class);
-                                tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
-                                tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
+                                tv_income.setText(json.getString("todayAmount"));
+                                tv_order_number.setText(json.getString("todayOrderNum"));
+                                if(json.getBoolean("open")) {
+                                    tv_state.setText("营业中");
+                                    img_state.setImageResource(R.mipmap.img_pause);
+                                } else {
+                                    tv_state.setText("休息中");
+                                    img_state.setImageResource(R.mipmap.img_play);
+                                }
                             } else if(json.getInt("status") == 505) {
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
-                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                    OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                                             .params("telephone", sp.getString("telephone", ""))
                                             .params("secretKey", sp.getString("secretKey", ""))
                                             .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
@@ -236,7 +251,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(intent2);
                 break;
             case R.id.rl_income:    //收入统计
-                Intent intent3 = new Intent(getContext(), IncomeActivity.class);
+                Intent intent3 = new Intent(getContext(), IncomeListActicity.class);
                 startActivity(intent3);
                 break;
             case R.id.rl_refund:    //退款订单
@@ -259,9 +274,57 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Intent intent8 = new Intent(getContext(), BoundaryActivity.class);
                 startActivity(intent8);
                 break;
+            case R.id.rl_balance:   //账户余额
+                Intent intent9 = new Intent(getContext(), BalanceActivity.class);
+                startActivity(intent9);
+                break;
+            case R.id.rl_state:
+                changeState();
+                break;
                 default:
                     break;
         }
+    }
+
+    public void changeState(){
+
+        HttpParams httpParams = new HttpParams();
+        final int state;
+        if(tv_state.getText().equals("营业中")) {
+            state = 0;
+        } else {
+         state = 1;
+        }
+        httpParams.put("state",state);
+        httpParams.put("id",CommunityBossApplication.storeInfo.getId());
+        OkGo.<String>post(Urls.getInstance().UPDATESTOREINGO)
+                .tag(this)
+                .params(httpParams)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("修改营业状态", json.toString());
+                            if (json.getInt("status") == 200) {
+                                if(state==0) {
+                                    tv_state.setText("休息中");
+                                    img_state.setImageResource(R.mipmap.img_play);
+                                } else {
+                                    tv_state.setText("营业中");
+                                    img_state.setImageResource(R.mipmap.img_pause);
+                                }
+                                Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
     public void initRefreshLayout(View view) {
         refreshLayout = (TwinklingRefreshLayout) view.findViewById(R.id.refreshLayout);

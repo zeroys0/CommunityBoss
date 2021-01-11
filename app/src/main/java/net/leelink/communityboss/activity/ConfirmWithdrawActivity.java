@@ -1,5 +1,7 @@
 package net.leelink.communityboss.activity;
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,10 +26,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ConfirmWithdrawActivity extends BaseActivity implements View.OnClickListener {
-private RelativeLayout rl_back;
+private RelativeLayout rl_back,rl_default,rl_card;
 private EditText ed_amount;
 private Button btn_confirm;
-private TextView tv_allin,tv_name;
+private TextView tv_allin,tv_name,tv_draw_history,tv_balance,tv_card_number;
+private String cardNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +42,9 @@ private TextView tv_allin,tv_name;
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
         tv_name = findViewById(R.id.tv_name);
-        tv_name.setText(getIntent().getStringExtra("bank_name"));
+        tv_card_number = findViewById(R.id.tv_card_number);
+
+     //   tv_name.setText(getIntent().getStringExtra("bank_name"));
         ed_amount = findViewById(R.id.ed_amount);
         ed_amount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,6 +90,14 @@ private TextView tv_allin,tv_name;
         btn_confirm.setOnClickListener(this);
         tv_allin = findViewById(R.id.tv_allin);
         tv_allin.setOnClickListener(this);
+        tv_draw_history = findViewById(R.id.tv_draw_history);
+        tv_draw_history.setOnClickListener(this);
+        rl_default = findViewById(R.id.rl_default);
+        rl_default.setOnClickListener(this);
+        rl_card = findViewById(R.id.rl_card);
+        rl_card.setOnClickListener(this);
+        tv_balance = findViewById(R.id.tv_balance);
+        tv_balance.setText("可提现余额"+getIntent().getStringExtra("balance")+"元");
     }
 
     @Override
@@ -103,16 +116,48 @@ private TextView tv_allin,tv_name;
             case R.id.tv_allin:
                 ed_amount.setText(getIntent().getStringExtra("balance"));
                 break;
+            case R.id.tv_draw_history:
+                Intent intent = new Intent(this,DrawHistoryActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.rl_default:
+            case R.id.rl_card:
+                Intent intent1 = new Intent(this,WithdrawActivity.class);
+                startActivityForResult(intent1,1);
+                break;
                 default:
                     break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data!=null){
+            if(requestCode ==1) {
+                rl_default.setVisibility(View.GONE);
+                rl_card.setVisibility(View.VISIBLE);
+                tv_name.setText(data.getStringExtra("name"));
+                cardNumber = data.getStringExtra("number");
+                if(cardNumber.length()>4){
+                    String number = cardNumber.substring(cardNumber.length()-4);
+                    tv_card_number.setText("尾号"+number);
+                } else {
+                    tv_card_number.setText("尾号"+cardNumber);
+                }
+            }
+        }
+    }
+
     public void withdraw(){
+        if(cardNumber==null){
+            Toast.makeText(this, "请选择银行卡", Toast.LENGTH_SHORT).show();
+            return;
+        }
         float f = Float.valueOf(ed_amount.getText().toString().trim());
         final int amount = (int)(f*100);
-        OkGo.<String>post(Urls.TXAOUNT)
-                .params("card",getIntent().getStringExtra("card_number"))
+        OkGo.<String>post(Urls.getInstance().TXAOUNT)
+                .params("card",cardNumber)
                 .params("bigDecimal",ed_amount.getText().toString().trim())
                 .tag(this)
                 .execute(new StringCallback() {
@@ -124,10 +169,11 @@ private TextView tv_allin,tv_name;
                             Log.d("提现",json.toString()+"     "+ amount);
                             if (json.getInt("status") == 200) {
                                 finish();
+                                Toast.makeText(ConfirmWithdrawActivity.this, "提现成功", Toast.LENGTH_SHORT).show();
                             } else {
-
+                                Toast.makeText(ConfirmWithdrawActivity.this, "提现失败", Toast.LENGTH_SHORT).show();
                             }
-                            Toast.makeText(ConfirmWithdrawActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

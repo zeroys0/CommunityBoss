@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/x1022"
+        android:layout_height="@dimen/y725"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/dialog_login"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/y72"
+            android:text="商户编码"
+            android:textColor="#5B5B5B"
+            android:id="@+id/tv_title"
+            android:textSize="@dimen/x44" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y1"
+            android:layout_marginTop="@dimen/y72"
+            android:background="#EDEDED" />
+
+      <EditText
+          android:layout_width="@dimen/x879"
+          android:layout_height="@dimen/y135"
+          android:layout_gravity="center_horizontal"
+          android:hint="输入商户编码"
+          android:textColor="@color/text_black"
+          android:textColorHint="@color/text_grey"
+          android:background="@null"
+          android:inputType="number"
+          android:id="@+id/ed_name"
+          />
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="@dimen/x600"
+            android:layout_height="@dimen/y134"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/y72"
+            android:layout_marginTop="@dimen/y72"
+            android:background="@mipmap/btn_button_blue"
+            android:textColor="@color/white"
+            android:text="确定" />
+    </LinearLayout>
+</LinearLayout>

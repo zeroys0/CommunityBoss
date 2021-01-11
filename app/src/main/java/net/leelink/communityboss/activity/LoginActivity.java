@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -23,13 +24,17 @@ import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,7 +70,7 @@ import io.reactivex.functions.Consumer;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 private TabLayout tablayout;
-private TextView getmsmpass_TX,tv_forgot,tv_register,tv_text;
+private TextView getmsmpass_TX,tv_forgot,tv_register,tv_text,tv_code;
 private EditText ed_phone,ed_password,ed_code;
 private Button btn_login;
 private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
@@ -79,7 +84,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         createProgressBar();
         init();
         initLogin();
-        quickLogin();
+
     }
 
 
@@ -95,6 +100,8 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         tv_register.setOnClickListener(this);
         btn_login = findViewById(R.id.btn_login);
         btn_login.setOnClickListener(this);
+        tv_code = findViewById(R.id.tv_code);
+        tv_code.setOnClickListener(this);
         tablayout = findViewById(R.id.tablayout);
         tablayout.addTab(tablayout.newTab().setText("手机验证码登录"));
         tablayout.addTab(tablayout.newTab().setText("账号密码登录"));
@@ -142,7 +149,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
             public void onClick(View widget) {
                 Intent intent = new Intent(LoginActivity.this,WebActivity.class);
                 intent.putExtra("type","distribution");
-                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambProtocol.html");
+                intent.putExtra("url","http://www.llky.net.cn/store/protocol.html");
                 startActivity(intent);
             }
             @Override
@@ -157,7 +164,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
                 Intent intent = new Intent(LoginActivity.this,WebActivity.class);
                 intent.putExtra("type","distribution");
-                intent.putExtra("url","http://api.iprecare.com:6280/h5/ambPrivacyPolicy.html");
+                intent.putExtra("url","http://www.llky.net.cn/store/privacyPolicy.html");
                 startActivity(intent);
             }
             @Override
@@ -168,28 +175,16 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         }, 16, 24, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_text.append(spannableString);
         tv_text.setMovementMethod(LinkMovementMethod.getInstance());  //很重要，点击无效就是由于没有设置这个引起
+
     }
 
     public void initLogin(){
         SharedPreferences sp = getSharedPreferences("sp",0);
-//        if(sp.getString("AppToken","")==null ||sp.getString("AppToken","").equals("") ) {
-//
-//        } else {
-//
-//                CommunityBossApplication.token = sp.getString("AppToken", "");
-//                JSONObject jsonObject = Acache.get(this).getAsJSONObject("storeInfo");
-//                if(jsonObject!=null) {
-//                    Gson gson = new Gson();
-//                    CommunityBossApplication.storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
-//                    Intent intent = new Intent(this, MainActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//
-//        }
+        String ip = sp.getString("ip","");
+        Urls.IP = ip;
         if(!sp.getString("secretKey","").equals("")) {
-
-        };
+            quickLogin();
+        }
 
 
     }
@@ -219,6 +214,10 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                 Intent intent1 = new Intent(this,ChangePasswordActivity.class);
                 startActivity(intent1);
                 break;
+            case R.id.tv_code:      //商户编码
+                backgroundAlpha(0.5f);
+                showPopup();
+                break;
 
                 default:
                     break;
@@ -227,8 +226,12 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     //短信验证码登录
     public void loginByCode(){
+        if(Urls.IP.equals("")) {
+            Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mProgressBar.setVisibility(View.VISIBLE);
-        OkGo.<String>post(Urls.LOGINBYCODE)
+        OkGo.<String>post(Urls.getInstance().LOGINBYCODE)
                 .tag(this)
                 .params("telephone", ed_phone.getText().toString().trim())
                 .params("code",ed_code.getText().toString().trim())
@@ -298,9 +301,14 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     //账号密码登录
     public void login(){
+        if(Urls.IP.equals("")) {
+            Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mProgressBar.setVisibility(View.VISIBLE);
-        Log.e( "login: ",JPushInterface.getRegistrationID(LoginActivity.this) );
-        OkGo.<String>post(Urls.LOGIN)
+        Log.e( "login: ",Urls.IP );
+        Log.e( "login: ",Urls.getInstance().LOGIN);
+        OkGo.<String>post(Urls.getInstance().LOGIN)
                 .tag(this)
                 .params("telephone", ed_phone.getText().toString().trim())
                 .params("password",ed_password.getText().toString().trim())
@@ -376,9 +384,13 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     }
 
     public void quickLogin() {
+        if(Urls.IP.equals("")) {
+            Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final SharedPreferences sp = getSharedPreferences("sp", 0);
         if (!sp.getString("secretKey", "").equals("")) {
-            OkGo.<String>post(Urls.QUICKLOGIN)
+            OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                     .params("telephone", sp.getString("telephone", ""))
                     .params("secretKey", sp.getString("secretKey", ""))
                     .params("deviceToken", JPushInterface.getRegistrationID(this))
@@ -438,9 +450,13 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     //发送短信验证码
     public void sendSmsCode(){
+        if(Urls.IP.equals("")) {
+            Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(!ed_phone.getText().toString().trim().equals("")){
             mProgressBar.setVisibility(View.VISIBLE);
-            OkGo.<String>post(Urls.SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
+            OkGo.<String>post(Urls.getInstance().SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
@@ -624,6 +640,118 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
             return imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
         return false;
+    }
+
+
+    @SuppressLint("WrongConstant")
+    public void showPopup(){
+        View popview = LayoutInflater.from(LoginActivity.this).inflate(R.layout.pop_partner_code, null);
+        final EditText ed_name = popview.findViewById(R.id.ed_name);
+        Button btn_confirm = popview.findViewById(R.id.btn_confirm);
+        final PopupWindow popuPhoneW = new PopupWindow(popview,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        popuPhoneW.setFocusable(true);
+        popuPhoneW.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+        popuPhoneW.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        popuPhoneW.setOutsideTouchable(true);
+        popuPhoneW.setBackgroundDrawable(new BitmapDrawable());
+        popuPhoneW.setOnDismissListener(new LoginActivity.poponDismissListener());
+        popuPhoneW.showAtLocation(tv_code, Gravity.CENTER, 0, 0);
+        SharedPreferences sp = getSharedPreferences("sp",0);
+        ed_name.setText(sp.getString("code",""));
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!ed_name.getText().toString().equals("")) {
+                    String s = ed_name.getText().toString().trim();
+                    getCode(s);
+                    popuPhoneW.dismiss();
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 根据商户编码获取地址
+     */
+    public void getCode(final String code){
+
+        OkGo.<String>get(Urls.PARTNER_CODE+code)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("根据商户编码获取url", json.toString());
+                            if (json.getInt("status") == 200) {
+                                if(!json.isNull("data")) {
+                                    json = json.getJSONObject("data");
+                                    SharedPreferences sp = getSharedPreferences("sp", 0);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putString("ip", json.getString("apiUrl"));
+                                    editor.putString("h5_ip", json.getString("h5Url"));
+                                    editor.putString("ws", json.getString("websocketUrl"));
+                                    editor.putString("c_ip", json.getString("clientInfoUrl"));
+                                    Urls.IP = json.getString("apiUrl");
+                                    Urls.H5_IP = json.getString("h5Url");
+                                    editor.putString("code",code);
+                                    Toast.makeText(LoginActivity.this, "切换商户成功", Toast.LENGTH_SHORT).show();
+                                    Log.e( "login: ",Urls.IP );
+                                    editor.apply();
+                                }else {
+                                    Toast.makeText(mContext, "商户编码错误", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(LoginActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+
+                        super.onError(response);
+                        Toast.makeText(LoginActivity.this, "网络不给力啊", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     *
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha; // 0.0-1.0
+        if (bgAlpha == 1) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);//不移除该Flag的话,在有视频的页面上的视频会出现黑屏的bug
+        } else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);//此行代码主要是解决在华为手机上半透明效果无效的bug
+        }
+        getWindow().setAttributes(lp);
+    }
+
+    /**
+     * 添加新笔记时弹出的popWin关闭的事件，主要是为了将背景透明度改回来
+     *
+     * @author cg
+     */
+    class poponDismissListener implements PopupWindow.OnDismissListener {
+
+        @Override
+        public void onDismiss() {
+            // TODO Auto-generated method stub
+            // Log.v("List_noteTypeActivity:", "我是关闭事件");
+            backgroundAlpha(1f);
+        }
     }
 
 }

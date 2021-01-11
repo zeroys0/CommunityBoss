@@ -70,9 +70,13 @@ private int time = 60;
 
     //注册
     public void regist(){
+        if(Urls.IP.equals("")) {
+            Toast.makeText(RegisterActivity.this, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
        if(!ed_code.getText().toString().trim().equals("")){
             if(ed_password.getText().toString().trim().equals(ed_confirm_password.getText().toString().trim())){
-                OkGo.<String>post(Urls.REGIST)
+                OkGo.<String>post(Urls.getInstance().REGIST)
                         .tag(this)
                         .params("telephone", ed_phone.getText().toString().trim())
                         .params("password",ed_password.getText().toString().trim())
@@ -107,8 +111,12 @@ private int time = 60;
 
     //发送短信验证码
     public void sendSmsCode(){
+        if(Urls.IP.equals("")) {
+            Toast.makeText(RegisterActivity.this, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(!ed_phone.getText().toString().trim().equals("")){
-            OkGo.<String>post(Urls.SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
+            OkGo.<String>post(Urls.getInstance().SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override

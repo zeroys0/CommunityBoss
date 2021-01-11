@@ -67,6 +67,11 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
                 holder.tv_state.setText("已完成");
                 holder.btn_confirm.setVisibility(View.INVISIBLE);
                 break;
+            case 11:
+                holder.tv_state.setText("用户自提");
+                holder.btn_confirm.setVisibility(View.VISIBLE);
+                holder.btn_confirm.setText("确认自提");
+                break;
             default:
                     break;
         }

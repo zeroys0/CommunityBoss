@@ -56,7 +56,7 @@ Context context;
     }
 
     public void initData(){
-        OkGo.<String>get(Urls.FINDSERWORKBYUSERID)
+        OkGo.<String>get(Urls.getInstance().FINDSERWORKBYUSERID)
                 .params("userId",getIntent().getStringExtra("userId"))
                 .params("pageNum",1)
                 .params("pageSize",10)

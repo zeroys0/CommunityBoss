@@ -51,7 +51,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         try {
             JSONObject json = jsonArray.getJSONObject(position);
             if(json.has("elderlyImgPath")) {
-                Glide.with(context).load(Urls.IMG_URL + json.getString("elderlyImgPath")).into(holder.img_head);
+                Glide.with(context).load(Urls.getInstance().IMG_URL + json.getString("elderlyImgPath")).into(holder.img_head);
             }
             holder.tv_orderId.setText("订单编号:"+json.getString("id"));
             holder.tv_phone.setText(json.getString("telephone"));
@@ -75,14 +75,14 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
                 holder.rl_img.setVisibility(View.VISIBLE);
                 if(json.has("image2_path")){
                     holder.ll_images.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(Urls.IMG_URL+json.getString("image1_path")).into(holder.img0);
-                    Glide.with(context).load(Urls.IMG_URL+json.getString("image2_path")).into(holder.img1);
+                    Glide.with(context).load(Urls.getInstance().IMG_URL+json.getString("image1_path")).into(holder.img0);
+                    Glide.with(context).load(Urls.getInstance().IMG_URL+json.getString("image2_path")).into(holder.img1);
                     if(json.has("image3_path")){
-                        Glide.with(context).load(Urls.IMG_URL+json.getString("image3_path")).into(holder.img2);
+                        Glide.with(context).load(Urls.getInstance().IMG_URL+json.getString("image3_path")).into(holder.img2);
                     }
                 } else {
                     holder.img_main.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(Urls.IMG_URL+json.getString("image1_path")).into(holder.img_main);
+                    Glide.with(context).load(Urls.getInstance().IMG_URL+json.getString("image1_path")).into(holder.img_main);
                 }
             }
             if(json.has("reply")){

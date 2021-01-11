@@ -87,7 +87,7 @@ private List<OrderBean> list = new ArrayList<>();
 
         //获取订单列表
 
-            OkGo.<String>get(Urls.ORDERLIST)
+            OkGo.<String>get(Urls.getInstance().ORDERLIST)
                     .params("state",2)
                     .params("pageNum",page)
                     .params("pageSize",10)
@@ -113,7 +113,7 @@ private List<OrderBean> list = new ArrayList<>();
                                 } else if(json.getInt("status") == 505) {
                                     final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                     if (!sp.getString("secretKey", "").equals("")) {
-                                        OkGo.<String>post(Urls.QUICKLOGIN)
+                                        OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                                                 .params("telephone", sp.getString("telephone", ""))
                                                 .params("secretKey", sp.getString("secretKey", ""))
                                                 .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
@@ -182,7 +182,7 @@ private List<OrderBean> list = new ArrayList<>();
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
-        OkGo.<String>post(Urls.ORDERSTATE+"?orderId="+list.get(position).getOrderId()+"&state=3")
+        OkGo.<String>post(Urls.getInstance().ORDERSTATE+"?orderId="+list.get(position).getOrderId()+"&state=3")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

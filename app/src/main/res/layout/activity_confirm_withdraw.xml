@@ -20,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/y44"
             android:layout_marginTop="@dimen/y80"
-            android:text="确认转出"
+            android:text="余额提现"
             android:textColor="#ffffff"
             android:textSize="@dimen/x58" />
         <RelativeLayout
@@ -36,26 +36,85 @@
                 android:layout_marginTop="@dimen/y95"
                 android:src="@mipmap/back" />
         </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提现记录"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/y95"
+            android:textColor="@color/white"
+            android:layout_marginRight="@dimen/x30"
+            android:id="@+id/tv_draw_history"
+            />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y173">
+        android:layout_height="@dimen/y189"
+        android:id="@+id/rl_default">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/bank"
             android:layout_marginLeft="@dimen/x35"
-            android:layout_marginTop="@dimen/y32"
+            android:layout_centerVertical="true"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/x45"
+            android:textSize="@dimen/x54"
+            android:textColor="@color/text_black"
+            android:layout_centerVertical="true"
+            android:text="选择银行卡"
+            android:layout_marginLeft="@dimen/x147"
+            android:layout_marginTop="@dimen/y20"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/arrow_right"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x45"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y189"
+        android:id="@+id/rl_card"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/bank"
+            android:layout_marginLeft="@dimen/x35"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x54"
             android:textColor="@color/text_black"
             android:id="@+id/tv_name"
             android:text="中国农业银行"
-            android:layout_marginLeft="@dimen/x195"
-            android:layout_centerVertical="true"/>
+            android:layout_marginLeft="@dimen/x147"
+            android:layout_marginTop="@dimen/y20"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x51"
+            android:textColor="#666666"
+            android:id="@+id/tv_card_number"
+            android:text="尾号2532"
+            android:layout_marginLeft="@dimen/x147"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/y20"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/arrow_right"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x45"
+            />
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -65,7 +124,15 @@
         android:layout_marginRight="@dimen/x32"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y294">
+        android:layout_height="@dimen/y426">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x54"
+            android:textColor="@color/text_black"
+            android:text="提现金额(元)"
+            android:layout_marginLeft="@dimen/x47"
+            android:layout_marginTop="@dimen/y20"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,26 +143,39 @@
         android:layout_centerVertical="true"
         />
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y200"
             android:textColor="@color/text_black"
             android:id="@+id/ed_amount"
             android:inputType="numberDecimal"
-            android:textSize="@dimen/x117"
+            android:textSize="@dimen/x54"
             android:background="@null"
             android:hint="请输入提现金额"
             android:textColorHint="@color/grey"
             android:layout_marginLeft="@dimen/x150"
+            android:layout_centerVertical="true"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x54"
+            android:textColor="@color/text_grey"
+            android:text="可提现余额24.8元"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/y30"
+            android:layout_marginLeft="@dimen/x47"
+            android:id="@+id/tv_balance"
+            android:layout_marginTop="@dimen/y20"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/x45"
             android:textColor="@color/blue"
             android:id="@+id/tv_allin"
-            android:text="全部"
+            android:text="全部提现"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/y30"
             android:layout_marginRight="@dimen/x36"/>
 
     </RelativeLayout>
@@ -110,7 +190,7 @@
         android:layout_width="@dimen/x1014"
         android:layout_height="@dimen/y129"
         android:background="@drawable/btn_confirm"
-        android:text="完成"
+        android:text="确认提现"
         android:id="@+id/btn_confirm"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/y50"

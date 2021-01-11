@@ -57,7 +57,7 @@ private RelativeLayout rl_back;
     }
 
     public void initData(){
-        OkGo.<String>get(Urls.FINDSERBYUSERID)
+        OkGo.<String>get(Urls.getInstance().FINDSERBYUSERID)
                 .params("pageNum",page)
                 .params("pageSize",10)
                 .params("userId",getIntent().getStringExtra("id"))
@@ -100,7 +100,7 @@ private RelativeLayout rl_back;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        OkGo.<String>post(Urls.SERPRODUCT)
+        OkGo.<String>post(Urls.getInstance().SERPRODUCT)
                 .upJson(jsonObject)
                 .tag(this)
                 .execute(new StringCallback() {

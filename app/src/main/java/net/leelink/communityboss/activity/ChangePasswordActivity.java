@@ -68,7 +68,11 @@ private Button btn_confirm;
 
     //修改密码(忘记密码)
     public void resetPassword(){
-        OkGo.<String>post(Urls.CHANGEPASSWORD)
+        if(Urls.IP.equals("")) {
+            Toast.makeText(ChangePasswordActivity.this, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        OkGo.<String>post(Urls.getInstance().CHANGEPASSWORD)
                 .tag(this)
                 .params("telephone", ed_phone.getText().toString().trim())
                 .params("smsCode",ed_code.getText().toString().trim())
@@ -95,8 +99,12 @@ private Button btn_confirm;
 
     //发送短信验证码
     public void sendSmsCode(){
+        if(Urls.IP.equals("")) {
+            Toast.makeText(ChangePasswordActivity.this, "请输入商户编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(!ed_phone.getText().toString().trim().equals("")){
-            OkGo.<String>post(Urls.SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
+            OkGo.<String>post(Urls.getInstance().SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override

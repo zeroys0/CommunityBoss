@@ -60,7 +60,7 @@ private StaffCheckAdapter staffCheckAdapter;
     }
 
     public void initData(){
-        OkGo.<String>get(Urls.VERTIFYSER)
+        OkGo.<String>get(Urls.getInstance().VERTIFYSER)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

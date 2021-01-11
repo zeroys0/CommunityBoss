@@ -104,7 +104,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
     }
 
     public void initData() {
-        OkGo.<String>get(Urls.PRODUCT)
+        OkGo.<String>get(Urls.getInstance().PRODUCT)
                 .params("pageNum", 1)
                 .params("pageSize", 100)
                 .tag(this)
@@ -161,7 +161,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         }
         id = list.get(position).getId();
         btn_confirm.setText("提交");
-        Glide.with(this).load(Urls.IMG_URL + list.get(position).getImgPath()).into(img);
+        Glide.with(this).load(Urls.getInstance().IMG_URL + list.get(position).getImgPath()).into(img);
         popupWindow.showAtLocation(service_list, Gravity.CENTER, 0, 0);
         backgroundAlpha(0.5f);
     }
@@ -222,7 +222,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
             Toast.makeText(this, "请上传商品图片", Toast.LENGTH_SHORT).show();
             return;
         }
-        OkGo.<String>post(Urls.PRODUCT)
+        OkGo.<String>post(Urls.getInstance().PRODUCT)
                 .params("around", ed_around.getText().toString().trim())
                 .params("damagePrice", ed_against_ptice.getText().toString().trim())
                 .params("remark", ed_explain.getText().toString().trim())
@@ -269,7 +269,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         params.put("unitPrice", ed_price.getText().toString().trim());
         params.put("unit", ed_unit.getText().toString().trim());
         params.put("id", id);
-        OkGo.<String>post(Urls.PRODUCTIMG)
+        OkGo.<String>post(Urls.getInstance().PRODUCTIMG)
                 .params(params)
                 .tag(this)
                 .execute(new StringCallback() {

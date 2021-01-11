@@ -62,7 +62,7 @@ private RecyclerView refund_list;
     public void initData(){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST)
+        OkGo.<String>get(Urls.getInstance().ORDERLIST)
                 .params("state","8,9,10")
                 .params("pageNum",1)
                 .params("pageSize",5)
@@ -114,7 +114,7 @@ private RecyclerView refund_list;
     }
 
     public void operation(final int position , int operation){
-        OkGo.<String>post(Urls.REFUND+"/"+list.get(position).getOrderId()+"/"+operation)
+        OkGo.<String>post(Urls.getInstance().REFUND+"/"+list.get(position).getOrderId()+"/"+operation)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

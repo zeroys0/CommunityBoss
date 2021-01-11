@@ -25,10 +25,12 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.activity.BalanceActivity;
 import net.leelink.communityboss.activity.BoundaryActivity;
 import net.leelink.communityboss.activity.ChangePhoneActivity;
 import net.leelink.communityboss.activity.CommentListActivity;
 import net.leelink.communityboss.activity.IncomeActivity;
+import net.leelink.communityboss.activity.IncomeListActicity;
 import net.leelink.communityboss.activity.InformationActivity;
 import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.activity.ManageListActivity;
@@ -51,7 +53,7 @@ import org.json.JSONObject;
 import cn.jpush.android.api.JPushInterface;
 
 public class HsMineFragment extends BaseFragment implements View.OnClickListener {
-    private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary;
+    private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary,rl_balance;
     private ImageView img_head,img_change,img_setting;
     private TextView tv_income,tv_order_number,tv_phone,tv_name;
     private TwinklingRefreshLayout refreshLayout;
@@ -91,16 +93,18 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
         img_setting.setOnClickListener(this);
         rl_boundary = view.findViewById(R.id.rl_boundary);
         rl_boundary.setOnClickListener(this);
+        rl_balance = view.findViewById(R.id.rl_balance);
+        rl_balance.setOnClickListener(this);
     }
 
     public void initdata(){
         if(CommunityBossApplication.storeInfo.getStoreImg() != null) {
-            Glide.with(this).load(Urls.IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
+            Glide.with(this).load(Urls.getInstance().IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
         }
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
         tv_phone.setText(CommunityBossApplication.storeInfo.getOrderPhone());
 
-        OkGo.<String>get(Urls.PROVIDERINFO+"/"+Integer.valueOf(CommunityBossApplication.storeInfo.getId()))
+        OkGo.<String>get(Urls.getInstance().PROVIDERINFO+"/"+Integer.valueOf(CommunityBossApplication.storeInfo.getId()))
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -113,19 +117,19 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
                                 json = json.getJSONObject("data");
                                 Gson gson = new Gson();
                                 myInfoBean = gson.fromJson(json.toString(), MyInfoBean.class);
+                                tv_order_number.setText(json.getString("todayOrderNum"));
                                 if(json.getString("todayAmount").equals("null")){
-                                    tv_income.setText("今日收入: ￥"+0);
+                                    tv_income.setText(0);
                                 } else {
-                                    tv_income.setText("今日收入: ￥"+json.getString("todayAmount"));
+                                    tv_income.setText(json.getString("todayAmount"));
                                 }
-                                tv_order_number.setText("今日订单: "+json.getString("todayOrderNum")+"单");
                                 if(json.has("store_img") ){
-                                    Glide.with(getContext()).load(Urls.IMG_URL+json.get("store_img")).into(img_head);
+                                    Glide.with(getContext()).load(Urls.getInstance().IMG_URL+json.get("store_img")).into(img_head);
                                 }
                             }else if(json.getInt("status") == 505) {
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
-                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                    OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                                             .params("telephone", sp.getString("telephone", ""))
                                             .params("secretKey", sp.getString("secretKey", ""))
                                             .params("deviceToken", JPushInterface.getRegistrationID(getContext()))
@@ -191,7 +195,7 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
                 startActivity(intent2);
                 break;
             case R.id.rl_income:    //收入统计
-                Intent intent3 = new Intent(getContext(), HsIncomeActivity.class);
+                Intent intent3 = new Intent(getContext(), IncomeListActicity.class);
                 startActivity(intent3);
                 break;
             case R.id.rl_refund:    //退款订单
@@ -213,6 +217,10 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
             case R.id.rl_boundary:
                 Intent intent8 = new Intent(getContext(), StaffManageActivity.class);
                 startActivity(intent8);
+                break;
+            case R.id.rl_balance:
+                Intent intent9 = new Intent(getContext(), BalanceActivity.class);
+                startActivity(intent9);
                 break;
             default:
                 break;

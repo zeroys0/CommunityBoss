@@ -76,7 +76,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
     public void initData(final int page){
         //获取订单列表
 
-        OkGo.<String>get(Urls.ORDERLIST)
+        OkGo.<String>get(Urls.getInstance().ORDERLIST)
                 .params("state","6,7")
                 .params("pageNum",page)
                 .params("pageSize",10)
@@ -102,7 +102,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
                             }else if(json.getInt("status") == 505) {
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
-                                    OkGo.<String>post(Urls.QUICKLOGIN)
+                                    OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
                                             .params("telephone", sp.getString("telephone", ""))
                                             .params("secretKey", sp.getString("secretKey", ""))
                                             .params("deviceToken", JPushInterface.getRegistrationID(getContext()))

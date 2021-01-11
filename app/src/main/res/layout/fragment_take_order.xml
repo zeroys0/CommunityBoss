@@ -21,6 +21,16 @@
             android:text="已接订单"
             android:textColor="#ffffff"
             android:textSize="@dimen/x58" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自提订单"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x30"
+            android:layout_marginTop="@dimen/y104"
+            android:textColor="@color/white"
+            android:id="@+id/tv_only"
+            />
     </RelativeLayout>
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"

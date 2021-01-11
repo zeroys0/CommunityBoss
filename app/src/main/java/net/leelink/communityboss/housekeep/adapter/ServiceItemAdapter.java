@@ -65,7 +65,7 @@ public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.
             holder.tv_status.setText("上架");
         }
 
-        Glide.with(context).load(Urls.IMG_URL+list.get(position).getImgPath()).into(holder.img);
+        Glide.with(context).load(Urls.getInstance().IMG_URL+list.get(position).getImgPath()).into(holder.img);
     }
 
     @Override

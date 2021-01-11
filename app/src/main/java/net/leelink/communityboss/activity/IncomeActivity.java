@@ -88,7 +88,7 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
     }
 
     public void initdata(){
-        OkGo.<String>get(Urls.STOREINCOME)
+        OkGo.<String>get(Urls.getInstance().STOREINCOME)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -150,7 +150,7 @@ private TextView tv_income,tv_open_time,tv_close_time,tv_total_income,tv_royalty
     }
 
     public void storeIncome(){
-        OkGo.<String>get(Urls.STOREINCOME)
+        OkGo.<String>get(Urls.getInstance().STOREINCOME)
                 .params("startTime",tv_open_time.getText().toString().trim() +" 00:00")
                 .params("endTime",tv_close_time.getText().toString().trim()+" 23:59")
                 .tag(this)

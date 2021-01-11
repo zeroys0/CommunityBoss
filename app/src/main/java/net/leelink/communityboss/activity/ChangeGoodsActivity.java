@@ -105,7 +105,7 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
             cb_up.setChecked(true);
         }
 
-        Glide.with(ChangeGoodsActivity.this).load(Urls.IMG_URL + url).into(img_head);
+        Glide.with(ChangeGoodsActivity.this).load(Urls.getInstance().IMG_URL + url).into(img_head);
 
         //将网络地址转化为file
 //        new Thread(new Runnable() {
@@ -191,7 +191,7 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
             e.printStackTrace();
         }
         Log.e( "state: ",state+"" );
-        OkGo.<String>post(Urls.COMMODITYIMG )
+        OkGo.<String>post(Urls.getInstance().COMMODITYIMG )
                 .tag(this)
                 .params("id",getIntent().getStringExtra("Id"))
                 .params("remark", ed_detail.getText().toString().trim())
@@ -248,7 +248,7 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
 
     public void delete() {
 
-        OkGo.<String>delete(Urls.COMMODITY + "?appToken=" + CommunityBossApplication.token + "&commodityIds=" + commodityId)
+        OkGo.<String>delete(Urls.getInstance().COMMODITY + "?appToken=" + CommunityBossApplication.token + "&commodityIds=" + commodityId)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override

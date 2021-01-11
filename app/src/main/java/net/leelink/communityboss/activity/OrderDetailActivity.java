@@ -52,7 +52,7 @@ private String orderId;
 private RatingBar rt_attitude,rt_taste,rt_hygiene;
 private EditText ed_reply;
 private ImageView img_head,img_main,img0,img1,img2;
-private LinearLayout ll_comment,ll_images;
+private LinearLayout ll_comment,ll_images,ll_connect,ll_adress;
 private int type;
 private Button btn_confirm;
 private RelativeLayout rl_back,rl_img;
@@ -82,6 +82,9 @@ private Context context;
         tv_refundRecord = findViewById(R.id.tv_refundRecord);
         btn_confirm = findViewById(R.id.btn_confirm);
         btn_confirm.setOnClickListener(this);
+        ll_connect = findViewById(R.id.ll_connect);
+        ll_adress = findViewById(R.id.ll_adress);
+        ll_connect = findViewById(R.id.ll_connect);
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
         type = getIntent().getIntExtra("type",0);
@@ -105,6 +108,11 @@ private Context context;
         } else if(type ==4){
             ll_comment.setVisibility(View.GONE);
             tv_state.setText("退款订单");
+        } else  if(type ==5) {
+            ll_comment.setVisibility(View.GONE);
+            tv_state.setText("已出发");
+            ll_adress.setVisibility(View.GONE);
+            ll_connect.setVisibility(View.GONE);
         }
         tv_store_name = findViewById(R.id.tv_store_name);
     }
@@ -112,7 +120,7 @@ private Context context;
     public void initData(){
         final String orderId = getIntent().getStringExtra("orderId");
         tv_orderid.setText(orderId);
-        OkGo.<String>get(Urls.ORDERDETAILS+"/"+ orderId)
+        OkGo.<String>get(Urls.getInstance().ORDERDETAILS+"/"+ orderId)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -157,7 +165,7 @@ private Context context;
                                     rt_attitude.setSelectedNumber(json.getInt("total_star"));
                                     rt_taste.setSelectedNumber(json.getInt("product_star"));
                                     rt_hygiene.setSelectedNumber(json.getInt("taste_star"));
-                                    Glide.with(OrderDetailActivity.this).load(Urls.IMG_URL+json.getString("head_img_path")).into(img_head);
+                                    Glide.with(OrderDetailActivity.this).load(Urls.getInstance().IMG_URL+json.getString("head_img_path")).into(img_head);
                                     tv_comment.setText(json.getString("feed_bank_content"));
                                     tv_userphone.setText(json.getString("telephone"));
                                     if(json.has("image1_path")) {
@@ -165,14 +173,14 @@ private Context context;
                                         if(json.has("image2_path")){
                                             img_main.setVisibility(View.GONE);
                                             ll_images.setVisibility(View.VISIBLE);
-                                            Glide.with(context).load(Urls.IMG_URL+json.getString("image1_path")).into(img0);
-                                            Glide.with(context).load(Urls.IMG_URL+json.getString("image2_path")).into(img1);
+                                            Glide.with(context).load(Urls.getInstance().IMG_URL+json.getString("image1_path")).into(img0);
+                                            Glide.with(context).load(Urls.getInstance().IMG_URL+json.getString("image2_path")).into(img1);
                                             if(json.has("image3_path")){
-                                                Glide.with(context).load(Urls.IMG_URL+json.getString("image3_path")).into(img2);
+                                                Glide.with(context).load(Urls.getInstance().IMG_URL+json.getString("image3_path")).into(img2);
                                             }
                                         } else {
                                             img_main.setVisibility(View.VISIBLE);
-                                            Glide.with(context).load(Urls.IMG_URL + json.getString("image1_path")).into(img_main);
+                                            Glide.with(context).load(Urls.getInstance().IMG_URL + json.getString("image1_path")).into(img_main);
                                         }
                                     }
                                     if(json.has("reply")){
@@ -239,31 +247,8 @@ private Context context;
     }
 
     public void takeOrder(int operation){
-//        OkGo.<String>post(Urls.ORDEROPERATION)
-//                .params("orderId",tv_orderid.getText().toString().trim())
-//                .params("operation",operation)
-//                .tag(this)
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onSuccess(Response<String> response) {
-//                        try {
-//                            String body = response.body();
-//                            body = body.substring(1,body.length()-1);
-//                            JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
-//                            Log.d("确认订单",json.toString());
-//                            if (json.getInt("ResultCode") == 200) {
-//                                Toast.makeText(OrderDetailActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
-//                                    btn_confirm.setVisibility(View.GONE);
-//                            } else {
-//                                Toast.makeText(OrderDetailActivity.this, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
-//                            }
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-        OkGo.<String>post(Urls.ORDERSTATE+"?orderId="+tv_orderid.getText().toString().trim()+"&state=3")
+
+        OkGo.<String>post(Urls.getInstance().ORDERSTATE+"?orderId="+tv_orderid.getText().toString().trim()+"&state=3")
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -288,7 +273,7 @@ private Context context;
     }
 
     public void reply(){
-        OkGo.<String>get(Urls.REPLYAPPRAISE)
+        OkGo.<String>get(Urls.getInstance().REPLYAPPRAISE)
                 .params("orderId",tv_orderid.getText().toString().trim())
                 .params("replyContent",ed_reply.getText().toString().trim())
                 .tag(this)

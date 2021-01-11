@@ -59,7 +59,7 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
         holder.tv_name.setText(list.get(position).getName());
         holder.tv_price.setText("￥"+list.get(position).getUnitPrice());
         holder.tv_detail.setText(list.get(position).getRemark());
-        Glide.with(context).load(Urls.IMG_URL+list.get(position).getProductImgPath()).into(holder.img_head);
+        Glide.with(context).load(Urls.getInstance().IMG_URL+list.get(position).getProductImgPath()).into(holder.img_head);
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -201,7 +201,7 @@ public class ManageGoodsActivity extends BaseActivity implements View.OnClickLis
             e.printStackTrace();
         }
         LoadDialog.start(this);
-        OkGo.<String>post(Urls.COMMODITY)
+        OkGo.<String>post(Urls.getInstance().COMMODITY)
                 .tag(this)
                 .params("remark", ed_detail.getText().toString().trim())
                 .params("name",ed_name.getText().toString().trim())
