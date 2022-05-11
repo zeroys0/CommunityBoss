@@ -1,7 +1,6 @@
 package net.leelink.communityboss.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,8 @@ import net.leelink.communityboss.utils.Urls;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class PreOrderAdapter extends RecyclerView.Adapter<PreOrderAdapter.ViewHolder> {
     private Context context;

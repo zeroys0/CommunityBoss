@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_all_service.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_balance.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_delegate.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_draw_detail.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_draw_history.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_income_list_acticity.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_login.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_manage_goods.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_my_service.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_order_detail.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_refund_list.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_service_item.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_staff_manage.xml" value="0.15677083333333333" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_staff_order.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/fragment_staff_check.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/fragment_take_order.xml" value="0.7540322580645161" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/goods_item.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/popu_category.xml" value="0.19895833333333332" />
+      </map>
+    </option>
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
     <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
     <option name="myNullables">
       <value>
-        <list size="12">
+        <list size="13">
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
           <item index="2" class="java.lang.String" itemvalue="javax.annotation.CheckForNull" />
@@ -18,12 +42,13 @@
           <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableDecl" />
           <item index="10" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableType" />
           <item index="11" class="java.lang.String" itemvalue="com.android.annotations.Nullable" />
+          <item index="12" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.Nullable" />
         </list>
       </value>
     </option>
     <option name="myNotNulls">
       <value>
-        <list size="11">
+        <list size="12">
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
           <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
@@ -35,11 +60,12 @@
           <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullDecl" />
           <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullType" />
           <item index="10" class="java.lang.String" itemvalue="com.android.annotations.NonNull" />
+          <item index="11" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.NonNull" />
         </list>
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="1.8 (14)" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8 (14)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

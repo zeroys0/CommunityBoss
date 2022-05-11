@@ -5,6 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,11 +42,13 @@ import net.leelink.communityboss.activity.ManageListActivity;
 import net.leelink.communityboss.activity.MyServiceActivity;
 import net.leelink.communityboss.activity.RefundListActivity;
 import net.leelink.communityboss.activity.SettingActivity;
+import net.leelink.communityboss.activity.WebActivity;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.MyInfoBean;
 import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.fragment.BaseFragment;
 import net.leelink.communityboss.housekeep.HsIncomeActivity;
+import net.leelink.communityboss.housekeep.HsInformationActivity;
 import net.leelink.communityboss.housekeep.ServiceItemActivity;
 import net.leelink.communityboss.housekeep.StaffManageActivity;
 import net.leelink.communityboss.utils.Acache;
@@ -55,7 +62,7 @@ import cn.jpush.android.api.JPushInterface;
 public class HsMineFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary,rl_balance;
     private ImageView img_head,img_change,img_setting;
-    private TextView tv_income,tv_order_number,tv_phone,tv_name;
+    private TextView tv_income,tv_order_number,tv_phone,tv_name,tv_text;
     private TwinklingRefreshLayout refreshLayout;
     private MyInfoBean myInfoBean;
 
@@ -84,17 +91,49 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
         rl_refund.setOnClickListener(this);
         rl_service = view.findViewById(R.id.rl_service);
         rl_service.setOnClickListener(this);
-        tv_income = view.findViewById(R.id.tv_income);
+        tv_income = view.findViewById(R.id.tv_total_income);
         tv_order_number = view.findViewById(R.id.tv_order_number);
         tv_phone = view.findViewById(R.id.tv_phone);
-        img_change = view.findViewById(R.id.img_change);
-        img_change.setOnClickListener(this);
+        tv_phone.setOnClickListener(this);
         img_setting = view.findViewById(R.id.img_setting);
         img_setting.setOnClickListener(this);
         rl_boundary = view.findViewById(R.id.rl_boundary);
         rl_boundary.setOnClickListener(this);
         rl_balance = view.findViewById(R.id.rl_balance);
         rl_balance.setOnClickListener(this);
+        tv_text = view.findViewById(R.id.tv_text);
+        SpannableString spannableString = new SpannableString("阅读<<用户协议>>以及<<隐私政策>>");
+        spannableString.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("type","distribution");
+                intent.putExtra("url","https://www.llky.net.cn/store/protocol.html");
+                startActivity(intent);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue)); //设置颜色
+            }
+        }, 2, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+
+                Intent intent = new Intent(getContext(),WebActivity.class);
+                intent.putExtra("type","distribution");
+                intent.putExtra("url","https://www.llky.net.cn/store/privacyPolicy.html");
+                startActivity(intent);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(getResources().getColor(R.color.blue)); //设置颜色
+            }
+        }, 12, 20, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_text.append(spannableString);
+        tv_text.setMovementMethod(LinkMovementMethod.getInstance());  //很重要，点击无效就是由于没有设置这个引起
     }
 
     public void initdata(){
@@ -186,8 +225,7 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.rl_info:  //商家信息
-                Intent intent1 = new Intent(getContext(), InformationActivity.class);
-                intent1.putExtra("type","housekeep");
+                Intent intent1 = new Intent(getContext(), HsInformationActivity.class);
                 startActivity(intent1);
                 break;
             case R.id.rl_goods: //服务项目
@@ -206,7 +244,7 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
                 Intent intent5 = new Intent(getContext(), MyServiceActivity.class);
                 startActivity(intent5);
                 break;
-            case R.id.img_change:   //修改电话
+            case R.id.tv_phone:   //修改电话
                 Intent intent6 = new Intent(getContext(), ChangePhoneActivity.class);
                 startActivity(intent6);
                 break;

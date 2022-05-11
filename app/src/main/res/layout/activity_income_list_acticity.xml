@@ -60,7 +60,7 @@
         android:layout_marginTop="@dimen/y20"
         android:id="@+id/tv_month_amount"
         />
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/income_list"

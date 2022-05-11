@@ -94,4 +94,13 @@
         <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="My_CheckBox" parent="@android:style/Widget.Material.CompoundButton.CheckBox">
+        <item name="android:colorControlActivated">@color/text_grey</item>
+        <item name="android:colorControlNormal">@color/grey</item>
+    </style>
+    <declare-styleable name="MaxHeightRecyclerView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+
 </resources>

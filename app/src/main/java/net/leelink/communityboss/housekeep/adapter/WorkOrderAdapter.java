@@ -1,7 +1,7 @@
 package net.leelink.communityboss.housekeep.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class WorkOrderAdapter extends RecyclerView.Adapter<WorkOrderAdapter.ViewHolder> {
     private Context context;
@@ -47,7 +49,7 @@ public class WorkOrderAdapter extends RecyclerView.Adapter<WorkOrderAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(WorkOrderAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(WorkOrderAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         JSONObject jsonObject = null;
         try {
             jsonObject = jsonArray.getJSONObject(position);

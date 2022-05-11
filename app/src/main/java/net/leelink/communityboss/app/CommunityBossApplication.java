@@ -34,7 +34,7 @@ public class CommunityBossApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initJPush();
+
         token = "";
         instance = this;
         storeInfo = new StoreInfo();
@@ -95,5 +95,10 @@ public class CommunityBossApplication extends Application {
     public void initJPush(){
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+    }
+
+
+    public void initSdk(){
+        initJPush();
     }
 }

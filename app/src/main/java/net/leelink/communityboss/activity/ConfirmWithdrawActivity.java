@@ -1,8 +1,7 @@
 package net.leelink.communityboss.activity;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +18,6 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
-import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.utils.Urls;
 
 import org.json.JSONException;

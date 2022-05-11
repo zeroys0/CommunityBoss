@@ -3,11 +3,14 @@ package net.leelink.communityboss.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.LoginActivity;
+import net.leelink.communityboss.app.CommunityBossApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +26,7 @@ public class JPushReceiver extends BroadcastReceiver {
     private String mStrPname;
     private String mStrCname;
     private int type;
+    private Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -34,7 +38,9 @@ public class JPushReceiver extends BroadcastReceiver {
             String regId = bundle
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             System.out.println("1[MyReceiver] 接收Registration Id : " + regId);
-
+            MediaPlayer mediaPlayer;
+            mediaPlayer = MediaPlayer.create(CommunityBossApplication.getInstance(), R.raw.alex);
+            mediaPlayer.start();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
             System.out.println("2[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">乐聆康养生活服务商户端</string>
+    <string name="app_name">乐聆商家版</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -76,4 +76,7 @@
         <item>珞巴族</item>
         <item>基诺族</item>
     </string-array>
+
+    <string name="agreement">请你务必审慎阅读,充分理解"服务协议及隐私政策"条款.包含但不限于:为了提供健康服务.我们需要收集你的设备信息,操作日志等个人信息.你可以在设置中查看,变更,删除个人信息并管理授权.你可阅读《用户协议》及《隐私政策》了解详细信息.如你同意,请点击"同意"开始接受我们的服务.</string>
+
 </resources>

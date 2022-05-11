@@ -1,7 +1,6 @@
 package net.leelink.communityboss.activity;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,10 +12,6 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.Text;
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.cncoderx.wheelview.OnWheelChangedListener;
 import com.cncoderx.wheelview.WheelView;
 

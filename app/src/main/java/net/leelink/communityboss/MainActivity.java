@@ -1,8 +1,7 @@
 package net.leelink.communityboss;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -85,7 +84,6 @@ FragmentManager fm;
         list.add("友鹏财管");
         list.add("阿里发发");
         list.add("新的商店");
-
     }
 
     public void checkVersion() {
@@ -254,4 +252,34 @@ FragmentManager fm;
         }
         return super.onKeyDown(keyCode, event);
     }
+
+//    private TextToSpeech myTTS;   // Define the TTS objecy
+//    private int MY_DATA_CHECK_CODE = 0;
+//
+//    //write the following code in oncreate method or whereever you want to use this
+//    {
+//        myTTS = new TextToSpeech(this, this);
+//
+//        Intent checkTTSIntent = new Intent();
+//        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+//        startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+//        speakWords("Pass the String here");
+//    }
+//
+//    private void speakWords(String speech) {
+//        //speak straight away
+//        //myTTS.setLanguage(Locale.US);
+//        System.out.println(speech + " TTSTTTS");
+//        myTTS.speak(speech, TextToSpeech.LANG_COUNTRY_AVAILABLE, null);
+//    }
+//
+//    public void onInit(int status) {
+//        // TODO Auto-generated method stub
+//        if (status == TextToSpeech.SUCCESS) {
+//            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
+//                myTTS.setLanguage(Locale.US);
+//        } else if (status == TextToSpeech.ERROR) {
+//            Toast.makeText(getApplicationContext(), "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
+//        }
+//    }
 }

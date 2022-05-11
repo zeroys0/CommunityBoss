@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -64,11 +62,13 @@ import java.util.List;
 import cn.jpush.android.api.JPushInterface;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
-    private RelativeLayout rl_comment,rl_info,rl_goods,rl_income,rl_refund,rl_service,rl_boundary,rl_balance,rl_state;
-    private ImageView img_head,img_change,img_setting,img_state;
-    private TextView tv_income,tv_order_number,tv_phone,tv_name,tv_text,tv_state;
+    private RelativeLayout rl_comment, rl_info, rl_goods, rl_income, rl_refund, rl_service, rl_boundary, rl_balance;
+    private ImageView img_head, img_change, img_setting, img_state;
+    private TextView tv_income, tv_order_number, tv_phone, tv_name, tv_text;
     private TwinklingRefreshLayout refreshLayout;
     private MyInfoBean myInfoBean;
+    private boolean open;
+
     @Override
     public void handleCallBack(Message msg) {
 
@@ -77,7 +77,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mine,container,false);
+        View view = inflater.inflate(R.layout.fragment_mine, container, false);
         init(view);
         initdata();
         initRefreshLayout(view);
@@ -85,8 +85,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     }
 
 
-
-    public void init(View view){
+    public void init(View view) {
         tv_name = view.findViewById(R.id.tv_name);
         rl_comment = view.findViewById(R.id.rl_comment);
         rl_comment.setOnClickListener(this);
@@ -103,30 +102,28 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         rl_service = view.findViewById(R.id.rl_service);
         rl_service.setOnClickListener(this);
         tv_income = view.findViewById(R.id.tv_total_income);
-        rl_state = view.findViewById(R.id.rl_state);
-        rl_state.setOnClickListener(this);
         tv_order_number = view.findViewById(R.id.tv_order_number);
         tv_phone = view.findViewById(R.id.tv_phone);
-        img_change = view.findViewById(R.id.img_change);
-        img_change.setOnClickListener(this);
+        tv_phone.setOnClickListener(this);
         img_setting = view.findViewById(R.id.img_setting);
         img_setting.setOnClickListener(this);
         rl_boundary = view.findViewById(R.id.rl_boundary);
         rl_boundary.setOnClickListener(this);
         rl_balance = view.findViewById(R.id.rl_balance);
         rl_balance.setOnClickListener(this);
-        tv_state = view.findViewById(R.id.tv_state);
         img_state = view.findViewById(R.id.img_state);
-        tv_text =view.findViewById(R.id.tv_text);
+        img_state.setOnClickListener(this);
+        tv_text = view.findViewById(R.id.tv_text);
         SpannableString spannableString = new SpannableString("阅读<<用户协议>>以及<<隐私政策>>");
         spannableString.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
                 Intent intent = new Intent(getContext(), WebActivity.class);
-                intent.putExtra("type","distribution");
-                intent.putExtra("url","http://www.llky.net.cn/store/protocol.html");
+                intent.putExtra("type", "distribution");
+                intent.putExtra("url", "https://www.llky.net.cn/store/protocol.html");
                 startActivity(intent);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -137,11 +134,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onClick(View widget) {
 
-                Intent intent = new Intent(getContext(),WebActivity.class);
-                intent.putExtra("type","distribution");
-                intent.putExtra("url","http://www.llky.net.cn/store/privacyPolicy.html");
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("type", "distribution");
+                intent.putExtra("url", "https://www.llky.net.cn/store/privacyPolicy.html");
                 startActivity(intent);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -152,8 +150,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         tv_text.setMovementMethod(LinkMovementMethod.getInstance());  //很重要，点击无效就是由于没有设置这个引起
     }
 
-    public void initdata(){
-        if(CommunityBossApplication.storeInfo.getStoreImg() != null) {
+    public void initdata() {
+        if (CommunityBossApplication.storeInfo.getStoreImg() != null) {
             Glide.with(this).load(Urls.getInstance().IMG_URL + CommunityBossApplication.storeInfo.getStoreImg()).into(img_head);
         }
         tv_name.setText(CommunityBossApplication.storeInfo.getStoreName());
@@ -167,21 +165,21 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("获取个人信息",json.toString());
+                            Log.d("获取个人信息", json.toString());
                             if (json.getInt("status") == 200) {
                                 json = json.getJSONObject("data");
                                 Gson gson = new Gson();
-                                myInfoBean = gson.fromJson(json.toString(),MyInfoBean.class);
+                                myInfoBean = gson.fromJson(json.toString(), MyInfoBean.class);
                                 tv_income.setText(json.getString("todayAmount"));
                                 tv_order_number.setText(json.getString("todayOrderNum"));
-                                if(json.getBoolean("open")) {
-                                    tv_state.setText("营业中");
-                                    img_state.setImageResource(R.mipmap.img_pause);
+                                if (json.getBoolean("open")) {
+                                    open = true;
+                                    img_state.setImageResource(R.mipmap.img_state_open);
                                 } else {
-                                    tv_state.setText("休息中");
-                                    img_state.setImageResource(R.mipmap.img_play);
+                                    open = false;
+                                    img_state.setImageResource(R.mipmap.img_state_rest);
                                 }
-                            } else if(json.getInt("status") == 505) {
+                            } else if (json.getInt("status") == 505) {
                                 final SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                 if (!sp.getString("secretKey", "").equals("")) {
                                     OkGo.<String>post(Urls.getInstance().QUICKLOGIN)
@@ -199,14 +197,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                                         if (json.getInt("status") == 200) {
                                                             JSONObject jsonObject = json.getJSONObject("data");
                                                             Gson gson = new Gson();
-                                                            Acache.get(getContext()).put("storeInfo",jsonObject);
+                                                            Acache.get(getContext()).put("storeInfo", jsonObject);
                                                             StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                                             CommunityBossApplication.storeInfo = storeInfo;
                                                             initdata();
                                                         } else {
                                                             Toast.makeText(getContext(), "登录失效,请重新登录", Toast.LENGTH_SHORT).show();
                                                             Intent intent4 = new Intent(getContext(), LoginActivity.class);
-                                                            SharedPreferences sp = getActivity().getSharedPreferences("sp",0);
+                                                            SharedPreferences sp = getActivity().getSharedPreferences("sp", 0);
                                                             SharedPreferences.Editor editor = sp.edit();
                                                             editor.remove("secretKey");
                                                             editor.remove("telephone");
@@ -222,7 +220,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                                 }
                                             });
                                 }
-                            }else {
+                            } else {
                                 Toast.makeText(getContext(), json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
@@ -234,16 +232,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.rl_comment:   //用户反馈
-                Intent intent = new Intent(getContext(),CommentListActivity.class);
-                intent.putExtra("myInfo",myInfoBean);
+                Intent intent = new Intent(getContext(), CommentListActivity.class);
+                intent.putExtra("myInfo", myInfoBean);
 
                 startActivity(intent);
                 break;
             case R.id.rl_info:  //商家信息
                 Intent intent1 = new Intent(getContext(), InformationActivity.class);
-                intent1.putExtra("type","distribution");
+                intent1.putExtra("type", "distribution");
                 startActivity(intent1);
                 break;
             case R.id.rl_goods: //商家物品
@@ -262,7 +260,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Intent intent5 = new Intent(getContext(), MyServiceActivity.class);
                 startActivity(intent5);
                 break;
-            case R.id.img_change:   //修改电话
+            case R.id.tv_phone:   //修改电话
                 Intent intent6 = new Intent(getContext(), ChangePhoneActivity.class);
                 startActivity(intent6);
                 break;
@@ -278,25 +276,25 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 Intent intent9 = new Intent(getContext(), BalanceActivity.class);
                 startActivity(intent9);
                 break;
-            case R.id.rl_state:
+            case R.id.img_state:
                 changeState();
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
     }
 
-    public void changeState(){
+    public void changeState() {
 
         HttpParams httpParams = new HttpParams();
         final int state;
-        if(tv_state.getText().equals("营业中")) {
+        if (open) {
             state = 0;
         } else {
-         state = 1;
+            state = 1;
         }
-        httpParams.put("state",state);
-        httpParams.put("id",CommunityBossApplication.storeInfo.getId());
+        httpParams.put("state", state);
+        httpParams.put("id", CommunityBossApplication.storeInfo.getId());
         OkGo.<String>post(Urls.getInstance().UPDATESTOREINGO)
                 .tag(this)
                 .params(httpParams)
@@ -308,12 +306,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             JSONObject json = new JSONObject(body);
                             Log.d("修改营业状态", json.toString());
                             if (json.getInt("status") == 200) {
-                                if(state==0) {
-                                    tv_state.setText("休息中");
-                                    img_state.setImageResource(R.mipmap.img_play);
+                                if (state == 0) {
+                                    open = false;
+                                    img_state.setImageResource(R.mipmap.img_state_rest);
                                 } else {
-                                    tv_state.setText("营业中");
-                                    img_state.setImageResource(R.mipmap.img_pause);
+                                    open = true;
+                                    img_state.setImageResource(R.mipmap.img_state_open);
                                 }
                                 Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
 
@@ -326,6 +324,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     }
                 });
     }
+
     public void initRefreshLayout(View view) {
         refreshLayout = (TwinklingRefreshLayout) view.findViewById(R.id.refreshLayout);
         SinaRefreshView headerView = new SinaRefreshView(getContext());

@@ -1,10 +1,7 @@
 package net.leelink.communityboss.housekeep;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -33,13 +30,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaffOrderActivity extends BaseActivity implements View.OnClickListener, OnOrderListener
-{
-RecyclerView order_list;
-private RelativeLayout rl_back;
-private SerWorkAdapter serWorkAdapter;
-private List<SerWorkBean> list = new ArrayList<>();
-Context context;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class StaffOrderActivity extends BaseActivity implements View.OnClickListener, OnOrderListener {
+    RecyclerView order_list;
+    private RelativeLayout rl_back;
+    private SerWorkAdapter serWorkAdapter;
+    private List<SerWorkBean> list = new ArrayList<>();
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,18 +48,18 @@ Context context;
         initData();
     }
 
-    public void init(){
+    public void init() {
         context = this;
         order_list = findViewById(R.id.order_list);
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
     }
 
-    public void initData(){
+    public void initData() {
         OkGo.<String>get(Urls.getInstance().FINDSERWORKBYUSERID)
-                .params("userId",getIntent().getStringExtra("userId"))
-                .params("pageNum",1)
-                .params("pageSize",10)
+                .params("userId", getIntent().getStringExtra("userId"))
+                .params("pageNum", 1)
+                .params("pageSize", 10)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -67,15 +67,16 @@ Context context;
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("已分配订单",json.toString());
+                            Log.d("已分配订单", json.toString());
                             if (json.getInt("status") == 200) {
                                 Gson gson = new Gson();
                                 json = json.getJSONObject("data");
                                 JSONArray jsonArray = json.getJSONArray("list");
-                                List<SerWorkBean> orderBeanlist = gson.fromJson(jsonArray.toString(),new TypeToken<List<SerWorkBean>>(){}.getType());
+                                List<SerWorkBean> orderBeanlist = gson.fromJson(jsonArray.toString(), new TypeToken<List<SerWorkBean>>() {
+                                }.getType());
                                 list.addAll(orderBeanlist);
-                                serWorkAdapter = new SerWorkAdapter(list,context, StaffOrderActivity.this);
-                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+                                serWorkAdapter = new SerWorkAdapter(list, context, StaffOrderActivity.this);
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
                                 order_list.setLayoutManager(layoutManager);
                                 order_list.setAdapter(serWorkAdapter);
                             } else {
@@ -91,7 +92,7 @@ Context context;
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.rl_back:
                 finish();
                 break;

@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.TabLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lcodecore.tkrefreshlayout.Footer.LoadingView;
@@ -51,9 +49,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cn.jpush.android.api.JPushInterface;
-
-import static net.leelink.communityboss.activity.LoginActivity.setIndicator;
 
 public class TakeOrderFragment extends  BaseFragment implements OnOrderListener {
     private RecyclerView list_order;
@@ -84,12 +82,6 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
         tablayout = view.findViewById(R.id.tablayout);
         tablayout.addTab(tablayout.newTab().setText("未派送"));
         tablayout.addTab(tablayout.newTab().setText("已派送"));
-        tablayout.post(new Runnable() {
-            @Override
-            public void run() {
-                setIndicator(tablayout, 36, 36);
-            }
-        });
 
         tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

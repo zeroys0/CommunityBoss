@@ -210,7 +210,7 @@
     android:layout_alignParentRight="true"
     android:orientation="horizontal"
     android:layout_centerVertical="true">
-    <android.support.v7.widget.AppCompatRadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_black"
@@ -218,8 +218,8 @@
         android:id="@+id/cb_up"
         android:text="上架">
 
-    </android.support.v7.widget.AppCompatRadioButton>
-    <android.support.v7.widget.AppCompatRadioButton
+    </androidx.appcompat.widget.AppCompatRadioButton>
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_black"
@@ -227,7 +227,7 @@
         android:id="@+id/cb_down"
         android:text="下架">
 
-    </android.support.v7.widget.AppCompatRadioButton>
+    </androidx.appcompat.widget.AppCompatRadioButton>
 </RadioGroup>
 
     </RelativeLayout>

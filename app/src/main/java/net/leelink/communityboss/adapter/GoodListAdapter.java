@@ -1,8 +1,7 @@
 package net.leelink.communityboss.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,8 @@ import net.leelink.communityboss.bean.GoodListBean;
 import net.leelink.communityboss.utils.Urls;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHolder> {
     private List<GoodListBean> list ;
@@ -50,7 +51,7 @@ public class GoodListAdapter extends RecyclerView.Adapter<GoodListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final GoodListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final GoodListAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         if(type == 1) {
             holder.rl_check.setVisibility(View.VISIBLE);
         } else {

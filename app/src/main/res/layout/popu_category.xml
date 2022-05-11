@@ -3,7 +3,7 @@
     android:layout_width="@dimen/x360"
     android:layout_height="match_parent"
     android:background="#00000000">
-<android.support.v7.widget.RecyclerView
+<androidx.recyclerview.widget.RecyclerView
     android:layout_width="@dimen/x360"
     android:layout_height="wrap_content"
     android:id="@+id/category_list"

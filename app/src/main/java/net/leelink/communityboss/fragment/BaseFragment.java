@@ -7,7 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +21,6 @@ import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.app.CommunityBossApplication;
-import net.leelink.communityboss.bean.MyInfoBean;
 import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;

@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/x42"
         android:textColor="#8e8e8e"
-        android:text="平台将于T+1日内完成资料审核，并将审核结果以短信形式通知您！"
+        android:text="您已申请注册成为商家，平台 将在2~3个工作日内完成商家 审核，请您耐心等待。"
         android:includeFontPadding="false"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/y63"/>

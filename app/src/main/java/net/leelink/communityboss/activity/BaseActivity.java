@@ -1,17 +1,23 @@
 package net.leelink.communityboss.activity;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -34,6 +40,7 @@ import cn.jpush.android.api.JPushInterface;
 
 
 public class BaseActivity extends FragmentActivity {
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,5 +157,72 @@ public class BaseActivity extends FragmentActivity {
                         }
                     }
                 });
+    }
+
+    public void createProgressBar(Context context) {
+
+        //整个Activity布局的最终父布局,参见参考资料
+        FrameLayout rootFrameLayout = (FrameLayout) findViewById(android.R.id.content);
+        FrameLayout.LayoutParams layoutParams =
+                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER;
+        mProgressBar = new ProgressBar(context);
+        mProgressBar.setLayoutParams(layoutParams);
+        mProgressBar.setVisibility(View.GONE);
+        rootFrameLayout.addView(mProgressBar);
+    }
+
+    public void showProgressBar(){
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void stopProgressBar(){
+        mProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideInput(v, ev)) {
+                if (hideInputMethod(this, v)) {
+                    return true; //隐藏键盘时，其他控件不响应点击事件==》注释则不拦截点击事件
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时则不能隐藏
+     *
+     * @param v
+     * @param event
+     * @return
+     */
+    public static boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            int[] leftTop = {0, 0};
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0], top = leftTop[1], bottom = top + v.getHeight(), right = left
+                    + v.getWidth();
+            if (event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom) {
+                // 保留点击EditText的事件
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Boolean hideInputMethod(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            return imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+        return false;
     }
 }

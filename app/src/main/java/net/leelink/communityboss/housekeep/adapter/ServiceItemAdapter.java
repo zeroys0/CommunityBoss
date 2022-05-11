@@ -1,7 +1,7 @@
 package net.leelink.communityboss.housekeep.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,8 @@ import net.leelink.communityboss.bean.ServiceBean;
 import net.leelink.communityboss.utils.Urls;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.ViewHolder> {
     private Context context;
@@ -47,7 +49,7 @@ public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ServiceItemAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(ServiceItemAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.rl_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

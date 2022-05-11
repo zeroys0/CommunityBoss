@@ -3,7 +3,6 @@ package net.leelink.communityboss.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,8 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -47,16 +45,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class InformationActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout rl_back;
-    private TextView tv_done, tv_close_time, tv_address, tv_province, tv_city, tv_local, tv_organ,tv_town,tv_name_c, ed_phone_c, tv_open_time, ed_businessNo, tv_file_name0, tv_file_name1, tv_file_name2, tv_file_name3;
-    private EditText ed_name, ed_phone, ed_address;
+    private TextView tv_done, tv_close_time, tv_address, tv_province, tv_city, tv_local, tv_organ,tv_town,tv_name_c, tv_open_time, ed_businessNo, tv_file_name0, tv_file_name1, tv_file_name2, tv_file_name3,tv_legal_person,tv_organ_city,tv_organ_area;
+    private EditText ed_name, ed_phone, ed_phone_c;
     private ImageView img_store_head, img_publicity, img_license, img_permit;
     private RelativeLayout rl_open_time, rl_close_time;
     private Bitmap bitmap = null;
@@ -98,9 +93,9 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         img_license.setOnClickListener(this);
         img_permit = findViewById(R.id.img_permit);
         img_permit.setOnClickListener(this);
-        tv_province = findViewById(R.id.tv_province);
         tv_city = findViewById(R.id.tv_city);
         tv_local = findViewById(R.id.tv_local);
+        tv_town = findViewById(R.id.tv_town);
         tv_organ = findViewById(R.id.tv_organ);
         tv_name_c = findViewById(R.id.tv_name_c);
         ed_phone_c = findViewById(R.id.ed_phone_c);
@@ -115,13 +110,12 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         tv_file_name2 = findViewById(R.id.tv_file_name2);
         tv_file_name3 = findViewById(R.id.tv_file_name3);
         tv_town = findViewById(R.id.tv_town);
+        tv_legal_person = findViewById(R.id.tv_legal_person);
 
     }
 
     public void initData() {
 
-
-        tv_address.setText(CommunityBossApplication.storeInfo.getAddress());
         tv_close_time.setText(CommunityBossApplication.storeInfo.getEndTime());
         tv_name_c.setText(CommunityBossApplication.storeInfo.getContact());
         ed_phone_c.setText(CommunityBossApplication.storeInfo.getContactPhone());
@@ -152,33 +146,45 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                                 json = json.getJSONObject("data");
                                 ed_name.setText(json.getString("store_name"));
                                 ed_phone.setText(json.getString("order_phone"));
-                                tv_province.setText(json.getString("province_name"));
+                                String address = json.getString("address_json");
+                                tv_legal_person.setText(json.getString("legal_person"));
+                                JSONObject jsonObject = new JSONObject(address) ;
+                                tv_province.setText(jsonObject.getString("province"));
+                                tv_city.setText(jsonObject.getString("city"));
+                                tv_local.setText(jsonObject.getString("county"));
+                                tv_town.setText(jsonObject.getString("town"));
+                                tv_address.setText(jsonObject.getString("address"));
                                 String start_time = json.getString("start_time");
-                                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ", Locale.US);
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                sf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                Date date = null;
-                                String dateTime = "";
-                                try {
-                                    date = sf.parse(start_time);
-                                    dateTime = sdf.format(date);
+                                start_time = start_time.substring(11,16);
+                                tv_open_time.setText(start_time);
 
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                dateTime = dateTime.substring(11,16);
-                                tv_open_time.setText(dateTime);
+//                                SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssZ", Locale.US);
+//                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                                sf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//                                Date date = null;
+//                                String dateTime = "";
+//                                try {
+//                                    date = sf.parse(start_time);
+//                                    dateTime = sdf.format(date);
+//
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                dateTime = dateTime.substring(11,16);
+//                                tv_open_time.setText(dateTime);
                                 String close_time = json.getString("end_time");
-                                Date date_close = null;
-                                String dateTime_close = "";
-                                try {
-                                    date_close = sf.parse(close_time);
-                                    dateTime_close = sdf.format(date_close);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                dateTime_close= dateTime_close.substring(11,16);
-                                tv_close_time.setText(dateTime_close);
+                                close_time = close_time.substring(11,16);
+                                tv_close_time.setText(close_time);
+//                                Date date_close = null;
+//                                String dateTime_close = "";
+//                                try {
+//                                    date_close = sf.parse(close_time);
+//                                    dateTime_close = sdf.format(date_close);
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                dateTime_close= dateTime_close.substring(11,16);
+//                                tv_close_time.setText(dateTime_close);
                                 Glide.with(InformationActivity.this).load(Urls.getInstance().IMG_URL + json.getString("regist_path")).into(img_store_head);
                                 Glide.with(InformationActivity.this).load(Urls.getInstance().IMG_URL + json.getString("store_font_path")).into(img_publicity);
                                 Glide.with(InformationActivity.this).load(Urls.getInstance().IMG_URL + json.getString("license_path")).into(img_license);
@@ -279,6 +285,7 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
         }
         params.put("storeName", ed_name.getText().toString().trim());
         params.put("orderPhone", ed_phone.getText().toString().trim());
+  //      params.put("contactPhone",ed_phone_c.getText().toString().trim());
         Log.e("startTime: ", "2000-01-01 " + tv_open_time.getText().toString() + ":00");
         params.put("startTime", "2000-01-01 " + tv_open_time.getText().toString() + ":00");
         Log.e("endTime: ", "2000-01-01 " + tv_close_time.getText().toString() + ":00");

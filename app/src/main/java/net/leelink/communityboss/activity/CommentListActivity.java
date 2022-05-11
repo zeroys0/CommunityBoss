@@ -1,10 +1,7 @@
 package net.leelink.communityboss.activity;
 
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -39,6 +36,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.transform.Templates;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CommentListActivity extends BaseActivity implements OnItemClickListener , View.OnClickListener {
 private RecyclerView comment_list;

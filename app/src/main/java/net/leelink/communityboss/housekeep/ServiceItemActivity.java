@@ -1,25 +1,9 @@
 package net.leelink.communityboss.housekeep;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Service;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.DataSetObserver;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatSpinner;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,13 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,11 +34,9 @@ import net.leelink.communityboss.adapter.OnCategoryClickListener;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.bean.ServiceBean;
 import net.leelink.communityboss.housekeep.adapter.ServiceItemAdapter;
-import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.CashierInputFilter;
 import net.leelink.communityboss.utils.GlideLoader;
 import net.leelink.communityboss.utils.Urls;
-import net.leelink.communityboss.view.CategoryPopup;
 import net.leelink.communityboss.view.RecycleViewDivider;
 
 import org.json.JSONArray;
@@ -66,6 +46,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ServiceItemActivity extends BaseActivity implements OnOrderListener, View.OnClickListener, OnCategoryClickListener {
     private RecyclerView service_list;
@@ -90,6 +74,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_item);
         init();
+        createProgressBar(this);
         initData();
         popu_service();
         popu_service2();
@@ -190,6 +175,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                 if (add) {
                     submit();
                 } else {
+
                     edit();
                 }
                 break;
@@ -255,11 +241,11 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
     }
 
     public void edit() {
-
+        Log.e("edit: ", "开始编辑");
         HttpParams params = new HttpParams();
+        showProgressBar();
         if (imagePaths.size() != 0) {
             params.put("img", new File(imagePaths.get(0)));
-            return;
         }
         params.put("around", ed_around.getText().toString().trim());
         params.put("damagePrice", ed_against_ptice.getText().toString().trim());
@@ -275,6 +261,7 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        stopProgressBar();
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
@@ -289,6 +276,13 @@ public class ServiceItemActivity extends BaseActivity implements OnOrderListener
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        stopProgressBar();
+                        Toast.makeText(ServiceItemActivity.this, "系统繁忙", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

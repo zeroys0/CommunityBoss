@@ -12,8 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -42,15 +41,20 @@ import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import net.leelink.communityboss.R;
-import net.leelink.communityboss.activity.ApplyActivity;
 import net.leelink.communityboss.activity.BaseActivity;
+import net.leelink.communityboss.activity.ChooseIdentityActivity;
+import net.leelink.communityboss.activity.ExamineActivity;
 import net.leelink.communityboss.bean.OrganBean;
+import net.leelink.communityboss.bean.StreetBean;
 import net.leelink.communityboss.city.CityPicker;
 import net.leelink.communityboss.city.Cityinfo;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.FileUtil;
+import net.leelink.communityboss.utils.Logger;
 import net.leelink.communityboss.utils.Urls;
 
 import org.json.JSONArray;
@@ -65,13 +69,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
+import io.reactivex.functions.Consumer;
 
 public class HousekeepApplyActivity extends BaseActivity implements View.OnClickListener {
     private Button btn_submit;
-    private EditText ed_order_phone,ed_name, ed_address, ed_number, ed_name_c, ed_phone_c, ed_server_address, ed_name_l;
-    private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s;
-    private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s;
-    private ImageView img_store_head, img_publicity, img_license, img_permit;
+    private EditText ed_order_phone, ed_name, ed_address, ed_number, ed_name_c, ed_phone_c, ed_server_address, ed_name_l;
+    private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s,rl_street;
+    private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s,tv_street;
+    private ImageView img_store_head, img_publicity, img_license;
     private PopupWindow popuPhoneW;
     private TimePickerView pvTime, pvTime1;
     private SimpleDateFormat sdf, sdf1;
@@ -85,7 +90,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
     private List<Cityinfo> province_list = new ArrayList<Cityinfo>();
     private HashMap<String, List<Cityinfo>> city_map = new HashMap<String, List<Cityinfo>>();
     private HashMap<String, List<Cityinfo>> couny_map = new HashMap<String, List<Cityinfo>>();
-    String province_id, city_id, local_id, province_id_s, city_id_s, local_id_s;
+    String province_id, city_id, local_id, province_id_s, city_id_s, local_id_s,town_id;
     int organ_id, nature;
     int type;
     private boolean ORGAN = true;
@@ -117,8 +122,6 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
         img_publicity.setOnClickListener(this);
         img_license = findViewById(R.id.img_license);
         img_license.setOnClickListener(this);
-        img_permit = findViewById(R.id.img_permit);
-        img_permit.setOnClickListener(this);
         rl_back = findViewById(R.id.rl_back);
         rl_back.setOnClickListener(this);
         rl_province = findViewById(R.id.rl_province);
@@ -152,8 +155,11 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
         ed_name_c = findViewById(R.id.ed_name_c);
         ed_phone_c = findViewById(R.id.ed_phone_c);
         ed_server_address = findViewById(R.id.ed_server_address);
-        ed_name_l = findViewById(R.id.ed_name_l);
-        ed_order_phone = findViewById(R.id.ed_order_phone);
+        ed_name_l = findViewById(R.id.ed_legal_person);
+        ed_order_phone = findViewById(R.id.ed_phone);
+        rl_street = findViewById(R.id.rl_street);
+        rl_street.setOnClickListener(this);
+        tv_street = findViewById(R.id.tv_street);
     }
 
     @Override
@@ -169,27 +175,19 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                 pvTime1.show();
                 break;
             case R.id.img_store_head:   //上传商店头像
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
+                requestPermissions();
                 type = 0;
                 break;
 
             case R.id.img_publicity:    //上传宣传图片
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
+                requestPermissions();
                 type = 1;
                 break;
             case R.id.img_license:  //上传执照图片
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
+                requestPermissions();
                 type = 2;
                 break;
 
-            case R.id.img_permit:   //上传许可证书
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
-                type = 3;
-                break;
             case R.id.btn_photograph://拍照
                 popuPhoneW.dismiss();
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -263,6 +261,11 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                     Toast.makeText(this, "请先选择城市", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.rl_street:
+                if(local_id_s !=null) {
+                    street();
+                }
+                break;
 
             default:
                 break;
@@ -278,15 +281,12 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                         if (file0 != null) {
                             if (file1 != null) {
                                 if (file2 != null) {
-                                    if (file3 != null) {
                                         if (local_id_s != null) {
                                             storeInfo();
                                         } else {
                                             Toast.makeText(this, "请选择正确的地址", Toast.LENGTH_SHORT).show();
                                         }
-                                    } else {
-                                        Toast.makeText(this, "请上传食品流通许可", Toast.LENGTH_SHORT).show();
-                                    }
+
                                 } else {
                                     Toast.makeText(this, "请上传营业执照", Toast.LENGTH_SHORT).show();
                                 }
@@ -330,6 +330,24 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
         Log.e("id: ", getIntent().getStringExtra("id"));
         Log.e("legalPerson: ", ed_name_l.getText().toString().trim());
 
+        JSONObject json_address = new JSONObject();
+
+        try {
+            json_address.put("province", tv_province_s.getText().toString());
+            json_address.put("city", tv_city_s.getText().toString());
+            json_address.put("countyId", local_id_s);
+            json_address.put("county", tv_local_s.getText().toString());
+            json_address.put("townId", town_id);
+            json_address.put("cityId", city_id_s);
+            json_address.put("provinceId", province_id_s);
+            json_address.put("town", tv_street.getText().toString());
+            json_address.put("address", ed_address.getText().toString());
+            json_address.put("fullAddress", tv_province_s.getText().toString() + tv_city_s.getText().toString() + tv_local_s.getText().toString() + tv_street.getText().toString() + ed_address.getText().toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         mProgressBar.setVisibility(View.VISIBLE);
         OkGo.<String>post(Urls.getInstance().REGISTER)
                 .tag(this)
@@ -342,19 +360,18 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                 .params("deviceToken", JPushInterface.getRegistrationID(this))
                 .params("endTime", "2000-01-01 " + tv_close_time.getText().toString() + ":00")
                 .params("startTime", "2000-01-01 " + tv_open_time.getText().toString() + ":00")
-                .params("healthfile", file1)
-                .params("licensefile", file0)
+                .params("storeFontfile", file1)
+                .params("registfile", file0)
                 .params("organId", organ_id)
                 .params("provinceId", province_id_s)
-                .params("registfile", file3)
-                .params("storeFontfile", file2)
+                .params("licensefile", file2)
                 .params("storeName", ed_name.getText().toString().trim())
                 .params("serverTypeId", 2)
                 .params("serverAddress", ed_server_address.getText().toString().trim())
                 .params("legalPerson", ed_name_l.getText().toString().trim())
                 .params("id", getIntent().getStringExtra("id"))
-                .params("orderPhone",ed_order_phone.getText().toString().trim())
-
+                .params("orderPhone", ed_order_phone.getText().toString().trim())
+                .params("addressJson",json_address.toString())
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -366,6 +383,9 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                                 mProgressBar.setVisibility(View.GONE);
                                 Toast.makeText(HousekeepApplyActivity.this, "提交成功,请等待审核", Toast.LENGTH_SHORT).show();
                                 finish();
+                                ChooseIdentityActivity.instance.finish();
+                                Intent intent = new Intent(mContext, ExamineActivity.class);
+                                startActivity(intent);
                             } else {
                                 Toast.makeText(HousekeepApplyActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
@@ -483,7 +503,7 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
 
     //选择地区机构
     public void organ() {
-        OkGo.<String>get(Urls.IP+"/sh/user/organ")
+        OkGo.<String>get(Urls.IP + "/sh/user/organ")
                 .tag(this)
                 .params("areaId", local_id)
                 //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
@@ -508,6 +528,60 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                         }
                     }
                 });
+    }
+
+    //街道选择
+    public void street(){
+        OkGo.<String>get(Urls.getInstance().GETTOWN)
+                .tag(this)
+                .params("id", local_id_s)
+                //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("查看", json.toString());
+                            if (json.getInt("status") == 200) {
+                                JSONArray jsonArray = json.getJSONArray("data");
+                                Gson gson = new Gson();
+                                List<StreetBean> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<StreetBean>>() {
+                                }.getType());
+                                showStreet(list);
+                            } else {
+                                Toast.makeText(mContext, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    //弹出街道列表
+    public void showStreet(final List<StreetBean> list) {
+        List<String> streetName = new ArrayList<>();
+        for (StreetBean streetBean : list) {
+            streetName.add(streetBean.getTown());
+        }
+        //条件选择器
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                if(list.size()!=0) {
+                    tv_street.setText(list.get(options1).getTown());
+                    town_id = list.get(options1).getId();
+                }
+            }
+        })
+                .setDividerColor(Color.parseColor("#A0A0A0"))
+                .setTextColorCenter(Color.parseColor("#333333")) //设置选中项文字颜色
+                .setContentTextSize(18)//设置滚轮文字大小
+                .setOutSideCancelable(true)//点击外部dismiss default true
+                .build();
+        pvOptions.setPicker(streetName);
+        pvOptions.show();
     }
 
     //弹出机构列表
@@ -556,10 +630,6 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                             img_license.setImageBitmap(bitmap);
                             file2 = BitmapCompress.compressImage(bitmap);
                             break;
-                        case 3:
-                            img_permit.setImageBitmap(bitmap);
-                            file3 = BitmapCompress.compressImage(bitmap);
-                            break;
                         default:
                             break;
                     }
@@ -580,10 +650,6 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                             case 2:
                                 img_license.setImageBitmap(bitmap);
                                 file2 = BitmapCompress.compressImage(bitmap);
-                                break;
-                            case 3:
-                                img_permit.setImageBitmap(bitmap);
-                                file3 = BitmapCompress.compressImage(bitmap);
                                 break;
                             default:
                                 break;
@@ -684,5 +750,41 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
         mProgressBar.setLayoutParams(layoutParams);
         mProgressBar.setVisibility(View.GONE);
         rootFrameLayout.addView(mProgressBar);
+    }
+
+    static int index_rx = 0;
+
+    @SuppressLint("CheckResult")
+    private void requestPermissions() {
+
+        RxPermissions rxPermission = new RxPermissions(HousekeepApplyActivity.this);
+        rxPermission.requestEach(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,//写外部存储器
+                Manifest.permission.READ_EXTERNAL_STORAGE,//读取外部存储器
+                Manifest.permission.CAMERA)//照相机
+                .subscribe(new Consumer<Permission>() {
+                    @Override
+                    public void accept(Permission permission) throws Exception {
+                        if (permission.granted) {
+                            // 用户已经同意该权限
+                            Logger.i("用户已经同意该权限", permission.name + " is granted.");
+                            popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
+                            backgroundAlpha(0.5f);
+
+                        } else if (permission.shouldShowRequestPermissionRationale) {
+                            // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                            Logger.i("用户拒绝了该权限,没有选中『不再询问』", permission.name + " is denied. More info should be provided.");
+                        } else {
+                            // 用户拒绝了该权限，并且选中『不再询问』
+                            Logger.i("用户拒绝了该权限,并且选中『不再询问』", permission.name + " is denied.");
+                            Toast.makeText(mContext, "您已经拒绝该权限,请在权限管理中开启权限使用本功能", Toast.LENGTH_SHORT).show();
+                        }
+                        index_rx++;
+                        if (index_rx == 3) {
+
+                            index_rx = 0;
+                        }
+                    }
+                });
     }
 }

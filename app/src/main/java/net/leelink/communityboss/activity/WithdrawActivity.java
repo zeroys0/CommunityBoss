@@ -3,10 +3,7 @@ package net.leelink.communityboss.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +36,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class WithdrawActivity extends BaseActivity implements OnItemClickListener, View.OnClickListener {
     private SwipeRecyclerView card_list;

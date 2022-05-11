@@ -1,17 +1,10 @@
 package net.leelink.communityboss.fragment;
 
-import android.app.usage.UsageEvents;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +22,8 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
-import net.leelink.communityboss.activity.ChangePasswordActivity;
 import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.activity.OrderDetailActivity;
-import net.leelink.communityboss.adapter.GoodListAdapter;
-import net.leelink.communityboss.adapter.OnItemClickListener;
 import net.leelink.communityboss.adapter.OnOrderListener;
 import net.leelink.communityboss.adapter.OrderListAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
@@ -52,8 +42,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cn.jpush.android.api.JPushInterface;
 
 public class UntakeOrderFragment extends BaseFragment implements OnOrderListener {

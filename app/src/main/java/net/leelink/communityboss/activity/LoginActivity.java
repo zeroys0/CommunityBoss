@@ -1,6 +1,5 @@
 package net.leelink.communityboss.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -9,12 +8,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -31,64 +25,85 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.tbruyelle.rxpermissions2.Permission;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
+import net.leelink.communityboss.adapter.OnOrderListener;
+import net.leelink.communityboss.adapter.UserNameAdapter;
 import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.housekeep.HousekeepApplyActivity;
 import net.leelink.communityboss.housekeep.HousekeepMainActivity;
 import net.leelink.communityboss.utils.Acache;
-import net.leelink.communityboss.utils.Logger;
 import net.leelink.communityboss.utils.Urls;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cn.jpush.android.api.JPushInterface;
-import io.reactivex.functions.Consumer;
 
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
-private TabLayout tablayout;
-private TextView getmsmpass_TX,tv_forgot,tv_register,tv_text,tv_code;
-private EditText ed_phone,ed_password,ed_code;
-private Button btn_login;
-private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
+public class LoginActivity extends BaseActivity implements View.OnClickListener, OnOrderListener {
+    private TextView getmsmpass_TX, tv_forgot, tv_register, tv_text, tv_code, tv_tab;
+    private EditText ed_phone, ed_password, ed_code;
+    private Button btn_login;
+    private ImageView img_user_name, img_eye, img_logo;
+    private int loginType = 1;      //登录方式 0验证码登录 1账号密码登录
     Context mContext;
     private ProgressBar mProgressBar;
+    private CheckBox cb_agree;
+    private RecyclerView user_list;
+    PopupWindow pop;
+    boolean visible = false;
+    private Context context;
+    private PopupWindow popuPhoneW;
+    private View popview;
+    TextView tv_cancel, tv_confirm, tv_agreement;
+    SharedPreferences sp;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        requestPermissions();
+        sp = getSharedPreferences("sp", 0);
+        //requestPermissions();
         createProgressBar();
         init();
         initLogin();
+        context = this;
+        img_logo = findViewById(R.id.img_logo);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
 
-    public void init(){
+    public void init() {
         getmsmpass_TX = findViewById(R.id.getmsmpass_TX);
         getmsmpass_TX.setOnClickListener(this);
         ed_phone = findViewById(R.id.ed_phone);
@@ -102,56 +117,26 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         btn_login.setOnClickListener(this);
         tv_code = findViewById(R.id.tv_code);
         tv_code.setOnClickListener(this);
-        tablayout = findViewById(R.id.tablayout);
-        tablayout.addTab(tablayout.newTab().setText("手机验证码登录"));
-        tablayout.addTab(tablayout.newTab().setText("账号密码登录"));
-        tablayout.post(new Runnable() {
-            @Override
-            public void run() {
-                setIndicator(tablayout, 32, 32);
-            }
-        });
-        tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if(tab.getPosition()==0) {
-                    getmsmpass_TX.setVisibility(View.VISIBLE);
-                    tv_forgot.setVisibility(View.INVISIBLE);
-                    ed_code.setVisibility(View.VISIBLE);
-                    ed_password.setVisibility(View.GONE);
-                    ed_phone.setHint("请输入手机号");
-                    TYPE = 0;
-                } else {
-                    getmsmpass_TX.setVisibility(View.GONE);
-                    tv_forgot.setVisibility(View.VISIBLE);
-                    ed_code.setVisibility(View.GONE);
-                    ed_password.setVisibility(View.VISIBLE);
-                    ed_phone.setHint("请输入账号");
-                    ed_password.setHint("请输入密码");
-                    TYPE = 1;
-                }
-            }
+        img_user_name = findViewById(R.id.img_user_name);
+        img_user_name.setOnClickListener(this);
+        tv_tab = findViewById(R.id.tv_tab);
+        tv_tab.setOnClickListener(this);
+        img_eye = findViewById(R.id.img_eye);
+        img_eye.setOnClickListener(this);
+        cb_agree = findViewById(R.id.cb_agree);
+        cb_agree.setOnClickListener(this);
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
         tv_text = findViewById(R.id.tv_text);
         SpannableString spannableString = new SpannableString("已阅读并同意<<用户协议>>以及<<隐私政策>>");
         spannableString.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Intent intent = new Intent(LoginActivity.this,WebActivity.class);
-                intent.putExtra("type","distribution");
-                intent.putExtra("url","http://www.llky.net.cn/store/protocol.html");
+                Intent intent = new Intent(LoginActivity.this, WebActivity.class);
+                intent.putExtra("type", "distribution");
+                intent.putExtra("url", "https://www.llky.net.cn/store/protocol.html");
                 startActivity(intent);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -162,11 +147,12 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
             @Override
             public void onClick(View widget) {
 
-                Intent intent = new Intent(LoginActivity.this,WebActivity.class);
-                intent.putExtra("type","distribution");
-                intent.putExtra("url","http://www.llky.net.cn/store/privacyPolicy.html");
+                Intent intent = new Intent(LoginActivity.this, WebActivity.class);
+                intent.putExtra("type", "distribution");
+                intent.putExtra("url", "https://www.llky.net.cn/store/privacyPolicy.html");
                 startActivity(intent);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -178,11 +164,11 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     }
 
-    public void initLogin(){
-        SharedPreferences sp = getSharedPreferences("sp",0);
-        String ip = sp.getString("ip","");
+    public void initLogin() {
+        SharedPreferences sp = getSharedPreferences("sp", 0);
+        String ip = sp.getString("ip", "");
         Urls.IP = ip;
-        if(!sp.getString("secretKey","").equals("")) {
+        if (!sp.getString("secretKey", "").equals("")) {
             quickLogin();
         }
 
@@ -195,7 +181,8 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        CommunityBossApplication app = (CommunityBossApplication) getApplication();
+        switch (v.getId()) {
             case R.id.getmsmpass_TX:    //获取验证码
                 sendSmsCode();
                 break;
@@ -204,29 +191,69 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                 startActivity(intent);
                 break;
             case R.id.btn_login:    //登录
-                if(TYPE==0) {
-                    loginByCode();
+                if (cb_agree.isChecked()) {
+                    if (loginType == 0) {
+                        loginByCode();
+                    } else {
+                        login();
+                    }
                 } else {
-                    login();
+                    Toast.makeText(context, "请认真阅读并同意用户协议", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.tv_forgot:    //忘记密码
-                Intent intent1 = new Intent(this,ChangePasswordActivity.class);
+                Intent intent1 = new Intent(this, ChangePasswordActivity.class);
                 startActivity(intent1);
                 break;
             case R.id.tv_code:      //商户编码
                 backgroundAlpha(0.5f);
                 showPopup();
                 break;
+            case R.id.img_user_name:    //过往登录列表
+                backgroundAlpha(0.5f);
+                showPopup1();
+                break;
+            case R.id.tv_tab:
+                if (loginType == 1) {
+                    getmsmpass_TX.setVisibility(View.VISIBLE);
+                    tv_forgot.setVisibility(View.INVISIBLE);
+                    ed_phone.setHint("请输入手机号");
+                    ed_password.setVisibility(View.GONE);
+                    ed_code.setVisibility(View.VISIBLE);
+                    img_eye.setVisibility(View.GONE);
+                    tv_tab.setText("密码登录");
+                    loginType = 0;
+                } else {
+                    getmsmpass_TX.setVisibility(View.GONE);
+                    tv_forgot.setVisibility(View.VISIBLE);
+                    ed_password.setVisibility(View.VISIBLE);
+                    ed_code.setVisibility(View.GONE);
+                    img_eye.setVisibility(View.VISIBLE);
+                    ed_phone.setHint("请输入手机号");
+                    tv_tab.setText("验证码登录");
+                    loginType = 1;
+                }
+                break;
+            case R.id.img_eye:
+                if (visible) {
+                    ed_password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                    img_eye.setImageResource(R.drawable.img_eye_close);
+                    visible = false;
+                } else {
+                    ed_password.setInputType(InputType.TYPE_CLASS_TEXT);
+                    img_eye.setImageResource(R.drawable.img_eye);
+                    visible = true;
+                }
+                break;
 
-                default:
-                    break;
+            default:
+                break;
         }
     }
 
     //短信验证码登录
-    public void loginByCode(){
-        if(Urls.IP.equals("")) {
+    public void loginByCode() {
+        if (Urls.IP.equals("")) {
             Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -234,7 +261,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         OkGo.<String>post(Urls.getInstance().LOGINBYCODE)
                 .tag(this)
                 .params("telephone", ed_phone.getText().toString().trim())
-                .params("code",ed_code.getText().toString().trim())
+                .params("code", ed_code.getText().toString().trim())
                 .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
                 .execute(new StringCallback() {
                     @Override
@@ -243,52 +270,54 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("验证码登录",json.toString());
+                            Log.d("验证码登录", json.toString());
                             if (json.getInt("status") == 200) {
-                             //   CommunityBossApplication.token = json.getString("AppToken");
-
+                                //   CommunityBossApplication.token = json.getString("AppToken");
+                                saveUsername(ed_phone.getText().toString().trim());
                                 JSONObject jsonObject = json.getJSONObject("data");
 
-                                if(jsonObject.getInt("serverTypeId")==100) {
+                                if (jsonObject.getInt("serverTypeId") == 100) {
                                     Intent intent = new Intent(LoginActivity.this, ChooseIdentityActivity.class);
-                                    intent.putExtra("id",jsonObject.getString("id"));
+                                    intent.putExtra("id", jsonObject.getString("id"));
                                     startActivity(intent);
-                                }else if(jsonObject.getInt("serverTypeId")==1) {
-                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                } else if (jsonObject.getInt("serverTypeId") == 1) {
+                                    if (jsonObject.getInt("vertifyState") == 1) {
                                         Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
                                         startActivity(intent);
-                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
-                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                    } else if (jsonObject.getInt("vertifyState") == 2) {
+                                        SharedPreferences sp = getSharedPreferences("sp", 0);
                                         SharedPreferences.Editor editor = sp.edit();
-                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
-                                        editor.putString("telephone",ed_phone.getText().toString().trim());
+                                        editor.putString("secretKey", jsonObject.getString("secretKey"));
+                                        editor.putString("telephone", ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
-                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        Acache.get(LoginActivity.this).put("storeInfo", jsonObject);
                                         StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                         CommunityBossApplication.storeInfo = storeInfo;
-                                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
+                                        finish();
                                     }
-                                } else if(jsonObject.getInt("serverTypeId")==2) {
-                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                } else if (jsonObject.getInt("serverTypeId") == 2) {
+                                    if (jsonObject.getInt("vertifyState") == 1) {
                                         Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
                                         startActivity(intent);
-                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
-                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                    } else if (jsonObject.getInt("vertifyState") == 2) {
+                                        SharedPreferences sp = getSharedPreferences("sp", 0);
                                         SharedPreferences.Editor editor = sp.edit();
-                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
-                                        editor.putString("telephone",ed_phone.getText().toString().trim());
+                                        editor.putString("secretKey", jsonObject.getString("secretKey"));
+                                        editor.putString("telephone", ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
-                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        Acache.get(LoginActivity.this).put("storeInfo", jsonObject);
                                         StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                         CommunityBossApplication.storeInfo = storeInfo;
-                                        Intent intent = new Intent(LoginActivity.this,HousekeepMainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, HousekeepMainActivity.class);
                                         startActivity(intent);
+                                        finish();
                                     }
                                 }
-                                finish();
+
                             } else {
                                 Toast.makeText(LoginActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
@@ -300,19 +329,20 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     }
 
     //账号密码登录
-    public void login(){
-        if(Urls.IP.equals("")) {
+    public void login() {
+        if (Urls.IP.equals("")) {
             Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
             return;
         }
         mProgressBar.setVisibility(View.VISIBLE);
-        Log.e( "login: ",Urls.IP );
-        Log.e( "login: ",Urls.getInstance().LOGIN);
+        Log.e("login: ", Urls.IP);
+        Log.e("login: ", Urls.getInstance().LOGIN);
+        Log.e("login: ",JPushInterface.getRegistrationID(LoginActivity.this));
         OkGo.<String>post(Urls.getInstance().LOGIN)
                 .tag(this)
                 .params("telephone", ed_phone.getText().toString().trim())
-                .params("password",ed_password.getText().toString().trim())
-                .params("deviceToken",JPushInterface.getRegistrationID(LoginActivity.this))
+                .params("password", ed_password.getText().toString().trim())
+                .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -320,58 +350,60 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("用户名密码登录",json.toString());
+                            Log.d("用户名密码登录", json.toString());
                             if (json.getInt("status") == 200) {
                                 JSONObject jsonObject = json.getJSONObject("data");
-
-                                if(jsonObject.getInt("serverTypeId")==100) {
+                                saveUsername(ed_phone.getText().toString().trim());
+                                if (jsonObject.getInt("serverTypeId") == 100) {
                                     Intent intent = new Intent(LoginActivity.this, ChooseIdentityActivity.class);
-                                    intent.putExtra("id",jsonObject.getString("id"));
+                                    intent.putExtra("id", jsonObject.getString("id"));
                                     startActivity(intent);
-                                }else if(jsonObject.getInt("serverTypeId")==1) {
-                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                } else if (jsonObject.getInt("serverTypeId") == 1) {
+                                    if (jsonObject.getInt("vertifyState") == 1) {
                                         Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
                                         startActivity(intent);
-                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
-                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                    } else if (jsonObject.getInt("vertifyState") == 2) {
+                                        SharedPreferences sp = getSharedPreferences("sp", 0);
                                         SharedPreferences.Editor editor = sp.edit();
-                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
-                                        editor.putString("telephone",ed_phone.getText().toString().trim());
+                                        editor.putString("secretKey", jsonObject.getString("secretKey"));
+                                        editor.putString("telephone", ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
-                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        Acache.get(LoginActivity.this).put("storeInfo", jsonObject);
                                         StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                         CommunityBossApplication.storeInfo = storeInfo;
-                                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
-                                    } else if(jsonObject.getInt("vertifyState") == 3) {
+                                        finish();
+                                    } else if (jsonObject.getInt("vertifyState") == 3) {
                                         Intent intent = new Intent(LoginActivity.this, ApplyActivity.class);
-                                        intent.putExtra("id",jsonObject.getString("id"));
+                                        intent.putExtra("id", jsonObject.getString("id"));
                                         startActivity(intent);
                                     }
-                                } else if(jsonObject.getInt("serverTypeId")==2) {
-                                    if(jsonObject.getInt("vertifyState") == 1) {
+                                } else if (jsonObject.getInt("serverTypeId") == 2) {
+                                    if (jsonObject.getInt("vertifyState") == 1) {
                                         Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
                                         startActivity(intent);
-                                    }else if(jsonObject.getInt("vertifyState") ==2 ){
-                                        SharedPreferences sp = getSharedPreferences("sp",0);
+                                    } else if (jsonObject.getInt("vertifyState") == 2) {
+                                        SharedPreferences sp = getSharedPreferences("sp", 0);
                                         SharedPreferences.Editor editor = sp.edit();
-                                        editor.putString("secretKey",jsonObject.getString("secretKey"));
-                                        editor.putString("telephone",ed_phone.getText().toString().trim());
+                                        editor.putString("secretKey", jsonObject.getString("secretKey"));
+                                        editor.putString("telephone", ed_phone.getText().toString().trim());
                                         editor.apply();
                                         Gson gson = new Gson();
-                                        Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                        Acache.get(LoginActivity.this).put("storeInfo", jsonObject);
                                         StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                         CommunityBossApplication.storeInfo = storeInfo;
-                                        Intent intent = new Intent(LoginActivity.this,HousekeepMainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, HousekeepMainActivity.class);
                                         startActivity(intent);
-                                    } else if(jsonObject.getInt("vertifyState") == 3) {
+                                        finish();
+                                    } else if (jsonObject.getInt("vertifyState") == 3) {
                                         Intent intent = new Intent(LoginActivity.this, HousekeepApplyActivity.class);
-                                        intent.putExtra("id",jsonObject.getString("id"));
+                                        intent.putExtra("id", jsonObject.getString("id"));
                                         startActivity(intent);
                                     }
                                 }
-                                finish();
+
 
                             } else {
                                 Toast.makeText(LoginActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
@@ -384,7 +416,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     }
 
     public void quickLogin() {
-        if(Urls.IP.equals("")) {
+        if (Urls.IP.equals("")) {
             Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -405,32 +437,32 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                 if (json.getInt("status") == 200) {
                                     JSONObject jsonObject = json.getJSONObject("data");
 
-                                    if(jsonObject.getInt("serverTypeId")==100) {
+                                    if (jsonObject.getInt("serverTypeId") == 100) {
                                         Intent intent = new Intent(LoginActivity.this, ChooseIdentityActivity.class);
-                                        intent.putExtra("id",jsonObject.getString("id"));
+                                        intent.putExtra("id", jsonObject.getString("id"));
                                         startActivity(intent);
-                                    }else if(jsonObject.getInt("serverTypeId")==1) {
-                                        if(jsonObject.getInt("vertifyState") == 1) {
+                                    } else if (jsonObject.getInt("serverTypeId") == 1) {
+                                        if (jsonObject.getInt("vertifyState") == 1) {
                                             Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
                                             startActivity(intent);
-                                        }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                        } else if (jsonObject.getInt("vertifyState") == 2) {
                                             Gson gson = new Gson();
-                                            Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                            Acache.get(LoginActivity.this).put("storeInfo", jsonObject);
                                             StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                             CommunityBossApplication.storeInfo = storeInfo;
-                                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                             startActivity(intent);
                                         }
-                                    } else if(jsonObject.getInt("serverTypeId")==2) {
-                                        if(jsonObject.getInt("vertifyState") == 1) {
+                                    } else if (jsonObject.getInt("serverTypeId") == 2) {
+                                        if (jsonObject.getInt("vertifyState") == 1) {
                                             Intent intent = new Intent(LoginActivity.this, ExamineActivity.class);
                                             startActivity(intent);
-                                        }else if(jsonObject.getInt("vertifyState") ==2 ){
+                                        } else if (jsonObject.getInt("vertifyState") == 2) {
                                             Gson gson = new Gson();
-                                            Acache.get(LoginActivity.this).put("storeInfo",jsonObject);
+                                            Acache.get(LoginActivity.this).put("storeInfo", jsonObject);
                                             StoreInfo storeInfo = gson.fromJson(jsonObject.toString(), StoreInfo.class);
                                             CommunityBossApplication.storeInfo = storeInfo;
-                                            Intent intent = new Intent(LoginActivity.this,HousekeepMainActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this, HousekeepMainActivity.class);
                                             startActivity(intent);
                                         }
                                     }
@@ -449,14 +481,14 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
     }
 
     //发送短信验证码
-    public void sendSmsCode(){
-        if(Urls.IP.equals("")) {
+    public void sendSmsCode() {
+        if (Urls.IP.equals("")) {
             Toast.makeText(mContext, "请输入商户编码", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!ed_phone.getText().toString().trim().equals("")){
+        if (!ed_phone.getText().toString().trim().equals("")) {
             mProgressBar.setVisibility(View.VISIBLE);
-            OkGo.<String>post(Urls.getInstance().SENDSMSCODE+"?telephone="+ed_phone.getText().toString().trim())
+            OkGo.<String>post(Urls.getInstance().SENDSMSCODE + "?telephone=" + ed_phone.getText().toString().trim())
                     .tag(this)
                     .execute(new StringCallback() {
                         @Override
@@ -465,11 +497,11 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             try {
                                 String body = response.body();
                                 JSONObject json = new JSONObject(body);
-                                Log.d("获取验证码",json.toString());
+                                Log.d("获取验证码", json.toString());
                                 if (json.getInt("status") == 200) {
-                                    if(time == 60) {
+                                    if (time == 60) {
                                         new Thread(new LoginActivity.TimeRun()).start();
-                                    }else {
+                                    } else {
                                         getmsmpass_TX.setEnabled(false);
                                     }
                                 } else {
@@ -486,17 +518,41 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         }
     }
 
-    private void createProgressBar(){
-        mContext=this;
+    private void createProgressBar() {
+        mContext = this;
         //整个Activity布局的最终父布局,参见参考资料
-        FrameLayout rootFrameLayout=(FrameLayout) findViewById(android.R.id.content);
-        FrameLayout.LayoutParams layoutParams=
+        FrameLayout rootFrameLayout = (FrameLayout) findViewById(android.R.id.content);
+        FrameLayout.LayoutParams layoutParams =
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity= Gravity.CENTER;
-        mProgressBar=new ProgressBar(mContext);
+        layoutParams.gravity = Gravity.CENTER;
+        mProgressBar = new ProgressBar(mContext);
         mProgressBar.setLayoutParams(layoutParams);
         mProgressBar.setVisibility(View.GONE);
         rootFrameLayout.addView(mProgressBar);
+    }
+
+    @Override
+    public void onItemClick(View view) {
+        int position = user_list.getChildLayoutPosition(view);
+        SharedPreferences sp = getSharedPreferences("sp", 0);
+        String user_list = sp.getString("user_name", "");
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(user_list);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            ed_phone.setText(jsonArray.getJSONObject(position).getString("user_name"));
+            pop.dismiss();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onButtonClick(View view, int position) {
+
     }
 
     private class TimeRun implements Runnable {
@@ -528,81 +584,13 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         };
     }
 
-    public static void setIndicator(TabLayout tabs, int leftDip, int rightDip) {
-        Class<?> tabLayout = tabs.getClass();
-        Field tabStrip = null;
-        try {
-            tabStrip = tabLayout.getDeclaredField("mTabStrip");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-
-        tabStrip.setAccessible(true);
-        LinearLayout llTab = null;
-        try {
-            llTab = (LinearLayout) tabStrip.get(tabs);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        int left = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, leftDip, Resources.getSystem().getDisplayMetrics());
-        int right = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rightDip, Resources.getSystem().getDisplayMetrics());
-
-        for (int i = 0; i < llTab.getChildCount(); i++) {
-            View child = llTab.getChildAt(i);
-            child.setPadding(0, 0, 0, 0);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            params.leftMargin = left;
-            params.rightMargin = right;
-            child.setLayoutParams(params);
-            child.invalidate();
-        }
-    }
-
-    static int index_rx = 0;
-    @SuppressLint("CheckResult")
-    private void requestPermissions() {
-        RxPermissions rxPermission = new RxPermissions(LoginActivity.this);
-        rxPermission.requestEach(android.Manifest.permission.ACCESS_FINE_LOCATION,//获取位置
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,//写外部存储器
-                android.Manifest.permission.READ_EXTERNAL_STORAGE,//读取外部存储器
-//                        Manifest.permission.READ_CALENDAR,//读取日历
-//                        Manifest.permission.READ_CALL_LOG,//看电话记录
-//                Manifest.permission.READ_CONTACTS,//读取通讯录
-//                        Manifest.permission.READ_PHONE_STATE,//读取手机状态
-//                        Manifest.permission.READ_SMS,//读取信息 　
-//                          Manifest.permission.SEND_SMS,//发信息
-//                Manifest.permission.CALL_PHONE,//打电话
-                Manifest.permission.CAMERA)//照相机
-                .subscribe(new Consumer<Permission>() {
-                    @Override
-                    public void accept(Permission permission) throws Exception {
-                        if (permission.granted) {
-                            // 用户已经同意该权限
-                            Logger.i("用户已经同意该权限", permission.name + " is granted.");
-                        } else if (permission.shouldShowRequestPermissionRationale) {
-                            // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
-                            Logger.i("用户拒绝了该权限,没有选中『不再询问』", permission.name + " is denied. More info should be provided.");
-                        } else {
-                            // 用户拒绝了该权限，并且选中『不再询问』
-                            Logger.i("用户拒绝了该权限,并且选中『不再询问』", permission.name + " is denied.");
-                        }
-                        index_rx++;
-                        if (index_rx == 4) {
-                            index_rx = 0;
-                        }
-
-                    }
-                });
-
-    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (isShouldHideInput(v, ev)) {
-                if(hideInputMethod(this, v)) {
+                if (hideInputMethod(this, v)) {
                     return true; //隐藏键盘时，其他控件不响应点击事件==》注释则不拦截点击事件
                 }
             }
@@ -619,7 +607,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
      */
     public static boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
-            int[] leftTop = { 0, 0 };
+            int[] leftTop = {0, 0};
             v.getLocationInWindow(leftTop);
             int left = leftTop[0], top = leftTop[1], bottom = top + v.getHeight(), right = left
                     + v.getWidth();
@@ -633,6 +621,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         }
         return false;
     }
+
     public static Boolean hideInputMethod(Context context, View v) {
         InputMethodManager imm = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -644,7 +633,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
 
 
     @SuppressLint("WrongConstant")
-    public void showPopup(){
+    public void showPopup() {
         View popview = LayoutInflater.from(LoginActivity.this).inflate(R.layout.pop_partner_code, null);
         final EditText ed_name = popview.findViewById(R.id.ed_name);
         Button btn_confirm = popview.findViewById(R.id.btn_confirm);
@@ -658,12 +647,12 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         popuPhoneW.setBackgroundDrawable(new BitmapDrawable());
         popuPhoneW.setOnDismissListener(new LoginActivity.poponDismissListener());
         popuPhoneW.showAtLocation(tv_code, Gravity.CENTER, 0, 0);
-        SharedPreferences sp = getSharedPreferences("sp",0);
-        ed_name.setText(sp.getString("code",""));
+        SharedPreferences sp = getSharedPreferences("sp", 0);
+        ed_name.setText(sp.getString("code", ""));
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!ed_name.getText().toString().equals("")) {
+                if (!ed_name.getText().toString().equals("")) {
                     String s = ed_name.getText().toString().trim();
                     getCode(s);
                     popuPhoneW.dismiss();
@@ -672,13 +661,48 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
         });
     }
 
+    public void showPopup1() {
+        View popView = getLayoutInflater().inflate(R.layout.popu_choose_user, null);
+
+        user_list = popView.findViewById(R.id.user_list);
+
+        SharedPreferences sp = getSharedPreferences("sp", 0);
+        String userList = sp.getString("user_name", "");
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(userList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        TextView tv_cancel = popView.findViewById(R.id.tv_cancel);
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pop.dismiss();
+            }
+        });
+
+        UserNameAdapter userNameAdapter = new UserNameAdapter(jsonArray, LoginActivity.this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+        user_list.setAdapter(userNameAdapter);
+        user_list.setLayoutManager(layoutManager);
+        pop = new PopupWindow(popView,
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        pop.setContentView(popView);
+        pop.setOutsideTouchable(true);
+        pop.setBackgroundDrawable(new BitmapDrawable());
+        pop.setOnDismissListener(new LoginActivity.poponDismissListener());
+
+        pop.showAtLocation(ed_phone, Gravity.BOTTOM, 0, 150);
+    }
+
 
     /**
      * 根据商户编码获取地址
      */
-    public void getCode(final String code){
+    public void getCode(final String code) {
 
-        OkGo.<String>get(Urls.PARTNER_CODE+code)
+        OkGo.<String>get(Urls.PARTNER_CODE + code)
                 .tag(this)
                 .execute(new StringCallback() {
                     @Override
@@ -689,7 +713,7 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                             JSONObject json = new JSONObject(body);
                             Log.d("根据商户编码获取url", json.toString());
                             if (json.getInt("status") == 200) {
-                                if(!json.isNull("data")) {
+                                if (!json.isNull("data")) {
                                     json = json.getJSONObject("data");
                                     SharedPreferences sp = getSharedPreferences("sp", 0);
                                     SharedPreferences.Editor editor = sp.edit();
@@ -699,11 +723,11 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
                                     editor.putString("c_ip", json.getString("clientInfoUrl"));
                                     Urls.IP = json.getString("apiUrl");
                                     Urls.H5_IP = json.getString("h5Url");
-                                    editor.putString("code",code);
+                                    editor.putString("code", code);
                                     Toast.makeText(LoginActivity.this, "切换商户成功", Toast.LENGTH_SHORT).show();
-                                    Log.e( "login: ",Urls.IP );
+                                    Log.e("login: ", Urls.IP);
                                     editor.apply();
-                                }else {
+                                } else {
                                     Toast.makeText(mContext, "商户编码错误", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
@@ -752,6 +776,42 @@ private static int TYPE = 0;    //登录方式 0 验证码登录 1 密码登录
             // Log.v("List_noteTypeActivity:", "我是关闭事件");
             backgroundAlpha(1f);
         }
+    }
+
+    public void saveUsername(String user_name) {
+        SharedPreferences sp = getSharedPreferences("sp", 0);
+        String user_list = sp.getString("user_name", "");
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(user_list);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (jsonArray != null) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if (jsonObject.getString("user_name").equals(user_name)) {
+                        return;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            jsonArray = new JSONArray();
+        }
+        JSONObject json = new JSONObject();
+        try {
+            json.put("user_name", user_name);
+            jsonArray.put(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("user_name", jsonArray.toString());
+        editor.apply();
+
     }
 
 }

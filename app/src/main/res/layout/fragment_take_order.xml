@@ -32,10 +32,11 @@
             android:id="@+id/tv_only"
             />
     </RelativeLayout>
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/y130"
         app:tabIndicatorColor="#1a9cff"
+        app:tabIndicatorFullWidth="false"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/black"
         app:tabTextAppearance="@android:style/TextAppearance.Holo.Small"
@@ -44,17 +45,17 @@
         android:id="@+id/tablayout"
         android:background="@color/white">
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
     <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_order"
         >
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
     </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 </LinearLayout>

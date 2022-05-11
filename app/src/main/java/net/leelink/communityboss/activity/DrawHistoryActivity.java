@@ -2,11 +2,7 @@ package net.leelink.communityboss.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.telephony.mbms.MbmsErrors;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -38,6 +34,9 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DrawHistoryActivity extends BaseActivity implements View.OnClickListener, OnOrderListener {
     private RecyclerView draw_list;

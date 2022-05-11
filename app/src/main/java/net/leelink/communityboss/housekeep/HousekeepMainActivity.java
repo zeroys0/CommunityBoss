@@ -1,8 +1,7 @@
 package net.leelink.communityboss.housekeep;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -24,14 +23,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
-import net.leelink.communityboss.MainActivity;
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.BaseActivity;
 import net.leelink.communityboss.app.CommunityBossApplication;
-import net.leelink.communityboss.fragment.CompleteOrderFragment;
-import net.leelink.communityboss.fragment.MineFragment;
-import net.leelink.communityboss.fragment.TakeOrderFragment;
-import net.leelink.communityboss.fragment.UntakeOrderFragment;
 import net.leelink.communityboss.housekeep.fragment.HsCompleteFragment;
 import net.leelink.communityboss.housekeep.fragment.HsMineFragment;
 import net.leelink.communityboss.housekeep.fragment.HsTakeFragment;

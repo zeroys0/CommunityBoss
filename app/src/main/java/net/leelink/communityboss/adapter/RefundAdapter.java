@@ -1,7 +1,7 @@
 package net.leelink.communityboss.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,8 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.bean.OrderBean;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.ViewHolder> {
     private Context context;
@@ -37,7 +39,7 @@ public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RefundAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RefundAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.tv_orderid.setText(list.get(position).getOrderId());
         holder.tv_time.setText("预约时间:"+list.get(position).getAppointTime());
         holder.tv_total_price.setText("总价:￥"+list.get(position).getActualPayPrice());

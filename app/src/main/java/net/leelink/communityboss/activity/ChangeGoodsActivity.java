@@ -10,11 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.core.content.ContextCompat;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,20 +24,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.app.CommunityBossApplication;
-import net.leelink.communityboss.bean.DeleteEvent;
 import net.leelink.communityboss.bean.Event;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.BitmapCompress;
@@ -49,7 +44,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.concurrent.ExecutionException;
 
 public class ChangeGoodsActivity extends BaseActivity implements View.OnClickListener {
 

@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.TabLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +40,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cn.jpush.android.api.JPushInterface;
 
 public class CompleteOrderFragment extends BaseFragment implements OnOrderListener {
@@ -72,8 +71,10 @@ public class CompleteOrderFragment extends BaseFragment implements OnOrderListen
         list_order = view.findViewById(R.id.list_order);
 
     }
-
+int i = 0;
     public void initData(final int page){
+        i++;
+        Log.e( "获取订单列表: ",i+"" );
         //获取订单列表
 
         OkGo.<String>get(Urls.getInstance().ORDERLIST)

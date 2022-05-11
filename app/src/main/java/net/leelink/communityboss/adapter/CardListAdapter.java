@@ -1,7 +1,6 @@
 package net.leelink.communityboss.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,8 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.bean.CardBean;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ViewHolder> {
 

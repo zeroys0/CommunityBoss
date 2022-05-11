@@ -13,7 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.maps.offlinemap.City;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
@@ -42,16 +41,17 @@ import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import net.leelink.communityboss.R;
-import net.leelink.communityboss.app.CommunityBossApplication;
 import net.leelink.communityboss.bean.OrganBean;
 import net.leelink.communityboss.bean.StreetBean;
 import net.leelink.communityboss.city.CityPicker;
 import net.leelink.communityboss.city.Cityinfo;
 import net.leelink.communityboss.utils.BitmapCompress;
 import net.leelink.communityboss.utils.FileUtil;
-import net.leelink.communityboss.utils.LoadDialog;
+import net.leelink.communityboss.utils.Logger;
 import net.leelink.communityboss.utils.Urls;
 
 import org.json.JSONArray;
@@ -66,10 +66,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
+import io.reactivex.functions.Consumer;
 
 public class ApplyActivity extends BaseActivity implements View.OnClickListener {
     private Button btn_submit;
-    private EditText ed_name, ed_phone, ed_address, ed_number, ed_name_c, ed_phone_c;
+    private EditText ed_name, ed_phone, ed_address, ed_number, ed_name_c, ed_phone_c,ed_server_address,ed_legal_person;
     private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s, rl_street;
     private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s,tv_street;
     private ImageView img_store_head, img_publicity, img_license, img_permit;
@@ -154,6 +155,8 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
         rl_street = findViewById(R.id.rl_street);
         rl_street.setOnClickListener(this);
         tv_street = findViewById(R.id.tv_street);
+        ed_server_address = findViewById(R.id.ed_server_address);
+        ed_legal_person = findViewById(R.id.ed_legal_person);
 
     }
 
@@ -170,25 +173,21 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 pvTime1.show();
                 break;
             case R.id.img_store_head:   //上传商店头像
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
+                requestPermissions();
                 type = 0;
                 break;
 
             case R.id.img_publicity:    //上传宣传图片
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
+                requestPermissions();
                 type = 1;
                 break;
             case R.id.img_license:  //上传执照图片
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
+                requestPermissions();
                 type = 2;
                 break;
 
             case R.id.img_permit:   //上传许可证书
-                popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
-                backgroundAlpha(0.5f);
+                requestPermissions();
                 type = 3;
                 break;
             case R.id.btn_photograph://拍照
@@ -266,7 +265,9 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.rl_street:
                 if(local_id_s !=null) {
-
+                    street();
+                } else {
+                    Toast.makeText(this, "请先选择区/县", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -320,6 +321,25 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
 
     //修改商户信息
     public void storeInfo() {
+
+        JSONObject json_address = new JSONObject();
+
+        try {
+            json_address.put("province", tv_province_s.getText().toString());
+            json_address.put("city", tv_city_s.getText().toString());
+            json_address.put("countyId", local_id_s);
+            json_address.put("county", tv_local_s.getText().toString());
+            json_address.put("townId", town_id);
+            json_address.put("cityId", city_id_s);
+            json_address.put("provinceId", province_id_s);
+            json_address.put("town", tv_street.getText().toString());
+            json_address.put("address", ed_address.getText().toString());
+            json_address.put("fullAddress", tv_province_s.getText().toString() + tv_city_s.getText().toString() + tv_local_s.getText().toString() + tv_street.getText().toString() + ed_address.getText().toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         Log.e("address: ", ed_address.getText().toString().trim());
         Log.e("areaId: ", local_id_s);
         Log.e("businessNo: ", ed_number.getText().toString().trim());
@@ -353,26 +373,38 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 .params("provinceId", province_id_s)
                 .params("registfile", file0)
                 .params("storeFontfile", file1)
+                .params("legalPerson",ed_legal_person.getText().toString().trim())
                 .params("storeName", ed_name.getText().toString().trim())
                 .params("serverTypeId", 1)
                 .params("id", getIntent().getStringExtra("id"))
+                .params("addressJson",json_address.toString())
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        mProgressBar.setVisibility(View.GONE);
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
-                            Log.d("修改商户信息", json.toString());
+                            Log.d("提交商户审核", json.toString());
                             if (json.getInt("status") == 200) {
-                                mProgressBar.setVisibility(View.GONE);
                                 Toast.makeText(ApplyActivity.this, "提交成功,请等待审核", Toast.LENGTH_SHORT).show();
                                 finish();
+                                ChooseIdentityActivity.instance.finish();
+                                Intent intent = new Intent(mContext,ExamineActivity.class);
+                                startActivity(intent);
                             } else {
                                 Toast.makeText(ApplyActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        stopProgressBar();
+                        Toast.makeText(mContext, "系统繁忙,请稍后重试", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -484,7 +516,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
 
     //选择地区机构
     public void organ() {
-        OkGo.<String>get("http://api.llky.net:8888/sh/user/organ")
+        OkGo.<String>get(Urls.IP+"/sh/user/organ")
                 .tag(this)
                 .params("areaId", local_id)
                 //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
@@ -740,4 +772,43 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
         mProgressBar.setVisibility(View.GONE);
         rootFrameLayout.addView(mProgressBar);
     }
+
+    static int index_rx = 0;
+
+    @SuppressLint("CheckResult")
+    private void requestPermissions() {
+
+        RxPermissions rxPermission = new RxPermissions(ApplyActivity.this);
+        rxPermission.requestEach(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,//写外部存储器
+                Manifest.permission.READ_EXTERNAL_STORAGE,//读取外部存储器
+                Manifest.permission.CAMERA)//照相机
+                .subscribe(new Consumer<Permission>() {
+                    @Override
+                    public void accept(Permission permission) throws Exception {
+                        if (permission.granted) {
+                            // 用户已经同意该权限
+                            Logger.i("用户已经同意该权限", permission.name + " is granted.");
+                            popuPhoneW.showAtLocation(img_store_head, Gravity.CENTER, 0, 0);
+                            backgroundAlpha(0.5f);
+
+                        } else if (permission.shouldShowRequestPermissionRationale) {
+                            // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                            Logger.i("用户拒绝了该权限,没有选中『不再询问』", permission.name + " is denied. More info should be provided.");
+                        } else {
+                            // 用户拒绝了该权限，并且选中『不再询问』
+                            Logger.i("用户拒绝了该权限,并且选中『不再询问』", permission.name + " is denied.");
+                            Toast.makeText(mContext, "您已经拒绝该权限,请在权限管理中开启权限使用本功能", Toast.LENGTH_SHORT).show();
+                        }
+                        index_rx++;
+                        if (index_rx == 3) {
+
+                            index_rx = 0;
+                        }
+                    }
+                });
+    }
+
+
+
 }

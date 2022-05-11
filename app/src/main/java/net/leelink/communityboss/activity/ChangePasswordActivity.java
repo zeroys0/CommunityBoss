@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -112,8 +111,6 @@ private Button btn_confirm;
                             try {
                                 String body = response.body();
                                 JSONObject json = new JSONObject(body);
-//                                body = body.substring(1,body.length()-1);
-//                                JSONObject json = new JSONObject(body.replaceAll("\\\\",""));
                                 Log.d("获取验证码",json.toString());
                                 if (json.getInt("status") == 200) {
                                     if(time == 60) {

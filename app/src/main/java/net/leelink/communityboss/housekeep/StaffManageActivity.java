@@ -1,46 +1,23 @@
 package net.leelink.communityboss.housekeep;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
+import com.google.android.material.tabs.TabLayout;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.activity.BaseActivity;
-import net.leelink.communityboss.activity.LoginActivity;
 import net.leelink.communityboss.adapter.OnOrderListener;
-import net.leelink.communityboss.bean.StaffBean;
-import net.leelink.communityboss.housekeep.adapter.StaffCheckAdapter;
-import net.leelink.communityboss.housekeep.adapter.StaffListAdapter;
 import net.leelink.communityboss.housekeep.fragment.StaffCheckFragment;
 import net.leelink.communityboss.housekeep.fragment.StaffListFragment;
 import net.leelink.communityboss.housekeep.fragment.StaffServiceFragment;
-import net.leelink.communityboss.utils.Urls;
 import net.leelink.communityboss.utils.Utils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static net.leelink.communityboss.activity.LoginActivity.setIndicator;
 
 public class StaffManageActivity extends BaseActivity implements OnOrderListener, View.OnClickListener {
 private TabLayout tablayout;
@@ -48,7 +25,7 @@ private RelativeLayout rl_back;
 private StaffCheckFragment staffCheckFragment;
 private StaffListFragment staffListFragment;
 private StaffServiceFragment staffServiceFragment;
-    private android.support.v4.app.FragmentManager fm;
+    private FragmentManager fm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +41,6 @@ private StaffServiceFragment staffServiceFragment;
         tablayout.addTab(tablayout.newTab().setText("员工审核"));
         tablayout.addTab(tablayout.newTab().setText("员工管理"));
         tablayout.addTab(tablayout.newTab().setText("添加服务"));
-        tablayout.post(new Runnable() {
-            @Override
-            public void run() {
-                setIndicator(tablayout, 36, 36);
-            }
-        });
         fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         staffCheckFragment = (StaffCheckFragment) fm.findFragmentByTag("check");

@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:id="@+id/rl_check"
         >
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:background="@drawable/check_box"

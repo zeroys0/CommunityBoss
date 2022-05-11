@@ -1,7 +1,7 @@
 package net.leelink.communityboss.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,8 @@ import net.leelink.communityboss.R;
 import net.leelink.communityboss.bean.OrderBean;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.ViewHolder> {
 
@@ -42,7 +44,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(OrderListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(OrderListAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.tv_orderid.setText(list.get(position).getOrderId());
         switch (list.get(position).getOrderState()){
             case 2:
