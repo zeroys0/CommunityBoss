@@ -50,7 +50,7 @@ import java.io.File;
 import io.reactivex.functions.Consumer;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
-    private RelativeLayout rl_back, rl_logout, rl_change_password;
+    private RelativeLayout rl_back, rl_logout, rl_change_password,rl_user;
     private ImageView img_head, img_change;
     private TextView tv_name, tv_phone;
     private PopupWindow popuPhoneW;
@@ -87,6 +87,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         tv_phone.setText(CommunityBossApplication.storeInfo.getTelephone());
         rl_change_password = findViewById(R.id.rl_change_password);
         rl_change_password.setOnClickListener(this);
+        rl_user = findViewById(R.id.rl_user);
+        rl_user.setOnClickListener(this);
     }
 
     @Override
@@ -137,6 +139,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 Intent intent2 = new Intent(Intent.ACTION_PICK);
                 intent2.setType("image/*");
                 startActivityForResult(intent2, 1);
+                break;
+            case R.id.rl_user:  //当前账号
+                Intent intent3 = new Intent(mContext,NowUserActivity.class);
+                startActivity(intent3);
                 break;
             default:
                 break;

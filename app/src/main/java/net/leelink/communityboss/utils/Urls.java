@@ -56,6 +56,7 @@ public class Urls {
     public String QUICKLOGIN = WEBSITE + "quickLogin";  //快速登录
     public String TXAOUNT = WEBSITE + "txAount";    //提现
     public String ORDER_ONLY = WEBSITE + "order-only";      //确认用户自取
+    public String CANCELACCOUNT = IP+"/sh/store/cancelAccount"; //注销账号
     //获取街道
     public String GETTOWN = IP + "/sysDict/getTown";
 

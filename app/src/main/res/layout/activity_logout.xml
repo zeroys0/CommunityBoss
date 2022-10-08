@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".activity.LogoutActivity">
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y185"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/y80"
+            android:layout_marginBottom="@dimen/y44"
+            android:text="申请注销账号"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/x45" />
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/y185">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x45"
+                android:layout_marginTop="@dimen/y95"
+                android:src="@drawable/arrow_left_black" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+    <ImageView
+        android:layout_width="@dimen/x144"
+        android:layout_height="@dimen/y144"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/img_logout"
+        android:layout_margin="@dimen/y59"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注销当前乐聆商家版帐号"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y76"
+        android:textSize="@dimen/x55"
+        android:textColor="@color/text_black"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="将所绑定的帐号注销"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y20"
+        android:textSize="@dimen/x35"
+        android:textColor="#666666"
+        android:id="@+id/tv_tips"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x59"
+        android:layout_marginRight="@dimen/x59"
+        android:background="@drawable/bg_white_radius"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/y112"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注销帐号有以下风险"
+            android:layout_marginLeft="@dimen/x52"
+            android:layout_marginTop="@dimen/y62"
+            android:textSize="@dimen/x49"
+            android:textColor="@color/text_black"
+            android:includeFontPadding="false"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="· 永久注销,无法登录"
+            android:layout_marginLeft="@dimen/x62"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/x35"
+            android:layout_marginTop="@dimen/y84"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="帐号一旦注销,无法登录,且会删除用户帐号关联敏感信息"
+            android:layout_marginLeft="@dimen/x82"
+            android:textColor="#666666"
+            android:textSize="@dimen/x35"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="· 乐聆商家版帐号无法再使用"
+            android:layout_marginLeft="@dimen/x62"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/x35"
+            android:layout_marginTop="@dimen/y56"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="账号一旦注销,乐聆商家版app将无法登录"
+            android:layout_marginLeft="@dimen/x82"
+            android:textColor="#666666"
+            android:textSize="@dimen/x35"
+            android:layout_marginBottom="@dimen/y65"
+            />
+    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x50"
+        android:layout_marginRight="@dimen/x50"
+        android:background="@drawable/bg_blue_radius"
+        android:layout_marginTop="@dimen/y400"
+        android:text="申请注销帐号"
+        android:textSize="@dimen/x52"
+        android:textStyle="bold"
+        android:id="@+id/btn_logout"
+        />
+</LinearLayout>

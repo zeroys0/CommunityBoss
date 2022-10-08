@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.StrictMode;
+import android.util.Log;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -93,6 +94,7 @@ public class CommunityBossApplication extends Application {
     }
 
     public void initJPush(){
+        Log.d( "初始化了极光: ","初始化了");
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
     }

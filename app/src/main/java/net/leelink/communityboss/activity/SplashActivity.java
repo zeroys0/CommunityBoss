@@ -144,7 +144,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.tv_confirm:   //同意条款
                 //是否已登录
-                app.initSdk();
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("agreement", true);
                 editor.apply();

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    tools:context=".activity.ConfirmLogoutActivity">
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y185"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/y80"
+            android:layout_marginBottom="@dimen/y44"
+            android:text="申请注销账号"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/x45" />
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/y185">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x45"
+                android:layout_marginTop="@dimen/y95"
+                android:src="@drawable/arrow_left_black" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="@dimen/x144"
+        android:layout_height="@dimen/y144"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/img_logout"
+        android:layout_marginTop="@dimen/y59"
+        android:id="@+id/img_warning"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_logout"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y125"
+        android:text="账号正在注销中..."
+        android:textSize="@dimen/x55"
+        android:textColor="@color/text_black"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击停止注销"
+        android:layout_marginTop="@dimen/y59"
+        android:textColor="#3494f4"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/tv_stop"
+        />
+</LinearLayout>

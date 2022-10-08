@@ -69,17 +69,18 @@
                 android:layout_marginLeft="13dp"
                 android:textSize="14sp"
                 android:textColor="@color/grey_apply"/>
+
             <TextView
+                android:id="@+id/tv_distribution"
                 android:layout_width="60dp"
                 android:layout_height="18dp"
-                android:background="@drawable/apply_button"
-                android:text="立即申请"
-                android:id="@+id/tv_distribution"
-                android:textColor="#2995fe"
-                android:textSize="12sp"
-                android:gravity="center"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="38dp"/>
+                android:layout_marginTop="38dp"
+                android:background="@drawable/apply_button"
+                android:gravity="center"
+                android:text="立即申请"
+                android:textColor="#2995fe"
+                android:textSize="12sp" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,6 +122,93 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 />
+
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="83dp"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:id="@+id/rl_setting">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="10dp"
+                android:text="设置"
+                android:textColor="@color/grey_apply"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="38dp"
+                android:background="@drawable/apply_button"
+                android:gravity="center"
+                android:text="设置"
+                android:textColor="#2995fe"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="@dimen/x90"
+                android:layout_height="@dimen/y90"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/x22"
+                android:layout_marginBottom="@dimen/y20"
+                android:src="@drawable/img_setting_big" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="83dp"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:visibility="invisible">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="10dp"
+                android:text="设置"
+                android:textColor="@color/grey_apply"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="38dp"
+                android:background="@drawable/apply_button"
+                android:gravity="center"
+                android:text="设置"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="@dimen/x90"
+                android:layout_height="@dimen/y90"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/x22"
+                android:layout_marginBottom="@dimen/y20"
+                android:src="@drawable/img_setting_big" />
 
         </RelativeLayout>
     </LinearLayout>
