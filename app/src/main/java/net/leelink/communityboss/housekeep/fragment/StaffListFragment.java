@@ -23,6 +23,7 @@ import net.leelink.communityboss.housekeep.StaffCheckActivity;
 import net.leelink.communityboss.housekeep.StaffManageActivity;
 import net.leelink.communityboss.housekeep.adapter.StaffCheckAdapter;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,6 +96,9 @@ public class StaffListFragment  extends BaseFragment implements OnOrderListener 
     }
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = staff_list.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), StaffCheckActivity.class);
         intent.putExtra("staff",list.get(position) );
@@ -104,6 +108,9 @@ public class StaffListFragment  extends BaseFragment implements OnOrderListener 
 
     @Override
     public void onButtonClick(View view, int position) {
+        if(Utils.isFastClick()){
+            return;
+        }
         Intent intent = new Intent(getContext(), StaffCheckActivity.class);
         intent.putExtra("staff",list.get(position) );
         intent.putExtra("action","delete");

@@ -5,13 +5,17 @@
       <map>
         <entry key="..\:/CommunityBoss/app/src/main/res/drawable/bg_blue_radius.xml" value="0.1165" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_all_service.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_apply.xml" value="0.23541666666666666" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_balance.xml" value="0.19895833333333332" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_choose_identity.xml" value="0.2" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_confirm_logout.xml" value="0.2171875" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_delegate.xml" value="0.19895833333333332" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_draw_detail.xml" value="0.19895833333333332" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_draw_history.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_hs_order_detail.xml" value="0.19739583333333333" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_hs_refund_list.xml" value="0.21927083333333333" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_income_list_acticity.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_information.xml" value="0.2875" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_login.xml" value="0.19895833333333332" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_logout.xml" value="0.1421875" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_manage_goods.xml" value="0.19895833333333332" />
@@ -21,8 +25,11 @@
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_refund_list.xml" value="0.19895833333333332" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_service_item.xml" value="0.19895833333333332" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_setting.xml" value="0.2171875" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_staff_check.xml" value="0.1546875" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_staff_manage.xml" value="0.15677083333333333" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/activity_staff_order.xml" value="0.19895833333333332" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/fragment_complete_order.xml" value="0.75" />
+        <entry key="..\:/CommunityBoss/app/src/main/res/layout/fragment_mine.xml" value="0.2875" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/fragment_staff_check.xml" value="0.19895833333333332" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/fragment_take_order.xml" value="0.7540322580645161" />
         <entry key="..\:/CommunityBoss/app/src/main/res/layout/goods_item.xml" value="0.19895833333333332" />

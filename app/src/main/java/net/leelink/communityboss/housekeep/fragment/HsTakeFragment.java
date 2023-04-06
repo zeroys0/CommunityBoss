@@ -46,6 +46,7 @@ import net.leelink.communityboss.housekeep.adapter.HsOrderAdapter;
 import net.leelink.communityboss.housekeep.adapter.WorkOrderAdapter;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -90,11 +91,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            jsonArray = new JSONArray("[]");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        jsonArray = new JSONArray();
         initData(type);
     }
 
@@ -334,6 +331,9 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
 
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), HsOrderDetailActivity.class);
 
@@ -353,6 +353,9 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
     @Override
     public void onButtonClick(View view, final int position) {
         int operation;
+        if(Utils.isFastClick()){
+            return;
+        }
         if(type .equals( "2")){
             Intent intent = new Intent(getContext(), DelegateActivity.class);
             intent.putExtra("id",list.get(position).getProductId());
@@ -426,6 +429,7 @@ public class HsTakeFragment extends BaseFragment implements OnOrderListener {
 
     @Override
     public void handleCallBack(Message msg) {
+
 
     }
     private void createProgressBar(){

@@ -41,6 +41,7 @@ import net.leelink.communityboss.housekeep.HsOrderDetailActivity;
 import net.leelink.communityboss.housekeep.adapter.HsOrderAdapter;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -141,6 +142,9 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
 
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), HsOrderDetailActivity.class);
         try {
@@ -198,6 +202,10 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
+        if(Utils.isFastClick()){
+            return;
+        }
+        Log.d( "确认订单: ",list.get(position).getOrderId());
         OkGo.<String>post(Urls.getInstance().HS_ORDERSTATE+"?"+"orderId="+list.get(position).getOrderId()+"&state="+2)
                 .tag(this)
                 .execute(new StringCallback() {
@@ -209,6 +217,7 @@ public class HsUntakeFragment extends BaseFragment implements OnOrderListener {
                             Log.d("确认订单",json.toString());
                             if (json.getInt("status") == 200) {
                                 jsonArray.remove(position);
+                                list.remove(position);
                                 hsOrderAdapter.notifyDataSetChanged();
                                 Toast.makeText(getContext(), "订单已确认,请尽快完成吧~", Toast.LENGTH_SHORT).show();
                                 EventBus.getDefault().post(new TakeOrderRefresh());

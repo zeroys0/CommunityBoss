@@ -95,8 +95,6 @@ public class ConfirmLogoutActivity extends BaseActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_back:
-                finish();
-                break;
             case R.id.tv_stop:
                 finish();
                 break;

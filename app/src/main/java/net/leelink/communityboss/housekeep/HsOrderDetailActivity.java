@@ -305,6 +305,11 @@ public class HsOrderDetailActivity extends BaseActivity  implements View.OnClick
                         ed_reply.setFocusableInTouchMode(false);
                     }
                     break;
+                case 9:
+                case 10:
+                    ll_button.setVisibility(GONE);
+                    btn_confirm.setVisibility(GONE);
+                    break;
 
             }
         } catch (JSONException e) {

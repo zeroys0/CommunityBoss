@@ -26,7 +26,10 @@
         android:roundIcon="@mipmap/android_template_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".housekeep.HsInformationActivity"></activity>
+        <activity
+            android:name=".housekeep.HsRefundListActivity"
+            android:exported="false" />
+        <activity android:name=".housekeep.HsInformationActivity" />
         <activity android:name=".activity.DrawHistoryActivity" />
         <activity android:name=".activity.IncomeListActicity" />
         <activity android:name=".activity.BalanceActivity" />
@@ -48,7 +51,7 @@
         <activity android:name=".activity.HKApplyActivity" />
         <activity android:name=".activity.BoundaryActivity" /> <!-- <activity android:name=".activity.CheckActivity"></activity> -->
         <activity android:name=".activity.ChangeGoodsActivity" />
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -77,9 +80,9 @@
         <activity android:name=".activity.ExamineActivity" />
         <activity android:name=".activity.AnswerActivity" />
         <activity android:name=".activity.WebActivity" />
-        <activity android:name=".activity.NowUserActivity"/>
-        <activity android:name=".activity.ConfirmLogoutActivity"/>
-        <activity android:name=".activity.LogoutActivity"/>
+        <activity android:name=".activity.NowUserActivity" />
+        <activity android:name=".activity.ConfirmLogoutActivity" />
+        <activity android:name=".activity.LogoutActivity" />
         <activity android:name=".activity.MyServiceActivity" /> <!-- 这个Service要继承JCommonService -->
         <service
             android:name=".receiver.PushService"

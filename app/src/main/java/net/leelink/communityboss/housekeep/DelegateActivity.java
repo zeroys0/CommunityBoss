@@ -63,12 +63,14 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
             public void onClick(View v) {
                 finish();
             }
+
         });
     }
 
 
 
     public void initData(){
+        Log.d( "initData: ",getIntent().getStringExtra("id"));
         OkGo.<String>get(Urls.getInstance().WORKSER)
                 .params("pangeNum",page)
                 .params("pageSize",10)
@@ -108,7 +110,6 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
 
         Intent intent = new Intent( this,StaffOrderActivity.class);
         intent.putExtra("userId",list.get(position).getUserId());
-
         startActivity(intent);
     }
 
@@ -125,7 +126,7 @@ public class DelegateActivity extends BaseActivity implements OnOrderListener {
                             Log.d("确认订单",json.toString());
                             if (json.getInt("status") == 200) {
                                 Toast.makeText(DelegateActivity.this, "派单成功", Toast.LENGTH_SHORT).show();
-                                EventBus.getDefault().post(new HsOrderRefresh());
+                            //    EventBus.getDefault().post(new HsOrderRefresh());
                                 EventBus.getDefault().post(new DelegateCallBack());
                                 finish();
                             } else {

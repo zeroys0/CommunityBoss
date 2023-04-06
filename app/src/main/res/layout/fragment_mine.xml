@@ -66,14 +66,13 @@
 <!--            android:id="@+id/img_change"-->
 <!--            />-->
         <ImageView
+            android:id="@+id/img_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/img_state"
-            android:src="@mipmap/img_state_rest"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/x253"
             android:layout_marginTop="@dimen/y12"
-            />
+            android:layout_marginRight="@dimen/x253"
+            android:src="@mipmap/img_state_rest" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

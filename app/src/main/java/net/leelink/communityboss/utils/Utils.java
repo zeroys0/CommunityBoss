@@ -268,4 +268,17 @@ public class Utils {
         return 0;
 
     }
+    private static final int MIN_CLICK_DELAY_TIME = 1000;
+    private static long lastClickTime;
+    //防止连续点击
+    public static boolean isFastClick() {
+        boolean flag = true;
+        long curClickTime = System.currentTimeMillis();
+        if ((curClickTime - lastClickTime) >= MIN_CLICK_DELAY_TIME) {
+            flag = false;
+        }
+        lastClickTime = curClickTime;
+        return flag;
+    }
+
 }

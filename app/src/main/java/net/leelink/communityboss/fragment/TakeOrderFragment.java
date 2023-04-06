@@ -37,6 +37,7 @@ import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.bean.TakeOrderRefresh;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -203,6 +204,9 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
 
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         intent.putExtra("orderId",list.get(position).getOrderId());
@@ -216,6 +220,9 @@ public class TakeOrderFragment extends  BaseFragment implements OnOrderListener 
 
     @Override
     public void onButtonClick(View view, final int position) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int operation;
         if(type .equals( "3,4")){
             operation = 2;  //开始派送

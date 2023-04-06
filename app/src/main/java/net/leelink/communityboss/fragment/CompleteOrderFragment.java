@@ -32,6 +32,7 @@ import net.leelink.communityboss.bean.OrderBean;
 import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -154,6 +155,9 @@ int i = 0;
 
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         intent.putExtra("orderId",list.get(position).getOrderId());

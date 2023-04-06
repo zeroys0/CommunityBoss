@@ -36,6 +36,7 @@ import net.leelink.communityboss.housekeep.HsOrderDetailActivity;
 import net.leelink.communityboss.housekeep.adapter.HsOrderAdapter;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -165,6 +166,9 @@ public class HsCompleteFragment extends BaseFragment implements OnOrderListener 
 
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), HsOrderDetailActivity.class);
         try {

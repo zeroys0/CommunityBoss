@@ -23,6 +23,7 @@ import net.leelink.communityboss.housekeep.AllServiceActivity;
 import net.leelink.communityboss.housekeep.StaffServiceActivity;
 import net.leelink.communityboss.housekeep.adapter.StaffCheckAdapter;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,6 +95,9 @@ public class StaffServiceFragment extends BaseFragment implements OnOrderListene
     }
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = staff_list.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), StaffServiceActivity.class);
         intent.putExtra("id",list.get(position).getId());
@@ -102,6 +106,9 @@ public class StaffServiceFragment extends BaseFragment implements OnOrderListene
 
     @Override
     public void onButtonClick(View view, int position) {
+        if(Utils.isFastClick()){
+            return;
+        }
         Intent intent = new Intent(getContext(), AllServiceActivity.class);
         intent.putExtra("id",list.get(position).getId());
         startActivity(intent);

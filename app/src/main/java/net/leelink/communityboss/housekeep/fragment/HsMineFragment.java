@@ -49,6 +49,7 @@ import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.fragment.BaseFragment;
 import net.leelink.communityboss.housekeep.HsIncomeActivity;
 import net.leelink.communityboss.housekeep.HsInformationActivity;
+import net.leelink.communityboss.housekeep.HsRefundListActivity;
 import net.leelink.communityboss.housekeep.ServiceItemActivity;
 import net.leelink.communityboss.housekeep.StaffManageActivity;
 import net.leelink.communityboss.utils.Acache;
@@ -237,7 +238,8 @@ public class HsMineFragment extends BaseFragment implements View.OnClickListener
                 startActivity(intent3);
                 break;
             case R.id.rl_refund:    //退款订单
-                Intent intent4 = new Intent(getContext(), RefundListActivity.class);
+              //  Intent intent4 = new Intent(getContext(), RefundListActivity.class);
+                Intent intent4 = new Intent(getContext(), HsRefundListActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.rl_service:   //我的客服

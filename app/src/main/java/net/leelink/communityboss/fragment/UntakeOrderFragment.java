@@ -32,6 +32,7 @@ import net.leelink.communityboss.bean.OrderBean;
 import net.leelink.communityboss.bean.StoreInfo;
 import net.leelink.communityboss.utils.Acache;
 import net.leelink.communityboss.utils.Urls;
+import net.leelink.communityboss.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -162,6 +163,9 @@ private List<OrderBean> list = new ArrayList<>();
 
     @Override
     public void onItemClick(View view) {
+        if(Utils.isFastClick()){
+            return;
+        }
         int position = list_order.getChildLayoutPosition(view);
         Intent intent = new Intent(getContext(), OrderDetailActivity.class);
         intent.putExtra("orderId",list.get(position).getOrderId());
@@ -173,6 +177,9 @@ private List<OrderBean> list = new ArrayList<>();
     //确认接单
     @Override
     public void onButtonClick(View view, final int position) {
+        if(Utils.isFastClick()){
+            return;
+        }
         OkGo.<String>post(Urls.getInstance().ORDERSTATE+"?orderId="+list.get(position).getOrderId()+"&state=3")
                 .tag(this)
                 .execute(new StringCallback() {

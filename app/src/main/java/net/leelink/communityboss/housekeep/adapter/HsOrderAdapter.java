@@ -91,6 +91,11 @@ public class HsOrderAdapter extends RecyclerView.Adapter<HsOrderAdapter.ViewHold
                     holder.tv_state.setText("服务完成");
                     holder.btn_confirm.setVisibility(View.GONE);
                     break;
+                case 9:
+                case 10:
+                    holder.tv_state.setText("订单取消");
+                    holder.btn_confirm.setVisibility(View.GONE);
+                    break;
                 default:
                     break;
             }
