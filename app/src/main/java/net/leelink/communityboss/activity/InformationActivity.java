@@ -3,6 +3,7 @@ package net.leelink.communityboss.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,11 +63,13 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
     private PopupWindow popuPhoneW;
     private TimePickerView pvTime, pvTime1;
     private SimpleDateFormat sdf, sdf1;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
+        context = this;
         init();
         initData();
         popu_head();
@@ -427,19 +430,19 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                     switch (type) {
                         case 0:
                             img_store_head.setImageBitmap(bitmap);
-                            file0 = BitmapCompress.compressImage(bitmap);
+                            file0 = BitmapCompress.compressImage(bitmap,context);
                             break;
                         case 1:
                             img_publicity.setImageBitmap(bitmap);
-                            file1 = BitmapCompress.compressImage(bitmap);
+                            file1 = BitmapCompress.compressImage(bitmap,context);
                             break;
                         case 2:
                             img_license.setImageBitmap(bitmap);
-                            file2 = BitmapCompress.compressImage(bitmap);
+                            file2 = BitmapCompress.compressImage(bitmap,context);
                             break;
                         case 3:
                             img_permit.setImageBitmap(bitmap);
-                            file3 = BitmapCompress.compressImage(bitmap);
+                            file3 = BitmapCompress.compressImage(bitmap,context);
                             break;
                         default:
                             break;
@@ -452,19 +455,19 @@ public class InformationActivity extends BaseActivity implements View.OnClickLis
                         switch (type) {
                             case 0:
                                 img_store_head.setImageBitmap(bitmap);
-                                file0 = BitmapCompress.compressImage(bitmap);
+                                file0 = BitmapCompress.compressImage(bitmap,context);
                                 break;
                             case 1:
                                 img_publicity.setImageBitmap(bitmap);
-                                file1 = BitmapCompress.compressImage(bitmap);
+                                file1 = BitmapCompress.compressImage(bitmap,context);
                                 break;
                             case 2:
                                 img_license.setImageBitmap(bitmap);
-                                file2 = BitmapCompress.compressImage(bitmap);
+                                file2 = BitmapCompress.compressImage(bitmap,context);
                                 break;
                             case 3:
                                 img_permit.setImageBitmap(bitmap);
-                                file3 = BitmapCompress.compressImage(bitmap);
+                                file3 = BitmapCompress.compressImage(bitmap,context);
                                 break;
                             default:
                                 break;

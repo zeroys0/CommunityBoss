@@ -620,15 +620,15 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                     switch (type) {
                         case 0:
                             img_store_head.setImageBitmap(bitmap);
-                            file0 = BitmapCompress.compressImage(bitmap);
+                            file0 = BitmapCompress.compressImage(bitmap,mContext);
                             break;
                         case 1:
                             img_publicity.setImageBitmap(bitmap);
-                            file1 = BitmapCompress.compressImage(bitmap);
+                            file1 = BitmapCompress.compressImage(bitmap,mContext);
                             break;
                         case 2:
                             img_license.setImageBitmap(bitmap);
-                            file2 = BitmapCompress.compressImage(bitmap);
+                            file2 = BitmapCompress.compressImage(bitmap,mContext);
                             break;
                         default:
                             break;
@@ -641,15 +641,15 @@ public class HousekeepApplyActivity extends BaseActivity implements View.OnClick
                         switch (type) {
                             case 0:
                                 img_store_head.setImageBitmap(bitmap);
-                                file0 = BitmapCompress.compressImage(bitmap);
+                                file0 = BitmapCompress.compressImage(bitmap,mContext);
                                 break;
                             case 1:
                                 img_publicity.setImageBitmap(bitmap);
-                                file1 = BitmapCompress.compressImage(bitmap);
+                                file1 = BitmapCompress.compressImage(bitmap,mContext);
                                 break;
                             case 2:
                                 img_license.setImageBitmap(bitmap);
-                                file2 = BitmapCompress.compressImage(bitmap);
+                                file2 = BitmapCompress.compressImage(bitmap,mContext);
                                 break;
                             default:
                                 break;

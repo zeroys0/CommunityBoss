@@ -159,7 +159,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     Uri uri = data.getData();
                     bitmap = BitmapCompress.decodeUriBitmap(SettingActivity.this, uri);
                     img_head.setImageBitmap(bitmap);
-                    file = BitmapCompress.compressImage(bitmap);
+                    file = BitmapCompress.compressImage(bitmap,mContext);
                     if(file!=null){
                         upLoadImg();
                     }
@@ -170,7 +170,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     if (bundle != null) {
                         bitmap = (Bitmap) bundle.get("data");
                         img_head.setImageBitmap(bitmap);
-                        file = BitmapCompress.compressImage(bitmap);
+                        file = BitmapCompress.compressImage(bitmap,mContext);
                         if(file!=null){
                             upLoadImg();
                         }

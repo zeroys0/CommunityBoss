@@ -13,7 +13,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.core.content.ContextCompat;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -70,9 +72,9 @@ import io.reactivex.functions.Consumer;
 
 public class ApplyActivity extends BaseActivity implements View.OnClickListener {
     private Button btn_submit;
-    private EditText ed_name, ed_phone, ed_address, ed_number, ed_name_c, ed_phone_c,ed_server_address,ed_legal_person;
+    private EditText ed_name, ed_phone, ed_address, ed_number, ed_name_c, ed_phone_c, ed_server_address, ed_legal_person;
     private RelativeLayout rl_open_time, rl_close_time, rl_back, rl_province, rl_city, rl_local, rl_organ, rl_province_s, rl_city_s, rl_local_s, rl_street;
-    private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s,tv_street;
+    private TextView tv_open_time, tv_close_time, tv_province, tv_city, tv_local, tv_organ, tv_province_s, tv_city_s, tv_local_s, tv_street;
     private ImageView img_store_head, img_publicity, img_license, img_permit;
     private PopupWindow popuPhoneW;
     private TimePickerView pvTime, pvTime1;
@@ -87,23 +89,24 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
     private List<Cityinfo> province_list = new ArrayList<Cityinfo>();
     private HashMap<String, List<Cityinfo>> city_map = new HashMap<String, List<Cityinfo>>();
     private HashMap<String, List<Cityinfo>> couny_map = new HashMap<String, List<Cityinfo>>();
-    String province_id, city_id, local_id, province_id_s, city_id_s, local_id_s,town_id; //街道ID;
+    String province_id, city_id, local_id, province_id_s, city_id_s, local_id_s, town_id; //街道ID;
     int organ_id, nature;
     int type;
     private boolean ORGAN = true;
     private boolean STORE = false;
-    ProgressBar mProgressBar;
     Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply);
+        mContext = this;
+        createProgressBar(mContext);
         init();
         initPickerView();
         initClose();
         popu_head();
-        createProgressBar();
+
     }
 
     public void init() {
@@ -264,7 +267,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.rl_street:
-                if(local_id_s !=null) {
+                if (local_id_s != null) {
                     street();
                 } else {
                     Toast.makeText(this, "请先选择区/县", Toast.LENGTH_SHORT).show();
@@ -354,7 +357,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
         Log.e("provinceId: ", province_id_s);
         Log.e("storeName: ", ed_name.getText().toString().trim());
         Log.e("serverTypeId: ", "1");
-        mProgressBar.setVisibility(View.VISIBLE);
+        showProgressBar();
         OkGo.<String>post(Urls.getInstance().REGISTER)
                 .tag(this)
                 .params("address", tv_province_s.getText().toString().trim() + tv_city_s.getText().toString().trim() + tv_local_s.getText().toString().trim() + ed_address.getText().toString().trim())
@@ -373,15 +376,15 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 .params("provinceId", province_id_s)
                 .params("registfile", file0)
                 .params("storeFontfile", file1)
-                .params("legalPerson",ed_legal_person.getText().toString().trim())
+                .params("legalPerson", ed_legal_person.getText().toString().trim())
                 .params("storeName", ed_name.getText().toString().trim())
                 .params("serverTypeId", 1)
                 .params("id", getIntent().getStringExtra("id"))
-                .params("addressJson",json_address.toString())
+                .params("addressJson", json_address.toString())
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        mProgressBar.setVisibility(View.GONE);
+                        stopProgressBar();
                         try {
                             String body = response.body();
                             JSONObject json = new JSONObject(body);
@@ -390,7 +393,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                                 Toast.makeText(ApplyActivity.this, "提交成功,请等待审核", Toast.LENGTH_SHORT).show();
                                 finish();
                                 ChooseIdentityActivity.instance.finish();
-                                Intent intent = new Intent(mContext,ExamineActivity.class);
+                                Intent intent = new Intent(mContext, ExamineActivity.class);
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(ApplyActivity.this, json.getString("message"), Toast.LENGTH_LONG).show();
@@ -516,7 +519,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
 
     //选择地区机构
     public void organ() {
-        OkGo.<String>get(Urls.IP+"/sh/user/organ")
+        OkGo.<String>get(Urls.IP + "/sh/user/organ")
                 .tag(this)
                 .params("areaId", local_id)
                 //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
@@ -579,19 +582,19 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                     switch (type) {
                         case 0:
                             img_store_head.setImageBitmap(bitmap);
-                            file0 = BitmapCompress.compressImage(bitmap);
+                            file0 = BitmapCompress.compressImage(bitmap,mContext);
                             break;
                         case 1:
                             img_publicity.setImageBitmap(bitmap);
-                            file1 = BitmapCompress.compressImage(bitmap);
+                            file1 = BitmapCompress.compressImage(bitmap,mContext);
                             break;
                         case 2:
                             img_license.setImageBitmap(bitmap);
-                            file2 = BitmapCompress.compressImage(bitmap);
+                            file2 = BitmapCompress.compressImage(bitmap,mContext);
                             break;
                         case 3:
                             img_permit.setImageBitmap(bitmap);
-                            file3 = BitmapCompress.compressImage(bitmap);
+                            file3 = BitmapCompress.compressImage(bitmap,mContext);
                             break;
                         default:
                             break;
@@ -604,19 +607,19 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                         switch (type) {
                             case 0:
                                 img_store_head.setImageBitmap(bitmap);
-                                file0 = BitmapCompress.compressImage(bitmap);
+                                file0 = BitmapCompress.compressImage(bitmap,mContext);
                                 break;
                             case 1:
                                 img_publicity.setImageBitmap(bitmap);
-                                file1 = BitmapCompress.compressImage(bitmap);
+                                file1 = BitmapCompress.compressImage(bitmap,mContext);
                                 break;
                             case 2:
                                 img_license.setImageBitmap(bitmap);
-                                file2 = BitmapCompress.compressImage(bitmap);
+                                file2 = BitmapCompress.compressImage(bitmap,mContext);
                                 break;
                             case 3:
                                 img_permit.setImageBitmap(bitmap);
-                                file3 = BitmapCompress.compressImage(bitmap);
+                                file3 = BitmapCompress.compressImage(bitmap,mContext);
                                 break;
                             default:
                                 break;
@@ -707,7 +710,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
     }
 
     //街道选择
-    public void street(){
+    public void street() {
         OkGo.<String>get(Urls.getInstance().GETTOWN)
                 .tag(this)
                 .params("id", local_id_s)
@@ -745,7 +748,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
         OptionsPickerView pvOptions = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                if(list.size()!=0) {
+                if (list.size() != 0) {
                     tv_street.setText(list.get(options1).getTown());
                     town_id = list.get(options1).getId();
                 }
@@ -758,19 +761,6 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 .build();
         pvOptions.setPicker(streetName);
         pvOptions.show();
-    }
-
-    private void createProgressBar() {
-        mContext = this;
-        //整个Activity布局的最终父布局,参见参考资料
-        FrameLayout rootFrameLayout = (FrameLayout) findViewById(android.R.id.content);
-        FrameLayout.LayoutParams layoutParams =
-                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.CENTER;
-        mProgressBar = new ProgressBar(mContext);
-        mProgressBar.setLayoutParams(layoutParams);
-        mProgressBar.setVisibility(View.GONE);
-        rootFrameLayout.addView(mProgressBar);
     }
 
     static int index_rx = 0;
@@ -808,7 +798,6 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                     }
                 });
     }
-
 
 
 }

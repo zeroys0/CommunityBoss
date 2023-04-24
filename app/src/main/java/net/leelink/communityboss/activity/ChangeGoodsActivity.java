@@ -3,6 +3,7 @@ package net.leelink.communityboss.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -60,10 +61,12 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
     private String url;
     private int state =1;
     private AppCompatRadioButton cb_up,cb_down;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_goods);
+        context = this;
         init();
         popu_head();
     }
@@ -223,14 +226,14 @@ public class ChangeGoodsActivity extends BaseActivity implements View.OnClickLis
                     Uri uri = data.getData();
                     bitmap = BitmapCompress.decodeUriBitmap(ChangeGoodsActivity.this, uri);
                     img_head.setImageBitmap(bitmap);
-                    file = BitmapCompress.compressImage(bitmap);
+                    file = BitmapCompress.compressImage(bitmap,context);
                     break;
                 case 2:
                     Bundle bundle = data.getExtras();
                     if (bundle != null) {
                         bitmap = (Bitmap) bundle.get("data");
                         img_head.setImageBitmap(bitmap);
-                        file = BitmapCompress.compressImage(bitmap);
+                        file = BitmapCompress.compressImage(bitmap,context);
                     }
                     break;
 
