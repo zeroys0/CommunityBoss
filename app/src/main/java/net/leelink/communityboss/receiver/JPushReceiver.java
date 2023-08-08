@@ -15,13 +15,16 @@ import net.leelink.communityboss.app.CommunityBossApplication;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.jpush.android.api.CustomMessage;
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.NotificationMessage;
+import cn.jpush.android.service.JPushMessageReceiver;
 
 import static net.leelink.communityboss.app.CommunityBossApplication.preferences;
 
 
 
-public class JPushReceiver extends BroadcastReceiver {
+public class JPushReceiver extends JPushMessageReceiver {
 
     private String mStrPname;
     private String mStrCname;
@@ -29,7 +32,25 @@ public class JPushReceiver extends BroadcastReceiver {
     private Context context;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onMessage(Context context, CustomMessage customMessage) {
+        super.onMessage(context, customMessage);
+        Log.d( "收到了自定义推送: ",customMessage.toString());
+    }
+
+    @Override
+    public void onNotifyMessageOpened(Context context, NotificationMessage notificationMessage) {
+        super.onNotifyMessageOpened(context, notificationMessage);
+
+    }
+
+    @Override
+    public void onNotifyMessageArrived(Context context, NotificationMessage notificationMessage) {
+        super.onNotifyMessageArrived(context, notificationMessage);
+        Log.d( "收到了推送通知: ",notificationMessage.toString());
+    }
+
+
+    public void onget(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         System.out.println("[MyReceiver] onReceive - " + intent.getAction()
                 + ", extras: " + printBundle(bundle));

@@ -6,8 +6,8 @@ android {
         applicationId "net.leelink.communityboss"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 16
-        versionName "1.1.5"
+        versionCode 17
+        versionName "1.1.6"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         manifestPlaceholders = [

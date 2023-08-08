@@ -81,7 +81,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private View popview;
     TextView tv_cancel, tv_confirm, tv_agreement;
     SharedPreferences sp;
-
+    boolean first = true;
 
 
     @Override
@@ -168,6 +168,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         SharedPreferences sp = getSharedPreferences("sp", 0);
         String ip = sp.getString("ip", "");
         Urls.IP = ip;
+        if (ip.equals("")) {
+            getCode("000002");
+        } else {
+            first = false;
+        }
+
         if (!sp.getString("secretKey", "").equals("")) {
             quickLogin();
         }
@@ -337,7 +343,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         mProgressBar.setVisibility(View.VISIBLE);
         Log.e("login: ", Urls.IP);
         Log.e("login: ", Urls.getInstance().LOGIN);
-        Log.e("login: ",JPushInterface.getRegistrationID(LoginActivity.this));
+        Log.e("login: ", JPushInterface.getRegistrationID(LoginActivity.this));
         OkGo.<String>post(Urls.getInstance().LOGIN)
                 .tag(this)
                 .params("telephone", ed_phone.getText().toString().trim())
@@ -724,7 +730,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                                     Urls.IP = json.getString("apiUrl");
                                     Urls.H5_IP = json.getString("h5Url");
                                     editor.putString("code", code);
-                                    Toast.makeText(LoginActivity.this, "切换商户成功", Toast.LENGTH_SHORT).show();
+                                    if (first) {
+                                        first = false;
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "切换商户成功", Toast.LENGTH_SHORT).show();
+                                    }
                                     Log.e("login: ", Urls.IP);
                                     editor.apply();
                                 } else {
