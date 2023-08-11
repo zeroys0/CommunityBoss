@@ -57,6 +57,14 @@ public class Urls {
     public String TXAOUNT = WEBSITE + "txAount";    //提现
     public String ORDER_ONLY = WEBSITE + "order-only";      //确认用户自取
     public String CANCELACCOUNT = IP+"/sh/store/cancelAccount"; //注销账号
+    //获取省
+    public String GETPROVINCE = IP + "/sysDict/getProvince";
+
+    //获取市
+    public String GETCITY = IP + "/sysDict/getCity";
+
+    //获取区县
+    public String GETCOUNTY = IP + "/sysDict/getCounty";
     //获取街道
     public String GETTOWN = IP + "/sysDict/getTown";
 

@@ -48,6 +48,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import net.leelink.communityboss.R;
 import net.leelink.communityboss.bean.OrganBean;
+import net.leelink.communityboss.bean.ProvinceBean;
 import net.leelink.communityboss.bean.StreetBean;
 import net.leelink.communityboss.city.CityPicker;
 import net.leelink.communityboss.city.Cityinfo;
@@ -225,18 +226,18 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 finish();
                 break;
             case R.id.rl_province:
-                province(ORGAN);
+                getPorvince(ORGAN);
                 break;
             case R.id.rl_city:
                 if (province_id != null) {
-                    city(ORGAN);
+                    getCity(ORGAN);
                 } else {
                     Toast.makeText(this, "请先选择省份", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.rl_local:
                 if (city_id != null) {
-                    local(ORGAN);
+                    getLocal(ORGAN);
                 } else {
                     Toast.makeText(this, "请先选择城市", Toast.LENGTH_SHORT).show();
                 }
@@ -249,19 +250,18 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.rl_province_s:
-
-                province(STORE);
+                getPorvince(STORE);
                 break;
             case R.id.rl_city_s:
                 if (province_id_s != null) {
-                    city(STORE);
+                    getCity(STORE);
                 } else {
                     Toast.makeText(this, "请先选择省份", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.rl_local_s:
                 if (city_id_s != null) {
-                    local(STORE);
+                    getLocal(STORE);
                 } else {
                     Toast.makeText(this, "请先选择城市", Toast.LENGTH_SHORT).show();
                 }
@@ -392,7 +392,9 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                             if (json.getInt("status") == 200) {
                                 Toast.makeText(ApplyActivity.this, "提交成功,请等待审核", Toast.LENGTH_SHORT).show();
                                 finish();
-                                ChooseIdentityActivity.instance.finish();
+                                if (ChooseIdentityActivity.instance != null) {
+                                    ChooseIdentityActivity.instance.finish();
+                                }
                                 Intent intent = new Intent(mContext, ExamineActivity.class);
                                 startActivity(intent);
                             } else {
@@ -412,31 +414,54 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 });
     }
 
-
-    CityPicker.JSONParser parser = new CityPicker.JSONParser();
+    public void getPorvince(final boolean organ) {
+        OkGo.<String>get(Urls.getInstance().GETPROVINCE)
+                .tag(this)
+                //      .params("deviceToken", JPushInterface.getRegistrationID(LoginActivity.this))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("查询省份", json.toString());
+                            if (json.getInt("status") == 200) {
+                                JSONArray jsonArray = json.getJSONArray("data");
+                                Gson gson = new Gson();
+                                List<ProvinceBean> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<ProvinceBean>>() {
+                                }.getType());
+                                showProvince(list, organ);
+                            } else {
+                                Toast.makeText(mContext, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
 
     //选择省份
-    public void province(final boolean organ) {
-        province.clear();
-
-        String area_str = FileUtil.readAssets(this, "area.json");
-        province_list = parser.getJSONParserResult(area_str, "area0");
-        city_map = parser.getJSONParserResultArray(area_str, "area1");
-        couny_map = parser.getJSONParserResultArray(area_str, "area2");
-        for (Cityinfo cityinfo : province_list) {
-            province.add(cityinfo.getCity_name());
+    public void showProvince(final List<ProvinceBean> list, final boolean organ) {
+        List<String> provinceName = new ArrayList<>();
+        for (ProvinceBean provinceBean : list) {
+            provinceName.add(provinceBean.getName());
         }
-        //条件选择器
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(ApplyActivity.this, new OnOptionsSelectListener() {
+        //条件选择器d
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                if (organ) {
-                    tv_province.setText(province.get(options1));
-                    province_id = province_list.get(options1).getId();
-                } else {
-                    tv_province_s.setText(province.get(options1));
-                    province_id_s = province_list.get(options1).getId();
+                if (list.size() != 0) {
+                    if (organ) {
+                        //机构所在省
+                        tv_province.setText(list.get(options1).getName());
+                        province_id = list.get(options1).getId();
+                    } else {
+                        //门店所在省
+                        tv_province_s.setText(list.get(options1).getName());
+                        province_id_s = list.get(options1).getId();
 
+                    }
                 }
             }
         })
@@ -445,32 +470,59 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 .setContentTextSize(18)//设置滚轮文字大小
                 .setOutSideCancelable(true)//点击外部dismiss default true
                 .build();
-        pvOptions.setPicker(province);
+        pvOptions.setPicker(provinceName);
         pvOptions.show();
     }
 
     //城市选择
-    public void city(final boolean organ) {
-        city.clear();
-        final List<Cityinfo> cityinfoList;
-        if (organ) {
-            cityinfoList = city_map.get(province_id);
-        } else {
-            cityinfoList = city_map.get(province_id_s);
+    public void getCity(final boolean organ) {
+        OkGo.<String>get(Urls.getInstance().GETCITY)
+                .tag(this)
+                .params("id", organ ? province_id : province_id_s)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("获取市", json.toString());
+                            if (json.getInt("status") == 200) {
+                                JSONArray jsonArray = json.getJSONArray("data");
+                                Gson gson = new Gson();
+                                List<ProvinceBean> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<ProvinceBean>>() {
+                                }.getType());
+                                showCity(list, organ);
+                            } else {
+                                Toast.makeText(mContext, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    //选择城市
+    public void showCity(final List<ProvinceBean> list, final boolean organ) {
+        List<String> provinceName = new ArrayList<>();
+        for (ProvinceBean provinceBean : list) {
+            provinceName.add(provinceBean.getName());
         }
-        for (Cityinfo cityinfo : cityinfoList) {
-            city.add(cityinfo.getCity_name());
-        }
-        //条件选择器
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(ApplyActivity.this, new OnOptionsSelectListener() {
+        //条件选择器d
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                if (organ) {
-                    tv_city.setText(city.get(options1));
-                    city_id = cityinfoList.get(options1).getId();
-                } else {
-                    tv_city_s.setText(city.get(options1));
-                    city_id_s = cityinfoList.get(options1).getId();
+                if (list.size() != 0) {
+                    if (organ) {
+                        //机构所在城市
+                        tv_city.setText(list.get(options1).getName());
+                        city_id = list.get(options1).getId();
+                    } else {
+                        //门店所在城市
+                        tv_city_s.setText(list.get(options1).getName());
+                        city_id_s = list.get(options1).getId();
+
+                    }
                 }
             }
         })
@@ -479,32 +531,60 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 .setContentTextSize(18)//设置滚轮文字大小
                 .setOutSideCancelable(true)//点击外部dismiss default true
                 .build();
-        pvOptions.setPicker(city);
+        pvOptions.setPicker(provinceName);
         pvOptions.show();
     }
 
+
     //地区选择
-    public void local(final boolean organ) {
-        local.clear();
-        final List<Cityinfo> cityinfoList;
-        if (organ) {
-            cityinfoList = couny_map.get(city_id);
-        } else {
-            cityinfoList = couny_map.get(city_id_s);
+    public void getLocal(final boolean organ) {
+        OkGo.<String>get(Urls.getInstance().GETCOUNTY)
+                .tag(this)
+                .params("id", organ ? city_id : city_id_s)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            JSONObject json = new JSONObject(body);
+                            Log.d("获取区县", json.toString());
+                            if (json.getInt("status") == 200) {
+                                JSONArray jsonArray = json.getJSONArray("data");
+                                Gson gson = new Gson();
+                                List<ProvinceBean> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<ProvinceBean>>() {
+                                }.getType());
+                                showLocal(list, organ);
+                            } else {
+                                Toast.makeText(mContext, json.getString("ResultValue"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    //选择区县
+    public void showLocal(final List<ProvinceBean> list, final boolean organ) {
+        List<String> provinceName = new ArrayList<>();
+        for (ProvinceBean provinceBean : list) {
+            provinceName.add(provinceBean.getName());
         }
-        for (Cityinfo cityinfo : cityinfoList) {
-            local.add(cityinfo.getCity_name());
-        }
-        //条件选择器
-        OptionsPickerView pvOptions = new OptionsPickerBuilder(ApplyActivity.this, new OnOptionsSelectListener() {
+        //条件选择器d
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(mContext, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                if (organ) {
-                    tv_local.setText(local.get(options1));
-                    local_id = cityinfoList.get(options1).getId();
-                } else {
-                    tv_local_s.setText(local.get(options1));
-                    local_id_s = cityinfoList.get(options1).getId();
+                if (list.size() != 0) {
+                    if (organ) {
+                        //机构所在区县
+                        tv_local.setText(list.get(options1).getName());
+                        local_id = list.get(options1).getId();
+                    } else {
+                        //门店所在区县
+                        tv_local_s.setText(list.get(options1).getName());
+                        local_id_s = list.get(options1).getId();
+
+                    }
                 }
             }
         })
@@ -513,7 +593,7 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                 .setContentTextSize(18)//设置滚轮文字大小
                 .setOutSideCancelable(true)//点击外部dismiss default true
                 .build();
-        pvOptions.setPicker(local);
+        pvOptions.setPicker(provinceName);
         pvOptions.show();
     }
 
@@ -582,19 +662,19 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                     switch (type) {
                         case 0:
                             img_store_head.setImageBitmap(bitmap);
-                            file0 = BitmapCompress.compressImage(bitmap,mContext);
+                            file0 = BitmapCompress.compressImage(bitmap, mContext);
                             break;
                         case 1:
                             img_publicity.setImageBitmap(bitmap);
-                            file1 = BitmapCompress.compressImage(bitmap,mContext);
+                            file1 = BitmapCompress.compressImage(bitmap, mContext);
                             break;
                         case 2:
                             img_license.setImageBitmap(bitmap);
-                            file2 = BitmapCompress.compressImage(bitmap,mContext);
+                            file2 = BitmapCompress.compressImage(bitmap, mContext);
                             break;
                         case 3:
                             img_permit.setImageBitmap(bitmap);
-                            file3 = BitmapCompress.compressImage(bitmap,mContext);
+                            file3 = BitmapCompress.compressImage(bitmap, mContext);
                             break;
                         default:
                             break;
@@ -607,19 +687,19 @@ public class ApplyActivity extends BaseActivity implements View.OnClickListener 
                         switch (type) {
                             case 0:
                                 img_store_head.setImageBitmap(bitmap);
-                                file0 = BitmapCompress.compressImage(bitmap,mContext);
+                                file0 = BitmapCompress.compressImage(bitmap, mContext);
                                 break;
                             case 1:
                                 img_publicity.setImageBitmap(bitmap);
-                                file1 = BitmapCompress.compressImage(bitmap,mContext);
+                                file1 = BitmapCompress.compressImage(bitmap, mContext);
                                 break;
                             case 2:
                                 img_license.setImageBitmap(bitmap);
-                                file2 = BitmapCompress.compressImage(bitmap,mContext);
+                                file2 = BitmapCompress.compressImage(bitmap, mContext);
                                 break;
                             case 3:
                                 img_permit.setImageBitmap(bitmap);
-                                file3 = BitmapCompress.compressImage(bitmap,mContext);
+                                file3 = BitmapCompress.compressImage(bitmap, mContext);
                                 break;
                             default:
                                 break;
